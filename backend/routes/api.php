@@ -17,6 +17,10 @@ use App\Modules\POS\Http\Controllers\SalesOrderController;
 use App\Modules\Manufacturing\Http\Controllers\BillOfMaterialController;
 use App\Modules\Manufacturing\Http\Controllers\ProductionOrderController;
 use App\Modules\Manufacturing\Http\Controllers\WorkOrderController;
+use App\Modules\Finance\Http\Controllers\AccountController;
+use App\Modules\Finance\Http\Controllers\JournalEntryController;
+use App\Modules\Finance\Http\Controllers\FinancialReportController;
+use App\Modules\Finance\Http\Controllers\FiscalYearController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -198,6 +202,43 @@ Route::prefix('v1')->group(function () {
             Route::post('work-orders/{id}/complete', [WorkOrderController::class, 'complete']);
             Route::post('work-orders/{id}/cancel', [WorkOrderController::class, 'cancel']);
             Route::apiResource('work-orders', WorkOrderController::class);
+            
+        });
+        
+        // Finance Module Routes
+        Route::prefix('finance')->group(function () {
+            
+            // Accounts (Chart of Accounts)
+            Route::get('accounts/by-type', [AccountController::class, 'byType']);
+            Route::get('accounts/root', [AccountController::class, 'rootAccounts']);
+            Route::get('accounts/active', [AccountController::class, 'activeAccounts']);
+            Route::get('accounts/search', [AccountController::class, 'search']);
+            Route::get('accounts/{id}/balance', [AccountController::class, 'balance']);
+            Route::apiResource('accounts', AccountController::class);
+            
+            // Journal Entries
+            Route::get('journal-entries/by-status', [JournalEntryController::class, 'byStatus']);
+            Route::get('journal-entries/draft', [JournalEntryController::class, 'draft']);
+            Route::get('journal-entries/posted', [JournalEntryController::class, 'posted']);
+            Route::get('journal-entries/search', [JournalEntryController::class, 'search']);
+            Route::get('journal-entries/generate-entry-number', [JournalEntryController::class, 'generateEntryNumber']);
+            Route::post('journal-entries/{id}/post', [JournalEntryController::class, 'post']);
+            Route::post('journal-entries/{id}/void', [JournalEntryController::class, 'void']);
+            Route::apiResource('journal-entries', JournalEntryController::class);
+            
+            // Financial Reports
+            Route::post('reports/trial-balance', [FinancialReportController::class, 'trialBalance']);
+            Route::post('reports/profit-and-loss', [FinancialReportController::class, 'profitAndLoss']);
+            Route::post('reports/balance-sheet', [FinancialReportController::class, 'balanceSheet']);
+            Route::post('reports/account-ledger/{accountId}', [FinancialReportController::class, 'accountLedger']);
+            Route::post('reports/general-ledger', [FinancialReportController::class, 'generalLedger']);
+            
+            // Fiscal Years
+            Route::get('fiscal-years/open', [FiscalYearController::class, 'open']);
+            Route::get('fiscal-years/closed', [FiscalYearController::class, 'closed']);
+            Route::get('fiscal-years/current', [FiscalYearController::class, 'current']);
+            Route::post('fiscal-years/{id}/close', [FiscalYearController::class, 'close']);
+            Route::apiResource('fiscal-years', FiscalYearController::class);
             
         });
         
