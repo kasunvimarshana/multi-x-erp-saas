@@ -33,21 +33,224 @@ The platform strictly follows:
 - **Event-driven architecture** for asynchronous operations
 - **Transactional boundaries** with atomicity and rollback safety
 
-## Development Guidelines
-
-For detailed development guidelines, coding standards, and architectural decisions, please refer to the [Copilot Instructions](.github/copilot-instructions.md) which provide comprehensive guidance for contributing to this project.
-
 ## Technology Stack
 
-- **Backend**: Laravel (PHP)
-- **Frontend**: Vue.js with Vite
-- **Database**: Append-only stock ledgers, multi-tenant architecture
-- **APIs**: RESTful with versioning and bulk operations support
-- **Security**: HTTPS enforcement, encryption at rest, rate limiting, audit trails
+### Backend
+- **Framework**: Laravel 12
+- **PHP**: 8.3+
+- **Database**: MySQL/PostgreSQL with append-only stock ledgers
+- **Authentication**: Laravel Sanctum
+- **API**: RESTful with versioning
 
-## Getting Started
+### Frontend
+- **Framework**: Vue.js 3
+- **Build Tool**: Vite
+- **State Management**: Pinia (planned)
+- **Styling**: Responsive and accessible layouts
 
-[Setup instructions to be added]
+## Installation
+
+### Prerequisites
+
+- PHP 8.3 or higher
+- Composer
+- Node.js 20+ and npm
+- MySQL 8.0+ or PostgreSQL 13+
+
+### Backend Setup
+
+1. Navigate to the backend directory:
+```bash
+cd backend
+```
+
+2. Install PHP dependencies:
+```bash
+composer install
+```
+
+3. Copy environment file:
+```bash
+cp .env.example .env
+```
+
+4. Generate application key:
+```bash
+php artisan key:generate
+```
+
+5. Configure your database in `.env`:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=multi_x_erp
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+6. Run migrations:
+```bash
+php artisan migrate
+```
+
+7. Seed initial data (optional):
+```bash
+php artisan db:seed --class=InitialDataSeeder
+```
+
+8. Start the development server:
+```bash
+php artisan serve
+```
+
+The API will be available at `http://localhost:8000`
+
+### Frontend Setup
+
+1. Navigate to the frontend directory:
+```bash
+cd frontend
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Start the development server:
+```bash
+npm run dev
+```
+
+The frontend will be available at `http://localhost:5173`
+
+## API Documentation
+
+### Base URL
+```
+http://localhost:8000/api/v1
+```
+
+### Authentication
+The API uses Laravel Sanctum for authentication. Include the access token in the Authorization header:
+```
+Authorization: Bearer {your-token}
+```
+
+### Available Endpoints
+
+#### Health Check
+```
+GET /api/v1/health
+```
+
+#### Products
+```
+GET    /api/v1/inventory/products              # List products
+POST   /api/v1/inventory/products              # Create product
+GET    /api/v1/inventory/products/{id}         # Get product
+PUT    /api/v1/inventory/products/{id}         # Update product
+DELETE /api/v1/inventory/products/{id}         # Delete product
+GET    /api/v1/inventory/products/search?q=    # Search products
+GET    /api/v1/inventory/products/below-reorder-level  # Low stock items
+GET    /api/v1/inventory/products/{id}/stock-history   # Stock history
+```
+
+## Development Guidelines
+
+For detailed development guidelines, coding standards, and architectural decisions, please refer to the [Copilot Instructions](.github/copilot-instructions.md).
+
+### Key Principles
+
+1. **Always review existing code** before making changes
+2. **Service Layer Orchestration** - All cross-module interactions go through services
+3. **Event-Driven Architecture** - Use events for asynchronous workflows only
+4. **Append-Only Ledger** - Never delete stock ledger entries, create reversals instead
+
+## Project Structure
+
+### Backend
+```
+backend/
+├── app/
+│   ├── Contracts/           # Interfaces and contracts
+│   ├── Enums/              # Enums (ProductType, StockMovementType, etc.)
+│   ├── Http/Controllers/   # Base controllers
+│   ├── Models/             # Core models (Tenant, User)
+│   ├── Modules/            # Business modules
+│   │   ├── IAM/           # Identity and Access Management
+│   │   └── Inventory/     # Inventory Management
+│   ├── Repositories/       # Data access layer
+│   ├── Services/          # Business logic layer
+│   └── Traits/            # Reusable traits
+├── database/
+│   ├── migrations/        # Database migrations
+│   └── seeders/          # Database seeders
+└── routes/
+    └── api.php           # API routes
+```
+
+### Frontend
+```
+frontend/
+├── src/
+│   ├── components/       # Reusable components
+│   ├── views/           # Page components
+│   ├── modules/         # Module-specific components
+│   ├── services/        # API services
+│   └── stores/          # State management
+└── public/
+```
+
+## Core Modules
+
+### Implemented
+- ✅ Multi-Tenancy Foundation
+- ✅ IAM (Roles & Permissions)
+- ✅ Inventory Management (Products & Stock Ledger)
+- ✅ Master Data (Categories, Warehouses, Units, Taxes)
+
+### Planned
+- CRM (Customer Relationship Management)
+- Procurement (Purchase Orders)
+- POS (Point of Sale)
+- Manufacturing
+- Financial Integration
+- Reporting & Analytics
+
+## Testing
+
+Run the test suite:
+```bash
+cd backend
+php artisan test
+```
+
+## Demo Credentials
+
+After running the seeder, you can use these demo credentials:
+
+- **Email**: admin@demo.com
+- **Password**: password
+- **Tenant**: demo-company
+
+## Security
+
+- HTTPS enforcement in production
+- CSRF protection enabled
+- SQL injection prevention via Eloquent
+- XSS prevention via output escaping
+- Rate limiting on API endpoints
+- Secure credential storage
+
+## Performance
+
+- Eager loading to prevent N+1 queries
+- Database indexing on frequently queried columns
+- Caching for frequently accessed data
+- Queue support for long-running tasks
+- Pagination for large datasets
 
 ## Contributing
 
@@ -56,3 +259,11 @@ Please follow the architectural guidelines and coding standards outlined in the 
 ## License
 
 [License information to be added]
+
+## Support
+
+For issues and questions, please use the GitHub issue tracker.
+
+---
+
+**Built with Clean Architecture principles for long-term maintainability and scalability.**
