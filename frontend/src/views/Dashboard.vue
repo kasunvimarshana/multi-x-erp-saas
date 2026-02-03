@@ -48,11 +48,13 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/authStore'
 
 const router = useRouter()
+const authStore = useAuthStore()
 
-const logout = () => {
-  localStorage.removeItem('auth_token')
+const logout = async () => {
+  await authStore.logout()
   router.push('/login')
 }
 </script>
