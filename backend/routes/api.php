@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NotificationController;
 use App\Modules\CRM\Http\Controllers\CustomerController;
 use App\Modules\IAM\Http\Controllers\PermissionController;
 use App\Modules\IAM\Http\Controllers\RoleController;
@@ -157,6 +158,27 @@ Route::prefix('v1')->group(function () {
             Route::get('payments/customer/{customerId}', [PaymentController::class, 'byCustomer']);
             Route::post('payments/{id}/void', [PaymentController::class, 'void']);
             Route::apiResource('payments', PaymentController::class)->except(['update']);
+            
+        });
+        
+        // Notifications Module Routes
+        Route::prefix('notifications')->group(function () {
+            
+            // Push Notifications
+            Route::post('push/subscribe', [NotificationController::class, 'subscribePush']);
+            Route::post('push/unsubscribe', [NotificationController::class, 'unsubscribePush']);
+            Route::get('push/subscriptions', [NotificationController::class, 'getPushSubscriptions']);
+            Route::post('push/test', [NotificationController::class, 'sendTestNotification']);
+            
+            // Notification Preferences
+            Route::get('preferences', [NotificationController::class, 'getPreferences']);
+            Route::put('preferences', [NotificationController::class, 'updatePreferences']);
+            
+            // Notification History
+            Route::get('history', [NotificationController::class, 'getHistory']);
+            Route::post('{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
+            Route::post('mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
+            Route::delete('{id}', [NotificationController::class, 'deleteNotification']);
             
         });
         
