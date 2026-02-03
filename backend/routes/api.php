@@ -3,6 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Modules\CRM\Http\Controllers\CustomerController;
 use App\Modules\Inventory\Http\Controllers\ProductController;
+use App\Modules\Procurement\Http\Controllers\PurchaseOrderController;
+use App\Modules\Procurement\Http\Controllers\SupplierController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -64,6 +66,24 @@ Route::prefix('v1')->group(function () {
         Route::prefix('crm')->group(function () {
             Route::get('customers/search', [CustomerController::class, 'search']);
             Route::apiResource('customers', CustomerController::class);
+        });
+        
+        // Procurement Module Routes
+        Route::prefix('procurement')->group(function () {
+            
+            // Suppliers
+            Route::get('suppliers/search', [SupplierController::class, 'search']);
+            Route::get('suppliers/active', [SupplierController::class, 'active']);
+            Route::apiResource('suppliers', SupplierController::class);
+            
+            // Purchase Orders
+            Route::get('purchase-orders/search', [PurchaseOrderController::class, 'search']);
+            Route::get('purchase-orders/pending', [PurchaseOrderController::class, 'pending']);
+            Route::post('purchase-orders/{id}/approve', [PurchaseOrderController::class, 'approve']);
+            Route::post('purchase-orders/{id}/receive', [PurchaseOrderController::class, 'receive']);
+            Route::post('purchase-orders/{id}/cancel', [PurchaseOrderController::class, 'cancel']);
+            Route::apiResource('purchase-orders', PurchaseOrderController::class);
+            
         });
         
         // IAM Module Routes (to be implemented)
