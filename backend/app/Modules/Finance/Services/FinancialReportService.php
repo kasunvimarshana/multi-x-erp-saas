@@ -14,6 +14,8 @@ use App\Services\BaseService;
  */
 class FinancialReportService extends BaseService
 {
+    private const HISTORICAL_START_DATE = '1900-01-01';
+
     public function __construct(
         protected AccountRepository $accountRepository,
         protected JournalEntryRepository $journalEntryRepository
@@ -159,19 +161,19 @@ class FinancialReportService extends BaseService
         // Get accounts by type
         $assetAccounts = $this->accountRepository->getAccountsForFinancialStatements(
             AccountType::ASSET,
-            '1900-01-01',
+            self::HISTORICAL_START_DATE,
             $asOfDate
         );
 
         $liabilityAccounts = $this->accountRepository->getAccountsForFinancialStatements(
             AccountType::LIABILITY,
-            '1900-01-01',
+            self::HISTORICAL_START_DATE,
             $asOfDate
         );
 
         $equityAccounts = $this->accountRepository->getAccountsForFinancialStatements(
             AccountType::EQUITY,
-            '1900-01-01',
+            self::HISTORICAL_START_DATE,
             $asOfDate
         );
 
