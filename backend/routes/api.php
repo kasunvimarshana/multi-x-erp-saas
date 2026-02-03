@@ -6,6 +6,7 @@ use App\Modules\IAM\Http\Controllers\PermissionController;
 use App\Modules\IAM\Http\Controllers\RoleController;
 use App\Modules\IAM\Http\Controllers\UserController;
 use App\Modules\Inventory\Http\Controllers\ProductController;
+use App\Modules\Inventory\Http\Controllers\StockMovementController;
 use App\Modules\Procurement\Http\Controllers\PurchaseOrderController;
 use App\Modules\Procurement\Http\Controllers\SupplierController;
 use Illuminate\Http\Request;
@@ -60,8 +61,13 @@ Route::prefix('v1')->group(function () {
             Route::get('products/{id}/stock-history', [ProductController::class, 'stockHistory']);
             Route::apiResource('products', ProductController::class);
             
-            // Stock Movements (to be implemented)
-            // Route::apiResource('stock-movements', StockMovementController::class)->only(['index', 'store', 'show']);
+            // Stock Movements
+            Route::prefix('stock-movements')->group(function () {
+                Route::get('types', [StockMovementController::class, 'types']);
+                Route::get('history', [StockMovementController::class, 'history']);
+                Route::post('adjustment', [StockMovementController::class, 'adjustment']);
+                Route::post('transfer', [StockMovementController::class, 'transfer']);
+            });
             
         });
         
