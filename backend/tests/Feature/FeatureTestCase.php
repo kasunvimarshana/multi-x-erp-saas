@@ -113,51 +113,51 @@ abstract class FeatureTestCase extends TestCase
     /**
      * Make a GET request to an API endpoint.
      */
-    public function getJson($uri, array $headers = [])
+    public function getJson($uri, array $headers = [], $options = 0)
     {
         return parent::getJson($uri, array_merge([
             'Accept' => 'application/json',
-        ], $headers));
+        ], $headers), $options);
     }
 
     /**
      * Make a POST request to an API endpoint.
      */
-    public function postJson($uri, array $data = [], array $headers = [])
+    public function postJson($uri, array $data = [], array $headers = [], $options = 0)
     {
         return parent::postJson($uri, $data, array_merge([
             'Accept' => 'application/json',
-        ], $headers));
+        ], $headers), $options);
     }
 
     /**
      * Make a PUT request to an API endpoint.
      */
-    public function putJson($uri, array $data = [], array $headers = [])
+    public function putJson($uri, array $data = [], array $headers = [], $options = 0)
     {
         return parent::putJson($uri, $data, array_merge([
             'Accept' => 'application/json',
-        ], $headers));
+        ], $headers), $options);
     }
 
     /**
      * Make a PATCH request to an API endpoint.
      */
-    public function patchJson($uri, array $data = [], array $headers = [])
+    public function patchJson($uri, array $data = [], array $headers = [], $options = 0)
     {
         return parent::patchJson($uri, $data, array_merge([
             'Accept' => 'application/json',
-        ], $headers));
+        ], $headers), $options);
     }
 
     /**
      * Make a DELETE request to an API endpoint.
      */
-    public function deleteJson($uri, array $data = [], array $headers = [])
+    public function deleteJson($uri, array $data = [], array $headers = [], $options = 0)
     {
         return parent::deleteJson($uri, $data, array_merge([
             'Accept' => 'application/json',
-        ], $headers));
+        ], $headers), $options);
     }
 
     /**

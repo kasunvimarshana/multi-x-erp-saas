@@ -30,7 +30,7 @@ class AuthController extends BaseController
             ]);
 
             if ($validator->fails()) {
-                return $this->validationError($validator->errors());
+                return $this->validationError($validator->errors()->toArray());
             }
 
             // Get tenant
@@ -87,7 +87,7 @@ class AuthController extends BaseController
             ]);
 
             if ($validator->fails()) {
-                return $this->validationError($validator->errors());
+                return $this->validationError($validator->errors()->toArray());
             }
 
             // Get tenant

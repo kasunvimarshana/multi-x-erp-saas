@@ -45,7 +45,7 @@ class PermissionFactory extends Factory
     /**
      * Create a view permission.
      */
-    public function view(string $resource): static
+    public function viewPermission(string $resource): static
     {
         return $this->state(fn (array $attributes) => [
             'name' => "View {$resource}",
@@ -56,7 +56,7 @@ class PermissionFactory extends Factory
     /**
      * Create a create permission.
      */
-    public function create(string $resource): static
+    public function createPermission(string $resource): static
     {
         return $this->state(fn (array $attributes) => [
             'name' => "Create {$resource}",
@@ -67,7 +67,7 @@ class PermissionFactory extends Factory
     /**
      * Create an update permission.
      */
-    public function update(string $resource): static
+    public function updatePermission(string $resource): static
     {
         return $this->state(fn (array $attributes) => [
             'name' => "Update {$resource}",
@@ -78,7 +78,7 @@ class PermissionFactory extends Factory
     /**
      * Create a delete permission.
      */
-    public function delete(string $resource): static
+    public function deletePermission(string $resource): static
     {
         return $this->state(fn (array $attributes) => [
             'name' => "Delete {$resource}",
