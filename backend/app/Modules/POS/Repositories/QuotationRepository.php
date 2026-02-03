@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Collection;
 
 class QuotationRepository extends BaseRepository
 {
-    public function __construct(Quotation $model)
+    protected function model(): string
     {
-        parent::__construct($model);
+        return Quotation::class;
     }
 
     public function findByQuotationNumber(string $quotationNumber): ?Quotation
