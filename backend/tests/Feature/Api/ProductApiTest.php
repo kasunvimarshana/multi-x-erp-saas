@@ -54,18 +54,25 @@ class ProductApiTest extends FeatureTestCase
         $response = $this->getJson($this->baseUri);
 
         $response->assertStatus(200)
-            ->assertJsonCount(3, 'data')
+            ->assertJsonCount(3, 'data.data')
             ->assertJsonStructure([
+                'success',
+                'message',
                 'data' => [
-                    '*' => [
-                        'id',
-                        'sku',
-                        'name',
-                        'type',
-                        'buying_price',
-                        'selling_price',
-                        'is_active',
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'sku',
+                            'name',
+                            'type',
+                            'buying_price',
+                            'selling_price',
+                            'is_active',
+                        ],
                     ],
+                    'current_page',
+                    'per_page',
+                    'total',
                 ],
             ]);
     }

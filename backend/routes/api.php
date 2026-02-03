@@ -66,12 +66,21 @@ Route::prefix('v1')->group(function () {
             Route::post('logout', [AuthController::class, 'logout']);
             Route::post('refresh', [AuthController::class, 'refresh']);
             Route::get('user', [AuthController::class, 'user']);
+            Route::get('me', [AuthController::class, 'me']);
+            Route::put('profile', [AuthController::class, 'profile']);
+            Route::put('change-password', [AuthController::class, 'changePassword']);
         });
+        
+        // Products (root level)
+        Route::get('products/search', [ProductController::class, 'search']);
+        Route::get('products/below-reorder-level', [ProductController::class, 'belowReorderLevel']);
+        Route::get('products/{id}/stock-history', [ProductController::class, 'stockHistory']);
+        Route::apiResource('products', ProductController::class);
         
         // Inventory Module Routes
         Route::prefix('inventory')->group(function () {
             
-            // Products
+            // Products (also available here for backward compatibility)
             Route::get('products/search', [ProductController::class, 'search']);
             Route::get('products/below-reorder-level', [ProductController::class, 'belowReorderLevel']);
             Route::get('products/{id}/stock-history', [ProductController::class, 'stockHistory']);
