@@ -78,7 +78,7 @@ class GoodsReceiptNote extends Model
      */
     public function hasDiscrepancies(): bool
     {
-        return $this->items()->where('quantity_received', '!=', 'quantity_ordered')->exists();
+        return $this->items()->whereColumn('quantity_received', '!=', 'quantity_ordered')->exists();
     }
 
     /**
