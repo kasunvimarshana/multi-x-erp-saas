@@ -9,6 +9,10 @@ use App\Modules\Inventory\Http\Controllers\ProductController;
 use App\Modules\Inventory\Http\Controllers\StockMovementController;
 use App\Modules\Procurement\Http\Controllers\PurchaseOrderController;
 use App\Modules\Procurement\Http\Controllers\SupplierController;
+use App\Modules\POS\Http\Controllers\InvoiceController;
+use App\Modules\POS\Http\Controllers\PaymentController;
+use App\Modules\POS\Http\Controllers\QuotationController;
+use App\Modules\POS\Http\Controllers\SalesOrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -121,6 +125,38 @@ Route::prefix('v1')->group(function () {
             Route::get('permissions/{id}/roles', [PermissionController::class, 'getRoles']);
             Route::get('permissions/{id}', [PermissionController::class, 'show']);
             Route::get('permissions', [PermissionController::class, 'index']);
+            
+        });
+        
+        // POS (Point of Sale) Module Routes
+        Route::prefix('pos')->group(function () {
+            
+            // Quotations
+            Route::get('quotations/expired', [QuotationController::class, 'expired']);
+            Route::get('quotations/customer/{customerId}', [QuotationController::class, 'byCustomer']);
+            Route::post('quotations/{id}/convert-to-sales-order', [QuotationController::class, 'convertToSalesOrder']);
+            Route::apiResource('quotations', QuotationController::class);
+            
+            // Sales Orders
+            Route::get('sales-orders/search', [SalesOrderController::class, 'search']);
+            Route::get('sales-orders/status/{status}', [SalesOrderController::class, 'byStatus']);
+            Route::get('sales-orders/customer/{customerId}', [SalesOrderController::class, 'byCustomer']);
+            Route::post('sales-orders/{id}/confirm', [SalesOrderController::class, 'confirm']);
+            Route::post('sales-orders/{id}/cancel', [SalesOrderController::class, 'cancel']);
+            Route::apiResource('sales-orders', SalesOrderController::class);
+            
+            // Invoices
+            Route::get('invoices/overdue', [InvoiceController::class, 'overdue']);
+            Route::get('invoices/status/{status}', [InvoiceController::class, 'byStatus']);
+            Route::get('invoices/customer/{customerId}', [InvoiceController::class, 'byCustomer']);
+            Route::post('invoices/from-sales-order/{salesOrderId}', [InvoiceController::class, 'createFromSalesOrder']);
+            Route::apiResource('invoices', InvoiceController::class);
+            
+            // Payments
+            Route::get('payments/invoice/{invoiceId}', [PaymentController::class, 'byInvoice']);
+            Route::get('payments/customer/{customerId}', [PaymentController::class, 'byCustomer']);
+            Route::post('payments/{id}/void', [PaymentController::class, 'void']);
+            Route::apiResource('payments', PaymentController::class)->except(['update']);
             
         });
         
