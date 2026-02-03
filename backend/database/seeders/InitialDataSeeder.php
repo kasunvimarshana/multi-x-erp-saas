@@ -105,15 +105,16 @@ class InitialDataSeeder extends Seeder
             $staffRole->permissions()->attach($staffPermissions);
 
             // Create demo admin user
-            $adminUser = DB::table('users')->insert([
+            $adminUser = \App\Models\User::create([
                 'tenant_id' => $tenant->id,
                 'name' => 'Admin User',
                 'email' => 'admin@demo.com',
                 'password' => Hash::make('password'),
                 'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
             ]);
+
+            // Assign admin role to admin user
+            $adminUser->assignRole($adminRole);
 
             // Create sample categories
             $categories = [
