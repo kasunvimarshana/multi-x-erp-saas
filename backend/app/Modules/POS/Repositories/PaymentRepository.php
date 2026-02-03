@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Collection;
 
 class PaymentRepository extends BaseRepository
 {
-    public function __construct(Payment $model)
+    protected function model(): string
     {
-        parent::__construct($model);
+        return Payment::class;
     }
 
     public function findByInvoice(int $invoiceId): Collection

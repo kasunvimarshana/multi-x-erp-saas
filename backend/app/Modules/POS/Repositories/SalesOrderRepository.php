@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Collection;
 
 class SalesOrderRepository extends BaseRepository
 {
-    public function __construct(SalesOrder $model)
+    protected function model(): string
     {
-        parent::__construct($model);
+        return SalesOrder::class;
     }
 
     public function findByOrderNumber(string $orderNumber): ?SalesOrder

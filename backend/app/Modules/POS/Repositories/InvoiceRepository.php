@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Collection;
 
 class InvoiceRepository extends BaseRepository
 {
-    public function __construct(Invoice $model)
+    protected function model(): string
     {
-        parent::__construct($model);
+        return Invoice::class;
     }
 
     public function findByInvoiceNumber(string $invoiceNumber): ?Invoice
