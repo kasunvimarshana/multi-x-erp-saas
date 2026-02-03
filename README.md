@@ -145,6 +145,15 @@ Authorization: Bearer {your-token}
 GET /api/v1/health
 ```
 
+#### Authentication
+```
+POST   /api/v1/auth/register              # Register new user
+POST   /api/v1/auth/login                 # Login user
+POST   /api/v1/auth/logout                # Logout user (protected)
+POST   /api/v1/auth/refresh               # Refresh token (protected)
+GET    /api/v1/auth/user                  # Get current user (protected)
+```
+
 #### Products
 ```
 GET    /api/v1/inventory/products              # List products
@@ -155,6 +164,16 @@ DELETE /api/v1/inventory/products/{id}         # Delete product
 GET    /api/v1/inventory/products/search?q=    # Search products
 GET    /api/v1/inventory/products/below-reorder-level  # Low stock items
 GET    /api/v1/inventory/products/{id}/stock-history   # Stock history
+```
+
+#### Customers (CRM)
+```
+GET    /api/v1/crm/customers                # List customers
+POST   /api/v1/crm/customers                # Create customer
+GET    /api/v1/crm/customers/{id}           # Get customer
+PUT    /api/v1/crm/customers/{id}           # Update customer
+DELETE /api/v1/crm/customers/{id}           # Delete customer
+GET    /api/v1/crm/customers/search?q=      # Search customers
 ```
 
 ## Development Guidelines
@@ -207,17 +226,23 @@ frontend/
 
 ### Implemented
 - ✅ Multi-Tenancy Foundation
-- ✅ IAM (Roles & Permissions)
+- ✅ Authentication & Authorization (Sanctum)
+- ✅ IAM (Users, Roles & Permissions)
 - ✅ Inventory Management (Products & Stock Ledger)
+- ✅ Stock Movement Service (Adjustments, Transfers)
+- ✅ Pricing Service (Tiered pricing, discounts, tax calculation)
+- ✅ CRM (Customer Management)
+- ✅ Procurement (Purchase Orders, Suppliers)
 - ✅ Master Data (Categories, Warehouses, Units, Taxes)
+- ✅ Event-Driven Architecture
+- ✅ Notification System Foundation
 
 ### Planned
-- CRM (Customer Relationship Management)
-- Procurement (Purchase Orders)
 - POS (Point of Sale)
-- Manufacturing
+- Manufacturing (BOM, Production Orders)
 - Financial Integration
 - Reporting & Analytics
+- Audit Trails
 
 ## Testing
 
