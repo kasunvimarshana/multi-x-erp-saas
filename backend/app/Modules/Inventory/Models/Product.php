@@ -22,6 +22,14 @@ class Product extends Model
     use HasFactory, SoftDeletes, TenantScoped;
 
     /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Database\Factories\Inventory\ProductFactory::new();
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>

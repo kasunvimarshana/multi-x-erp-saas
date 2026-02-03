@@ -14,6 +14,17 @@ use App\Modules\POS\Http\Controllers\InvoiceController;
 use App\Modules\POS\Http\Controllers\PaymentController;
 use App\Modules\POS\Http\Controllers\QuotationController;
 use App\Modules\POS\Http\Controllers\SalesOrderController;
+use App\Modules\Manufacturing\Http\Controllers\BillOfMaterialController;
+use App\Modules\Manufacturing\Http\Controllers\ProductionOrderController;
+use App\Modules\Manufacturing\Http\Controllers\WorkOrderController;
+use App\Modules\Finance\Http\Controllers\AccountController;
+use App\Modules\Finance\Http\Controllers\JournalEntryController;
+use App\Modules\Finance\Http\Controllers\FinancialReportController;
+use App\Modules\Finance\Http\Controllers\FiscalYearController;
+use App\Modules\Reporting\Http\Controllers\ReportController;
+use App\Modules\Reporting\Http\Controllers\DashboardController;
+use App\Modules\Reporting\Http\Controllers\AnalyticsController;
+use App\Modules\Reporting\Http\Controllers\ScheduledReportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -161,6 +172,80 @@ Route::prefix('v1')->group(function () {
             
         });
         
+        // Manufacturing Module Routes
+        Route::prefix('manufacturing')->group(function () {
+            
+            // Bill of Materials
+            Route::get('boms/search', [BillOfMaterialController::class, 'search']);
+            Route::get('boms/product/{productId}', [BillOfMaterialController::class, 'byProduct']);
+            Route::get('boms/product/{productId}/latest-active', [BillOfMaterialController::class, 'latestActive']);
+            Route::post('boms/{id}/create-version', [BillOfMaterialController::class, 'createVersion']);
+            Route::apiResource('boms', BillOfMaterialController::class);
+            
+            // Production Orders
+            Route::get('production-orders/search', [ProductionOrderController::class, 'search']);
+            Route::get('production-orders/status', [ProductionOrderController::class, 'byStatus']);
+            Route::get('production-orders/in-progress', [ProductionOrderController::class, 'inProgress']);
+            Route::get('production-orders/overdue', [ProductionOrderController::class, 'overdue']);
+            Route::post('production-orders/{id}/release', [ProductionOrderController::class, 'release']);
+            Route::post('production-orders/{id}/start', [ProductionOrderController::class, 'start']);
+            Route::post('production-orders/{id}/consume-materials', [ProductionOrderController::class, 'consumeMaterials']);
+            Route::post('production-orders/{id}/complete', [ProductionOrderController::class, 'complete']);
+            Route::post('production-orders/{id}/cancel', [ProductionOrderController::class, 'cancel']);
+            Route::apiResource('production-orders', ProductionOrderController::class);
+            
+            // Work Orders
+            Route::get('work-orders/search', [WorkOrderController::class, 'search']);
+            Route::get('work-orders/status', [WorkOrderController::class, 'byStatus']);
+            Route::get('work-orders/pending', [WorkOrderController::class, 'pending']);
+            Route::get('work-orders/in-progress', [WorkOrderController::class, 'inProgress']);
+            Route::get('work-orders/overdue', [WorkOrderController::class, 'overdue']);
+            Route::get('work-orders/my-work-orders', [WorkOrderController::class, 'myWorkOrders']);
+            Route::get('work-orders/production-order/{productionOrderId}', [WorkOrderController::class, 'byProductionOrder']);
+            Route::post('work-orders/{id}/start', [WorkOrderController::class, 'start']);
+            Route::post('work-orders/{id}/complete', [WorkOrderController::class, 'complete']);
+            Route::post('work-orders/{id}/cancel', [WorkOrderController::class, 'cancel']);
+            Route::apiResource('work-orders', WorkOrderController::class);
+            
+        });
+        
+        // Finance Module Routes
+        Route::prefix('finance')->group(function () {
+            
+            // Accounts (Chart of Accounts)
+            Route::get('accounts/by-type', [AccountController::class, 'byType']);
+            Route::get('accounts/root', [AccountController::class, 'rootAccounts']);
+            Route::get('accounts/active', [AccountController::class, 'activeAccounts']);
+            Route::get('accounts/search', [AccountController::class, 'search']);
+            Route::get('accounts/{id}/balance', [AccountController::class, 'balance']);
+            Route::apiResource('accounts', AccountController::class);
+            
+            // Journal Entries
+            Route::get('journal-entries/by-status', [JournalEntryController::class, 'byStatus']);
+            Route::get('journal-entries/draft', [JournalEntryController::class, 'draft']);
+            Route::get('journal-entries/posted', [JournalEntryController::class, 'posted']);
+            Route::get('journal-entries/search', [JournalEntryController::class, 'search']);
+            Route::get('journal-entries/generate-entry-number', [JournalEntryController::class, 'generateEntryNumber']);
+            Route::post('journal-entries/{id}/post', [JournalEntryController::class, 'post']);
+            Route::post('journal-entries/{id}/void', [JournalEntryController::class, 'void']);
+            Route::apiResource('journal-entries', JournalEntryController::class);
+            
+            // Financial Reports
+            Route::post('reports/trial-balance', [FinancialReportController::class, 'trialBalance']);
+            Route::post('reports/profit-and-loss', [FinancialReportController::class, 'profitAndLoss']);
+            Route::post('reports/balance-sheet', [FinancialReportController::class, 'balanceSheet']);
+            Route::post('reports/account-ledger/{accountId}', [FinancialReportController::class, 'accountLedger']);
+            Route::post('reports/general-ledger', [FinancialReportController::class, 'generalLedger']);
+            
+            // Fiscal Years
+            Route::get('fiscal-years/open', [FiscalYearController::class, 'open']);
+            Route::get('fiscal-years/closed', [FiscalYearController::class, 'closed']);
+            Route::get('fiscal-years/current', [FiscalYearController::class, 'current']);
+            Route::post('fiscal-years/{id}/close', [FiscalYearController::class, 'close']);
+            Route::apiResource('fiscal-years', FiscalYearController::class);
+            
+        });
+        
         // Notifications Module Routes
         Route::prefix('notifications')->group(function () {
             
@@ -179,6 +264,51 @@ Route::prefix('v1')->group(function () {
             Route::post('{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
             Route::post('mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
             Route::delete('{id}', [NotificationController::class, 'deleteNotification']);
+            
+        });
+        
+        // Reporting & Analytics Module Routes
+        Route::prefix('reports')->group(function () {
+            
+            // Reports
+            Route::get('by-module', [ReportController::class, 'getByModule']);
+            Route::post('{id}/execute', [ReportController::class, 'execute']);
+            Route::post('{id}/export', [ReportController::class, 'export']);
+            Route::apiResource('/', ReportController::class)->parameters(['' => 'id']);
+            
+            // Dashboards
+            Route::prefix('dashboards')->group(function () {
+                Route::get('default', [DashboardController::class, 'getDefault']);
+                Route::post('{id}/set-default', [DashboardController::class, 'setAsDefault']);
+                Route::post('widgets', [DashboardController::class, 'addWidget']);
+                Route::put('widgets/{widgetId}', [DashboardController::class, 'updateWidget']);
+                Route::delete('widgets/{widgetId}', [DashboardController::class, 'removeWidget']);
+                Route::post('{id}/reorder-widgets', [DashboardController::class, 'reorderWidgets']);
+                Route::apiResource('/', DashboardController::class)->parameters(['' => 'id']);
+            });
+            
+            // Analytics & KPIs
+            Route::prefix('analytics')->group(function () {
+                Route::get('kpis', [AnalyticsController::class, 'getKPIs']);
+                Route::get('revenue', [AnalyticsController::class, 'getTotalRevenue']);
+                Route::get('expenses', [AnalyticsController::class, 'getTotalExpenses']);
+                Route::get('gross-profit-margin', [AnalyticsController::class, 'getGrossProfitMargin']);
+                Route::get('net-profit-margin', [AnalyticsController::class, 'getNetProfitMargin']);
+                Route::get('inventory-turnover-ratio', [AnalyticsController::class, 'getInventoryTurnoverRatio']);
+                Route::get('days-sales-outstanding', [AnalyticsController::class, 'getDaysSalesOutstanding']);
+                Route::get('order-fulfillment-rate', [AnalyticsController::class, 'getOrderFulfillmentRate']);
+                Route::get('production-efficiency', [AnalyticsController::class, 'getProductionEfficiency']);
+                Route::get('customer-acquisition-cost', [AnalyticsController::class, 'getCustomerAcquisitionCost']);
+                Route::get('average-order-value', [AnalyticsController::class, 'getAverageOrderValue']);
+            });
+            
+            // Scheduled Reports
+            Route::prefix('scheduled')->group(function () {
+                Route::get('due', [ScheduledReportController::class, 'getDueReports']);
+                Route::post('process', [ScheduledReportController::class, 'processDueReports']);
+                Route::get('report/{reportId}', [ScheduledReportController::class, 'getForReport']);
+                Route::apiResource('/', ScheduledReportController::class)->parameters(['' => 'id']);
+            });
             
         });
         

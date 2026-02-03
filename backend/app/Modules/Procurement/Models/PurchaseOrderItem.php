@@ -11,6 +11,14 @@ class PurchaseOrderItem extends Model
 {
     use HasFactory;
 
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Database\Factories\Procurement\PurchaseOrderItemFactory::new();
+    }
+
     protected $fillable = [
         'purchase_order_id',
         'product_id',

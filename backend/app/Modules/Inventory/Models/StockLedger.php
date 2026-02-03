@@ -22,6 +22,14 @@ class StockLedger extends Model
     use HasFactory, TenantScoped;
 
     /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Database\Factories\Inventory\StockLedgerFactory::new();
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>

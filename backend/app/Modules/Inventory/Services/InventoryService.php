@@ -46,6 +46,7 @@ class InventoryService extends BaseService
             
             // Create stock ledger entry
             $ledgerData = [
+                'tenant_id' => $product->tenant_id,
                 'product_id' => $dto->productId,
                 'movement_type' => $dto->movementType->value,
                 'quantity' => $quantity,

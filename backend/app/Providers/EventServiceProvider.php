@@ -7,6 +7,19 @@ use App\Events\PurchaseOrderCreated;
 use App\Events\StockMovementRecorded;
 use App\Listeners\CheckReorderLevel;
 use App\Listeners\NotifySupplierOfPurchaseOrder;
+use App\Modules\Manufacturing\Events\ProductionOrderCompleted;
+use App\Modules\Manufacturing\Events\ProductionOrderCreated as ManufacturingProductionOrderCreated;
+use App\Modules\Manufacturing\Events\WorkOrderCompleted;
+use App\Modules\Manufacturing\Events\WorkOrderStarted;
+use App\Modules\Manufacturing\Listeners\ConsumeInventoryOnProductionStart;
+use App\Modules\Manufacturing\Listeners\NotifyOnProductionOrderCompletion;
+use App\Modules\Manufacturing\Listeners\ReplenishInventoryOnProductionComplete;
+use App\Modules\Finance\Events\JournalEntryPosted;
+use App\Modules\Finance\Events\JournalEntryVoided;
+use App\Modules\Finance\Events\FiscalYearClosed;
+use App\Modules\Finance\Listeners\UpdateAccountBalances;
+use App\Modules\Finance\Listeners\RecalculateFinancialStatements;
+use App\Modules\Finance\Listeners\NotifyOnFiscalYearClosed;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -22,6 +35,23 @@ class EventServiceProvider extends ServiceProvider
         ],
         PurchaseOrderApproved::class => [
             NotifySupplierOfPurchaseOrder::class,
+        ],
+        ManufacturingProductionOrderCreated::class => [
+            ConsumeInventoryOnProductionStart::class,
+        ],
+        ProductionOrderCompleted::class => [
+            ReplenishInventoryOnProductionComplete::class,
+            NotifyOnProductionOrderCompletion::class,
+        ],
+        JournalEntryPosted::class => [
+            UpdateAccountBalances::class,
+            RecalculateFinancialStatements::class,
+        ],
+        JournalEntryVoided::class => [
+            UpdateAccountBalances::class,
+        ],
+        FiscalYearClosed::class => [
+            NotifyOnFiscalYearClosed::class,
         ],
     ];
 
