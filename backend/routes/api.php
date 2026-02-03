@@ -14,6 +14,9 @@ use App\Modules\POS\Http\Controllers\InvoiceController;
 use App\Modules\POS\Http\Controllers\PaymentController;
 use App\Modules\POS\Http\Controllers\QuotationController;
 use App\Modules\POS\Http\Controllers\SalesOrderController;
+use App\Modules\Manufacturing\Http\Controllers\BillOfMaterialController;
+use App\Modules\Manufacturing\Http\Controllers\ProductionOrderController;
+use App\Modules\Manufacturing\Http\Controllers\WorkOrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -158,6 +161,43 @@ Route::prefix('v1')->group(function () {
             Route::get('payments/customer/{customerId}', [PaymentController::class, 'byCustomer']);
             Route::post('payments/{id}/void', [PaymentController::class, 'void']);
             Route::apiResource('payments', PaymentController::class)->except(['update']);
+            
+        });
+        
+        // Manufacturing Module Routes
+        Route::prefix('manufacturing')->group(function () {
+            
+            // Bill of Materials
+            Route::get('boms/search', [BillOfMaterialController::class, 'search']);
+            Route::get('boms/product/{productId}', [BillOfMaterialController::class, 'byProduct']);
+            Route::get('boms/product/{productId}/latest-active', [BillOfMaterialController::class, 'latestActive']);
+            Route::post('boms/{id}/create-version', [BillOfMaterialController::class, 'createVersion']);
+            Route::apiResource('boms', BillOfMaterialController::class);
+            
+            // Production Orders
+            Route::get('production-orders/search', [ProductionOrderController::class, 'search']);
+            Route::get('production-orders/status', [ProductionOrderController::class, 'byStatus']);
+            Route::get('production-orders/in-progress', [ProductionOrderController::class, 'inProgress']);
+            Route::get('production-orders/overdue', [ProductionOrderController::class, 'overdue']);
+            Route::post('production-orders/{id}/release', [ProductionOrderController::class, 'release']);
+            Route::post('production-orders/{id}/start', [ProductionOrderController::class, 'start']);
+            Route::post('production-orders/{id}/consume-materials', [ProductionOrderController::class, 'consumeMaterials']);
+            Route::post('production-orders/{id}/complete', [ProductionOrderController::class, 'complete']);
+            Route::post('production-orders/{id}/cancel', [ProductionOrderController::class, 'cancel']);
+            Route::apiResource('production-orders', ProductionOrderController::class);
+            
+            // Work Orders
+            Route::get('work-orders/search', [WorkOrderController::class, 'search']);
+            Route::get('work-orders/status', [WorkOrderController::class, 'byStatus']);
+            Route::get('work-orders/pending', [WorkOrderController::class, 'pending']);
+            Route::get('work-orders/in-progress', [WorkOrderController::class, 'inProgress']);
+            Route::get('work-orders/overdue', [WorkOrderController::class, 'overdue']);
+            Route::get('work-orders/my-work-orders', [WorkOrderController::class, 'myWorkOrders']);
+            Route::get('work-orders/production-order/{productionOrderId}', [WorkOrderController::class, 'byProductionOrder']);
+            Route::post('work-orders/{id}/start', [WorkOrderController::class, 'start']);
+            Route::post('work-orders/{id}/complete', [WorkOrderController::class, 'complete']);
+            Route::post('work-orders/{id}/cancel', [WorkOrderController::class, 'cancel']);
+            Route::apiResource('work-orders', WorkOrderController::class);
             
         });
         
