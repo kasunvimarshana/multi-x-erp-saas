@@ -174,14 +174,14 @@ class UserService extends BaseService
         return $this->transaction(function () use ($userId, $roleIds) {
             $user = $this->userRepository->findOrFail($userId);
 
-            // Validate all roles exist
+            // Validate all roles exist and fetch them
+            $roles = [];
             foreach ($roleIds as $roleId) {
-                $this->roleRepository->findOrFail($roleId);
+                $roles[] = $this->roleRepository->findOrFail($roleId);
             }
 
             // Assign each role
-            foreach ($roleIds as $roleId) {
-                $role = $this->roleRepository->findOrFail($roleId);
+            foreach ($roles as $role) {
                 $this->userRepository->assignRole($user, $role);
             }
 

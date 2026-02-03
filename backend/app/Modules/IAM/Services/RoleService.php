@@ -173,14 +173,14 @@ class RoleService extends BaseService
         return $this->transaction(function () use ($roleId, $permissionIds) {
             $role = $this->roleRepository->findOrFail($roleId);
 
-            // Validate all permissions exist
+            // Validate all permissions exist and fetch them
+            $permissions = [];
             foreach ($permissionIds as $permissionId) {
-                $this->permissionRepository->findOrFail($permissionId);
+                $permissions[] = $this->permissionRepository->findOrFail($permissionId);
             }
 
             // Assign each permission
-            foreach ($permissionIds as $permissionId) {
-                $permission = $this->permissionRepository->findOrFail($permissionId);
+            foreach ($permissions as $permission) {
                 $this->roleRepository->assignPermission($role, $permission);
             }
 
