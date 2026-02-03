@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Modules\CRM\Http\Controllers\CustomerController;
 use App\Modules\Inventory\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,12 +30,20 @@ Route::prefix('v1')->group(function () {
         ]);
     });
     
+    // Authentication routes (public)
+    Route::prefix('auth')->group(function () {
+        Route::post('register', [AuthController::class, 'register']);
+        Route::post('login', [AuthController::class, 'login']);
+    });
+    
     // Protected routes (require authentication)
     Route::middleware('auth:sanctum')->group(function () {
         
-        // User route
-        Route::get('/user', function (Request $request) {
-            return $request->user();
+        // Authentication routes (protected)
+        Route::prefix('auth')->group(function () {
+            Route::post('logout', [AuthController::class, 'logout']);
+            Route::post('refresh', [AuthController::class, 'refresh']);
+            Route::get('user', [AuthController::class, 'user']);
         });
         
         // Inventory Module Routes
@@ -48,6 +58,12 @@ Route::prefix('v1')->group(function () {
             // Stock Movements (to be implemented)
             // Route::apiResource('stock-movements', StockMovementController::class)->only(['index', 'store', 'show']);
             
+        });
+        
+        // CRM Module Routes
+        Route::prefix('crm')->group(function () {
+            Route::get('customers/search', [CustomerController::class, 'search']);
+            Route::apiResource('customers', CustomerController::class);
         });
         
         // IAM Module Routes (to be implemented)

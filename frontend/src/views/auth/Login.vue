@@ -50,11 +50,14 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '../../stores/authStore'
 
 const router = useRouter()
+const authStore = useAuthStore()
 
 const email = ref('admin@demo.com')
 const password = ref('password')
+const tenantSlug = ref('demo-company')
 const loading = ref(false)
 const error = ref(null)
 
@@ -63,17 +66,15 @@ const handleLogin = async () => {
   error.value = null
 
   try {
-    // For demo purposes, we'll simulate a successful login
-    // In production, this would call the actual API
+    const result = await authStore.login(email.value, password.value, tenantSlug.value)
     
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    // Set a dummy token
-    localStorage.setItem('auth_token', 'demo-token-12345')
-    
-    // Redirect to dashboard
-    router.push('/dashboard')
+    if (result.success) {
+      // Redirect to dashboard
+      const redirect = router.currentRoute.value.query.redirect || '/dashboard'
+      router.push(redirect)
+    } else {
+      error.value = result.message || 'Login failed. Please try again.'
+    }
   } catch (err) {
     error.value = err.message || 'Login failed. Please try again.'
   } finally {
