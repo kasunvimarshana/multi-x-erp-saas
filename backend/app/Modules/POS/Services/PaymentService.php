@@ -13,11 +13,9 @@ use Illuminate\Support\Facades\DB;
 class PaymentService extends BaseService
 {
     public function __construct(
-        PaymentRepository $repository,
+        protected PaymentRepository $repository,
         private readonly InvoiceService $invoiceService
-    ) {
-        parent::__construct($repository);
-    }
+    ) {}
 
     public function create(PaymentDTO $dto): Payment
     {

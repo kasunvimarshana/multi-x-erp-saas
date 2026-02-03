@@ -14,10 +14,9 @@ use Illuminate\Support\Facades\DB;
 
 class InvoiceService extends BaseService
 {
-    public function __construct(InvoiceRepository $repository)
-    {
-        parent::__construct($repository);
-    }
+    public function __construct(
+        protected InvoiceRepository $repository
+    ) {}
 
     public function create(InvoiceDTO $dto): Invoice
     {

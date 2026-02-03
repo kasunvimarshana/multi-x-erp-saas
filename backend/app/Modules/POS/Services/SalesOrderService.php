@@ -17,11 +17,9 @@ use Illuminate\Support\Facades\DB;
 class SalesOrderService extends BaseService
 {
     public function __construct(
-        SalesOrderRepository $repository,
+        protected SalesOrderRepository $repository,
         private readonly StockMovementService $stockMovementService
-    ) {
-        parent::__construct($repository);
-    }
+    ) {}
 
     public function create(SalesOrderDTO $dto): SalesOrder
     {
