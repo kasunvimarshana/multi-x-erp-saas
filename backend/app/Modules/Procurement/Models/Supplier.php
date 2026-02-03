@@ -13,6 +13,14 @@ class Supplier extends Model
 {
     use HasFactory, SoftDeletes, TenantScoped;
 
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Database\Factories\Procurement\SupplierFactory::new();
+    }
+
     protected $fillable = [
         'tenant_id',
         'name',

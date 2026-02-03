@@ -15,6 +15,14 @@ class PurchaseOrder extends Model
 {
     use HasFactory, SoftDeletes, TenantScoped;
 
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Database\Factories\Procurement\PurchaseOrderFactory::new();
+    }
+
     protected $fillable = [
         'tenant_id',
         'supplier_id',

@@ -13,6 +13,14 @@ class Customer extends Model
 {
     use HasFactory, SoftDeletes, TenantScoped;
 
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Database\Factories\CRM\CustomerFactory::new();
+    }
+
     protected $fillable = [
         'tenant_id',
         'customer_type',
