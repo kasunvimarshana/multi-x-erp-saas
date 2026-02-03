@@ -485,7 +485,7 @@ FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE
 
 1. **Resource-Based URLs**: `/api/v1/inventory/products`
 2. **HTTP Methods**: GET, POST, PUT, PATCH, DELETE
-3. **Status Codes**: 200, 201, 204, 400, 401, 403, 404, 422, 500
+3. **Status Codes**: 200, 201, 204, 400, 401, 403, 404, 409, 422, 500
 4. **Versioning**: URL-based (`/api/v1/`)
 5. **Pagination**: Consistent across all list endpoints
 

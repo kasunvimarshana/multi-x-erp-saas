@@ -67,8 +67,7 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
-      bearerFormat: JWT
-      description: Laravel Sanctum API token
+      description: Laravel Sanctum API token (plain text token, not JWT)
 
   schemas:
     Error:
