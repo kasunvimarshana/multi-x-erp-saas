@@ -45,8 +45,16 @@ The platform strictly follows:
 ### Frontend
 - **Framework**: Vue.js 3
 - **Build Tool**: Vite
-- **State Management**: Pinia (planned)
+- **State Management**: Pinia
+- **HTTP Client**: Axios
 - **Styling**: Responsive and accessible layouts
+
+## Quick Links
+
+- 📖 [API Documentation](./API_DOCUMENTATION.md) - Complete API reference
+- 🏗️ [Implementation Guide](./IMPLEMENTATION_GUIDE.md) - Architecture and patterns
+- 📊 [Project Summary](./PROJECT_COMPLETION_SUMMARY.md) - Implementation status and metrics
+- 📝 [Implementation Summary](./IMPLEMENTATION_SUMMARY.md) - Detailed feature list
 
 ## Installation
 
