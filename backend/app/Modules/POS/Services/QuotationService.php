@@ -15,11 +15,9 @@ use Illuminate\Support\Facades\DB;
 class QuotationService extends BaseService
 {
     public function __construct(
-        QuotationRepository $repository,
+        protected QuotationRepository $repository,
         private readonly SalesOrderService $salesOrderService
-    ) {
-        parent::__construct($repository);
-    }
+    ) {}
 
     public function create(QuotationDTO $dto): Quotation
     {
