@@ -134,4 +134,31 @@ abstract class BaseController extends Controller
     ): JsonResponse {
         return $this->errorResponse($message, $errors, 422);
     }
+
+    /**
+     * Alias for successResponse for backwards compatibility
+     * @deprecated Use successResponse instead
+     */
+    protected function success($data = null, string $message = 'Operation successful', int $statusCode = 200): JsonResponse
+    {
+        return $this->successResponse($data, $message, $statusCode);
+    }
+
+    /**
+     * Alias for errorResponse for backwards compatibility
+     * @deprecated Use errorResponse instead
+     */
+    protected function error(string $message = 'Operation failed', mixed $errors = null, int $statusCode = 400): JsonResponse
+    {
+        return $this->errorResponse($message, $errors, $statusCode);
+    }
+
+    /**
+     * Alias for validationErrorResponse for backwards compatibility
+     * @deprecated Use validationErrorResponse instead
+     */
+    protected function validationError(array $errors, string $message = 'Validation failed'): JsonResponse
+    {
+        return $this->validationErrorResponse($errors, $message);
+    }
 }
