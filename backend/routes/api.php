@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Modules\CRM\Http\Controllers\CustomerController;
 use App\Modules\Inventory\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -57,6 +58,12 @@ Route::prefix('v1')->group(function () {
             // Stock Movements (to be implemented)
             // Route::apiResource('stock-movements', StockMovementController::class)->only(['index', 'store', 'show']);
             
+        });
+        
+        // CRM Module Routes
+        Route::prefix('crm')->group(function () {
+            Route::get('customers/search', [CustomerController::class, 'search']);
+            Route::apiResource('customers', CustomerController::class);
         });
         
         // IAM Module Routes (to be implemented)
