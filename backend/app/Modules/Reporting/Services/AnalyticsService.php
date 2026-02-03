@@ -40,7 +40,7 @@ class AnalyticsService extends BaseService
             ->join('journal_entry_lines as jel', 'je.id', '=', 'jel.journal_entry_id')
             ->join('accounts as a', 'jel.account_id', '=', 'a.id')
             ->whereBetween('je.entry_date', [$startDate, $endDate])
-            ->where('a.account_type', 'expense')
+            ->where('a.type', 'expense')
             ->where('je.status', 'posted')
             ->sum('jel.debit');
     }

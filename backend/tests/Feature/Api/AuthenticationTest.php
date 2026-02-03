@@ -26,7 +26,7 @@ class AuthenticationTest extends FeatureTestCase
         $tenant = Tenant::factory()->create();
 
         $userData = [
-            'tenant_id' => $tenant->id,
+            'tenant_slug' => $tenant->slug,
             'name' => 'John Doe',
             'email' => 'john@example.com',
             'password' => 'password123',
