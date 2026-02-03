@@ -240,11 +240,13 @@ class ProductionOrderService extends BaseService
                     $quantityToConsume = $item->planned_quantity - $item->consumed_quantity;
                     
                     // Record stock movement OUT
+                    // Note: unitCost is set to 0 as the StockMovementService will automatically
+                    // calculate the cost using the FIFO/weighted average method from stock ledger
                     $stockMovementDto = new StockMovementDTO(
                         productId: $item->product_id,
                         movementType: StockMovementType::PRODUCTION_OUT,
                         quantity: $quantityToConsume,
-                        unitCost: 0, // Cost will be determined by inventory service
+                        unitCost: 0,
                         warehouseId: $productionOrder->warehouse_id,
                         referenceType: ProductionOrder::class,
                         referenceId: $productionOrder->id,
@@ -315,6 +317,8 @@ class ProductionOrderService extends BaseService
                 }
                 
                 // Record stock movement OUT
+                // Note: unitCost is set to 0 as the StockMovementService will automatically
+                // calculate the cost using the FIFO/weighted average method from stock ledger
                 $stockMovementDto = new StockMovementDTO(
                     productId: $consumedItem['product_id'],
                     movementType: StockMovementType::PRODUCTION_OUT,
@@ -362,11 +366,15 @@ class ProductionOrderService extends BaseService
             $this->logInfo('Completing production order', ['id' => $id]);
             
             // Add finished goods to inventory
+            // Note: unitCost is set to 0. The actual cost of finished goods should ideally
+            // be calculated based on consumed materials. For now, the StockMovementService
+            // will handle this according to the configured cost calculation method.
+            // Future enhancement: Calculate total cost from consumed items and assign here.
             $stockMovementDto = new StockMovementDTO(
                 productId: $productionOrder->product_id,
                 movementType: StockMovementType::PRODUCTION_IN,
                 quantity: $productionOrder->quantity,
-                unitCost: 0, // Cost will be calculated based on materials consumed
+                unitCost: 0,
                 warehouseId: $productionOrder->warehouse_id,
                 referenceType: ProductionOrder::class,
                 referenceId: $productionOrder->id,
