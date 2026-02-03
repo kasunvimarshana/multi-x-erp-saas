@@ -4,6 +4,7 @@ namespace App\Modules\POS\Services;
 
 use App\Modules\POS\DTOs\InvoiceDTO;
 use App\Modules\POS\Enums\InvoiceStatus;
+use App\Modules\POS\Events\InvoiceCreated;
 use App\Modules\POS\Models\Invoice;
 use App\Modules\POS\Models\InvoiceItem;
 use App\Modules\POS\Repositories\InvoiceRepository;
@@ -31,6 +32,9 @@ class InvoiceService extends BaseService
             $this->createItems($invoice, $dto->items);
             $invoice->calculateTotals();
             $invoice->save();
+
+            // Dispatch event for async processing
+            event(new InvoiceCreated($invoice));
 
             return $invoice->load(['items.product', 'customer']);
         });
@@ -102,6 +106,9 @@ class InvoiceService extends BaseService
 
             // Update sales order status
             $salesOrder->update(['status' => \App\Modules\POS\Enums\SalesOrderStatus::INVOICED]);
+
+            // Dispatch event for async processing
+            event(new InvoiceCreated($invoice));
 
             return $invoice->load(['items.product', 'customer']);
         });

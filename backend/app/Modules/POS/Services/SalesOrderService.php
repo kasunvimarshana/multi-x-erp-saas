@@ -5,6 +5,8 @@ namespace App\Modules\POS\Services;
 use App\Modules\Inventory\Services\StockMovementService;
 use App\Modules\POS\DTOs\SalesOrderDTO;
 use App\Modules\POS\Enums\SalesOrderStatus;
+use App\Modules\POS\Events\SalesOrderConfirmed;
+use App\Modules\POS\Events\SalesOrderCreated;
 use App\Modules\POS\Models\SalesOrder;
 use App\Modules\POS\Models\SalesOrderItem;
 use App\Modules\POS\Repositories\SalesOrderRepository;
@@ -34,6 +36,9 @@ class SalesOrderService extends BaseService
             $this->createItems($salesOrder, $dto->items);
             $salesOrder->calculateTotals();
             $salesOrder->save();
+
+            // Dispatch event for async processing
+            event(new SalesOrderCreated($salesOrder));
 
             return $salesOrder->load(['items.product', 'customer']);
         });
@@ -83,6 +88,9 @@ class SalesOrderService extends BaseService
             }
 
             $salesOrder->update(['status' => SalesOrderStatus::CONFIRMED]);
+
+            // Dispatch event for async processing
+            event(new SalesOrderConfirmed($salesOrder));
 
             return $salesOrder->load(['items.product', 'customer']);
         });

@@ -3,6 +3,7 @@
 namespace App\Modules\POS\Services;
 
 use App\Modules\POS\DTOs\PaymentDTO;
+use App\Modules\POS\Events\PaymentReceived;
 use App\Modules\POS\Models\Payment;
 use App\Modules\POS\Repositories\PaymentRepository;
 use App\Services\BaseService;
@@ -29,6 +30,9 @@ class PaymentService extends BaseService
 
             // Update invoice payment status
             $this->invoiceService->updatePaymentStatus($dto->invoiceId);
+
+            // Dispatch event for async processing
+            event(new PaymentReceived($payment));
 
             return $payment->load(['invoice', 'customer']);
         });

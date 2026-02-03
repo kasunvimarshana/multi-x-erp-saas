@@ -4,6 +4,7 @@ namespace App\Modules\POS\Services;
 
 use App\Modules\POS\DTOs\QuotationDTO;
 use App\Modules\POS\DTOs\SalesOrderDTO;
+use App\Modules\POS\Events\QuotationCreated;
 use App\Modules\POS\Models\Quotation;
 use App\Modules\POS\Models\QuotationItem;
 use App\Modules\POS\Repositories\QuotationRepository;
@@ -33,6 +34,9 @@ class QuotationService extends BaseService
             $this->createItems($quotation, $dto->items);
             $quotation->calculateTotals();
             $quotation->save();
+
+            // Dispatch event for async processing
+            event(new QuotationCreated($quotation));
 
             return $quotation->load(['items.product', 'customer']);
         });
