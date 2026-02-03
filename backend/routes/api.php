@@ -21,6 +21,10 @@ use App\Modules\Finance\Http\Controllers\AccountController;
 use App\Modules\Finance\Http\Controllers\JournalEntryController;
 use App\Modules\Finance\Http\Controllers\FinancialReportController;
 use App\Modules\Finance\Http\Controllers\FiscalYearController;
+use App\Modules\Reporting\Http\Controllers\ReportController;
+use App\Modules\Reporting\Http\Controllers\DashboardController;
+use App\Modules\Reporting\Http\Controllers\AnalyticsController;
+use App\Modules\Reporting\Http\Controllers\ScheduledReportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -260,6 +264,51 @@ Route::prefix('v1')->group(function () {
             Route::post('{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
             Route::post('mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
             Route::delete('{id}', [NotificationController::class, 'deleteNotification']);
+            
+        });
+        
+        // Reporting & Analytics Module Routes
+        Route::prefix('reports')->group(function () {
+            
+            // Reports
+            Route::get('by-module', [ReportController::class, 'getByModule']);
+            Route::post('{id}/execute', [ReportController::class, 'execute']);
+            Route::post('{id}/export', [ReportController::class, 'export']);
+            Route::apiResource('/', ReportController::class)->parameters(['' => 'id']);
+            
+            // Dashboards
+            Route::prefix('dashboards')->group(function () {
+                Route::get('default', [DashboardController::class, 'getDefault']);
+                Route::post('{id}/set-default', [DashboardController::class, 'setAsDefault']);
+                Route::post('widgets', [DashboardController::class, 'addWidget']);
+                Route::put('widgets/{widgetId}', [DashboardController::class, 'updateWidget']);
+                Route::delete('widgets/{widgetId}', [DashboardController::class, 'removeWidget']);
+                Route::post('{id}/reorder-widgets', [DashboardController::class, 'reorderWidgets']);
+                Route::apiResource('/', DashboardController::class)->parameters(['' => 'id']);
+            });
+            
+            // Analytics & KPIs
+            Route::prefix('analytics')->group(function () {
+                Route::get('kpis', [AnalyticsController::class, 'getKPIs']);
+                Route::get('revenue', [AnalyticsController::class, 'getTotalRevenue']);
+                Route::get('expenses', [AnalyticsController::class, 'getTotalExpenses']);
+                Route::get('gross-profit-margin', [AnalyticsController::class, 'getGrossProfitMargin']);
+                Route::get('net-profit-margin', [AnalyticsController::class, 'getNetProfitMargin']);
+                Route::get('inventory-turnover-ratio', [AnalyticsController::class, 'getInventoryTurnoverRatio']);
+                Route::get('days-sales-outstanding', [AnalyticsController::class, 'getDaysSalesOutstanding']);
+                Route::get('order-fulfillment-rate', [AnalyticsController::class, 'getOrderFulfillmentRate']);
+                Route::get('production-efficiency', [AnalyticsController::class, 'getProductionEfficiency']);
+                Route::get('customer-acquisition-cost', [AnalyticsController::class, 'getCustomerAcquisitionCost']);
+                Route::get('average-order-value', [AnalyticsController::class, 'getAverageOrderValue']);
+            });
+            
+            // Scheduled Reports
+            Route::prefix('scheduled')->group(function () {
+                Route::get('due', [ScheduledReportController::class, 'getDueReports']);
+                Route::post('process', [ScheduledReportController::class, 'processDueReports']);
+                Route::get('report/{reportId}', [ScheduledReportController::class, 'getForReport']);
+                Route::apiResource('/', ScheduledReportController::class)->parameters(['' => 'id']);
+            });
             
         });
         
