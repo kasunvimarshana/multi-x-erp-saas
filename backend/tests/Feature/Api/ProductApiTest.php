@@ -239,15 +239,13 @@ class ProductApiTest extends FeatureTestCase
         ]);
 
         // Should fail with 404 due to tenant scoping
-        if ($response->status() !== 404) {
-            // If update somehow succeeded, verify the name wasn't changed
-            $this->assertDatabaseMissing('products', [
-                'id' => $product->id,
-                'name' => 'Hacked Name',
-            ]);
-        } else {
-            $response->assertStatus(404);
-        }
+        $response->assertStatus(404);
+        
+        // Verify the product was not updated
+        $this->assertDatabaseMissing('products', [
+            'id' => $product->id,
+            'name' => 'Hacked Name',
+        ]);
     }
 
     /** @test */
@@ -280,15 +278,13 @@ class ProductApiTest extends FeatureTestCase
         $response = $this->deleteJson("{$this->baseUri}/{$product->id}");
 
         // Should fail with 404 due to tenant scoping
-        if ($response->status() !== 404) {
-            // If delete somehow succeeded, verify the product still exists
-            $this->assertDatabaseHas('products', [
-                'id' => $product->id,
-                'deleted_at' => null,
-            ]);
-        } else {
-            $response->assertStatus(404);
-        }
+        $response->assertStatus(404);
+        
+        // Verify the product still exists and is not deleted
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
+            'deleted_at' => null,
+        ]);
     }
 
     /** @test */

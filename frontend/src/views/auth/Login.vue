@@ -1,47 +1,51 @@
 <template>
-  <div class="login-page">
-    <div class="login-container">
-      <div class="login-header">
-        <h1>Multi-X ERP</h1>
-        <p>Sign in to your account</p>
+  <div class="login-container">
+    <div class="login-card">
+      <div class="logo-section">
+        <h1 class="logo-text">Multi-X ERP</h1>
+        <p class="subtitle">Enterprise Resource Planning System</p>
       </div>
-
+      
       <form @submit.prevent="handleLogin" class="login-form">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            id="email"
-            v-model="email"
-            type="email"
-            required
-            placeholder="admin@demo.com"
-          />
+        <div v-if="errorMessage" class="error-alert">
+          <ExclamationCircleIcon class="icon" />
+          {{ errorMessage }}
         </div>
-
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input
-            id="password"
-            v-model="password"
-            type="password"
-            required
-            placeholder="Enter your password"
-          />
-        </div>
-
+        
+        <FormInput
+          v-model="credentials.email"
+          label="Email"
+          type="email"
+          placeholder="Enter your email"
+          required
+          :error="errors.email"
+        />
+        
+        <FormInput
+          v-model="credentials.password"
+          label="Password"
+          type="password"
+          placeholder="Enter your password"
+          required
+          :error="errors.password"
+        />
+        
+        <FormInput
+          v-model="credentials.tenantSlug"
+          label="Tenant"
+          placeholder="demo-company"
+          :error="errors.tenantSlug"
+        />
+        
         <button type="submit" class="btn-login" :disabled="loading">
-          {{ loading ? 'Signing in...' : 'Sign In' }}
+          <span v-if="loading" class="spinner"></span>
+          <span v-else>Sign In</span>
         </button>
-
-        <div v-if="error" class="error-message">
-          {{ error }}
-        </div>
       </form>
-
-      <div class="demo-credentials">
-        <p><strong>Demo Credentials:</strong></p>
-        <p>Email: admin@demo.com</p>
-        <p>Password: password</p>
+      
+      <div class="footer-text">
+        <p>Demo Credentials:</p>
+        <p class="text-muted">Email: admin@demo.com | Password: password</p>
       </div>
     </div>
   </div>
@@ -49,34 +53,45 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
+import { ExclamationCircleIcon } from '@heroicons/vue/24/outline'
+import FormInput from '../../components/forms/FormInput.vue'
 import { useAuthStore } from '../../stores/authStore'
 
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 
-const email = ref('admin@demo.com')
-const password = ref('password')
-const tenantSlug = ref('demo-company')
+const credentials = ref({
+  email: '',
+  password: '',
+  tenantSlug: 'demo-company'
+})
+
+const errors = ref({})
+const errorMessage = ref('')
 const loading = ref(false)
-const error = ref(null)
 
 const handleLogin = async () => {
+  errorMessage.value = ''
+  errors.value = {}
   loading.value = true
-  error.value = null
-
+  
   try {
-    const result = await authStore.login(email.value, password.value, tenantSlug.value)
+    const result = await authStore.login(
+      credentials.value.email,
+      credentials.value.password,
+      credentials.value.tenantSlug
+    )
     
     if (result.success) {
-      // Redirect to dashboard
-      const redirect = router.currentRoute.value.query.redirect || '/dashboard'
+      const redirect = route.query.redirect || '/dashboard'
       router.push(redirect)
     } else {
-      error.value = result.message || 'Login failed. Please try again.'
+      errorMessage.value = result.message || 'Login failed. Please check your credentials.'
     }
-  } catch (err) {
-    error.value = err.message || 'Login failed. Please try again.'
+  } catch (error) {
+    errorMessage.value = error.response?.data?.message || 'An error occurred during login.'
   } finally {
     loading.value = false
   }
@@ -84,83 +99,82 @@ const handleLogin = async () => {
 </script>
 
 <style scoped>
-.login-page {
-  min-height: 100vh;
+.login-container {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 2rem;
+  padding: 20px;
 }
 
-.login-container {
-  background: white;
-  padding: 3rem;
-  border-radius: 1rem;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+.login-card {
   width: 100%;
-  max-width: 400px;
+  max-width: 450px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  padding: 40px;
 }
 
-.login-header {
+.logo-section {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 32px;
 }
 
-.login-header h1 {
-  font-size: 2rem;
+.logo-text {
+  font-size: 32px;
+  font-weight: 700;
   color: #667eea;
-  margin-bottom: 0.5rem;
+  margin-bottom: 8px;
 }
 
-.login-header p {
-  color: #666;
+.subtitle {
+  font-size: 14px;
+  color: #6b7280;
 }
 
 .login-form {
+  margin-bottom: 24px;
+}
+
+.error-alert {
   display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #991b1b;
+  font-size: 14px;
+  margin-bottom: 20px;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.form-group label {
-  font-weight: 600;
-  color: #333;
-}
-
-.form-group input {
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-}
-
-.form-group input:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+.error-alert .icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 }
 
 .btn-login {
-  padding: 0.75rem;
+  width: 100%;
+  padding: 12px 24px;
   background: #667eea;
   color: white;
   border: none;
-  border-radius: 0.5rem;
-  font-size: 1rem;
+  border-radius: 8px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.2s;
+  margin-top: 8px;
 }
 
 .btn-login:hover:not(:disabled) {
   background: #5568d3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .btn-login:disabled {
@@ -168,30 +182,33 @@ const handleLogin = async () => {
   cursor: not-allowed;
 }
 
-.error-message {
-  padding: 0.75rem;
-  background: #fee;
-  border: 1px solid #fcc;
-  border-radius: 0.5rem;
-  color: #c33;
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.footer-text {
   text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
 }
 
-.demo-credentials {
-  margin-top: 2rem;
-  padding: 1rem;
-  background: #f8f9fa;
-  border-radius: 0.5rem;
-  font-size: 0.9rem;
-  text-align: center;
+.footer-text p {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 4px 0;
 }
 
-.demo-credentials p {
-  margin: 0.25rem 0;
-  color: #666;
-}
-
-.demo-credentials strong {
-  color: #333;
+.text-muted {
+  color: #9ca3af !important;
 }
 </style>
