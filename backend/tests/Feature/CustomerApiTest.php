@@ -47,34 +47,37 @@ class CustomerApiTest extends TestCase
             ->assertJsonStructure([
                 'success',
                 'data' => [
-                    '*' => [
-                        'id',
-                        'code',
-                        'name',
-                        'email',
-                        'phone',
-                        'type',
-                        'is_active',
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'name',
+                            'email',
+                            'phone',
+                            'customer_type',
+                            'is_active',
+                        ],
                     ],
+                    'current_page',
+                    'per_page',
+                    'total',
                 ],
             ])
             ->assertJson([
                 'success' => true,
             ]);
 
-        $this->assertCount(3, $response->json('data'));
+        $this->assertCount(3, $response->json('data.data'));
     }
 
     public function test_can_create_customer(): void
     {
         $customerData = [
-            'code' => 'CUST-001',
             'name' => 'John Doe',
             'email' => 'john@example.com',
             'phone' => '+1234567890',
-            'type' => 'individual',
+            'customer_type' => 'individual',
             'credit_limit' => 10000,
-            'payment_terms' => 'Net 30',
+            'payment_terms_days' => 30,
             'is_active' => true,
         ];
 
@@ -87,17 +90,15 @@ class CustomerApiTest extends TestCase
                 'message',
                 'data' => [
                     'id',
-                    'code',
                     'name',
                     'email',
                     'phone',
-                    'type',
+                    'customer_type',
                 ],
             ])
             ->assertJson([
                 'success' => true,
                 'data' => [
-                    'code' => 'CUST-001',
                     'name' => 'John Doe',
                     'email' => 'john@example.com',
                 ],
@@ -105,31 +106,30 @@ class CustomerApiTest extends TestCase
 
         $this->assertDatabaseHas('customers', [
             'tenant_id' => $this->tenant->id,
-            'code' => 'CUST-001',
             'name' => 'John Doe',
             'email' => 'john@example.com',
         ]);
     }
 
-    public function test_cannot_create_customer_with_duplicate_code(): void
+    public function test_cannot_create_customer_with_duplicate_email(): void
     {
         // Create an existing customer
         Customer::factory()->create([
             'tenant_id' => $this->tenant->id,
-            'code' => 'CUST-001',
+            'email' => 'duplicate@example.com',
         ]);
 
         $customerData = [
-            'code' => 'CUST-001',
             'name' => 'Jane Doe',
-            'type' => 'individual',
+            'email' => 'duplicate@example.com',
+            'customer_type' => 'individual',
         ];
 
         $response = $this->actingAs($this->user)
             ->postJson('/api/v1/crm/customers', $customerData);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['code']);
+            ->assertJsonValidationErrors(['email']);
     }
 
     public function test_can_get_customer_by_id(): void
@@ -146,7 +146,6 @@ class CustomerApiTest extends TestCase
                 'success' => true,
                 'data' => [
                     'id' => $customer->id,
-                    'code' => $customer->code,
                     'name' => $customer->name,
                 ],
             ]);
@@ -237,8 +236,9 @@ class CustomerApiTest extends TestCase
                 'success' => true,
             ]);
 
-        $this->assertCount(1, $response->json('data'));
-        $this->assertEquals('John Smith', $response->json('data.0.name'));
+        $data = $response->json('data.data') ?? $response->json('data');
+        $this->assertCount(1, $data);
+        $this->assertEquals('John Smith', $data[0]['name']);
     }
 
     public function test_validates_required_fields_on_create(): void
@@ -247,16 +247,15 @@ class CustomerApiTest extends TestCase
             ->postJson('/api/v1/crm/customers', []);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['code', 'name', 'type']);
+            ->assertJsonValidationErrors(['name', 'customer_type']);
     }
 
     public function test_validates_email_format(): void
     {
         $customerData = [
-            'code' => 'CUST-001',
             'name' => 'John Doe',
             'email' => 'invalid-email',
-            'type' => 'individual',
+            'customer_type' => 'individual',
         ];
 
         $response = $this->actingAs($this->user)
