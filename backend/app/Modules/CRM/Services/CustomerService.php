@@ -71,11 +71,11 @@ class CustomerService extends BaseService
     protected function validateCustomerData(array $data, ?int $customerId = null): void
     {
         $rules = [
-            'name' => 'required|string|max:255',
+            'name' => ($customerId ? 'sometimes|' : '') . 'required|string|max:255',
             'email' => 'nullable|email|max:255|unique:customers,email' . ($customerId ? ",{$customerId}" : ''),
             'phone' => 'nullable|string|max:50',
             'mobile' => 'nullable|string|max:50',
-            'customer_type' => 'required|in:individual,business',
+            'customer_type' => ($customerId ? 'sometimes|' : '') . 'required|in:individual,business',
             'company_name' => 'nullable|string|max:255',
             'tax_number' => 'nullable|string|max:100',
             'credit_limit' => 'nullable|numeric|min:0',

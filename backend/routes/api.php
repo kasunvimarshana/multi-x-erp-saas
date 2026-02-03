@@ -66,12 +66,21 @@ Route::prefix('v1')->group(function () {
             Route::post('logout', [AuthController::class, 'logout']);
             Route::post('refresh', [AuthController::class, 'refresh']);
             Route::get('user', [AuthController::class, 'user']);
+            Route::get('me', [AuthController::class, 'me']);
+            Route::put('profile', [AuthController::class, 'profile']);
+            Route::put('change-password', [AuthController::class, 'changePassword']);
         });
+        
+        // Products (root level)
+        Route::get('products/search', [ProductController::class, 'search']);
+        Route::get('products/below-reorder-level', [ProductController::class, 'belowReorderLevel']);
+        Route::get('products/{id}/stock-history', [ProductController::class, 'stockHistory']);
+        Route::apiResource('products', ProductController::class);
         
         // Inventory Module Routes
         Route::prefix('inventory')->group(function () {
             
-            // Products
+            // Products (also available here for backward compatibility)
             Route::get('products/search', [ProductController::class, 'search']);
             Route::get('products/below-reorder-level', [ProductController::class, 'belowReorderLevel']);
             Route::get('products/{id}/stock-history', [ProductController::class, 'stockHistory']);
@@ -270,13 +279,10 @@ Route::prefix('v1')->group(function () {
         // Reporting & Analytics Module Routes
         Route::prefix('reports')->group(function () {
             
-            // Reports
+            // Reports - specialized routes first
             Route::get('by-module', [ReportController::class, 'getByModule']);
-            Route::post('{id}/execute', [ReportController::class, 'execute']);
-            Route::post('{id}/export', [ReportController::class, 'export']);
-            Route::apiResource('/', ReportController::class)->parameters(['' => 'id']);
             
-            // Dashboards
+            // Dashboards (before generic report resource routes)
             Route::prefix('dashboards')->group(function () {
                 Route::get('default', [DashboardController::class, 'getDefault']);
                 Route::post('{id}/set-default', [DashboardController::class, 'setAsDefault']);
@@ -309,6 +315,11 @@ Route::prefix('v1')->group(function () {
                 Route::get('report/{reportId}', [ScheduledReportController::class, 'getForReport']);
                 Route::apiResource('/', ScheduledReportController::class)->parameters(['' => 'id']);
             });
+            
+            // Reports - generic resource routes last
+            Route::post('{id}/execute', [ReportController::class, 'execute']);
+            Route::post('{id}/export', [ReportController::class, 'export']);
+            Route::apiResource('/', ReportController::class)->parameters(['' => 'id']);
             
         });
         

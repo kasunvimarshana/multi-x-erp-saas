@@ -54,6 +54,16 @@ abstract class BaseRepository implements RepositoryInterface
     }
 
     /**
+     * Get a new query builder for the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function query()
+    {
+        return $this->model->newQuery();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function all(array $columns = ['*']): Collection

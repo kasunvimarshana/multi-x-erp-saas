@@ -61,10 +61,10 @@ class ReportController extends BaseController
     /**
      * Get a specific report
      *
-     * @param int $id
+     * @param string|int $id
      * @return JsonResponse
      */
-    public function show(int $id): JsonResponse
+    public function show(string|int $id): JsonResponse
     {
         try {
             $report = $this->reportService->getReport($id);
@@ -107,10 +107,10 @@ class ReportController extends BaseController
      * Update a report
      *
      * @param Request $request
-     * @param int $id
+     * @param string|int $id
      * @return JsonResponse
      */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(Request $request, string|int $id): JsonResponse
     {
         try {
             $validated = $request->validate([
@@ -135,10 +135,10 @@ class ReportController extends BaseController
     /**
      * Delete a report
      *
-     * @param int $id
+     * @param string|int $id
      * @return JsonResponse
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(string|int $id): JsonResponse
     {
         try {
             $this->reportService->deleteReport($id);
@@ -152,10 +152,10 @@ class ReportController extends BaseController
      * Execute a report
      *
      * @param Request $request
-     * @param int $id
+     * @param string|int $id
      * @return JsonResponse
      */
-    public function execute(Request $request, int $id): JsonResponse
+    public function execute(Request $request, string|int $id): JsonResponse
     {
         try {
             $validated = $request->validate([
@@ -182,10 +182,10 @@ class ReportController extends BaseController
      * Export a report
      *
      * @param Request $request
-     * @param int $id
+     * @param string|int $id
      * @return mixed
      */
-    public function export(Request $request, int $id)
+    public function export(Request $request, string|int $id)
     {
         try {
             $validated = $request->validate([

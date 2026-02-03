@@ -26,7 +26,7 @@ class AuthenticationTest extends FeatureTestCase
         $tenant = Tenant::factory()->create();
 
         $userData = [
-            'tenant_id' => $tenant->id,
+            'tenant_slug' => $tenant->slug,
             'name' => 'John Doe',
             'email' => 'john@example.com',
             'password' => 'password123',
@@ -72,7 +72,7 @@ class AuthenticationTest extends FeatureTestCase
         $response = $this->postJson("{$this->baseUri}/register", []);
 
         $this->assertValidationErrors($response, [
-            'tenant_id',
+            'tenant_slug',
             'name',
             'email',
             'password',
@@ -89,7 +89,7 @@ class AuthenticationTest extends FeatureTestCase
         ]);
 
         $response = $this->postJson("{$this->baseUri}/register", [
-            'tenant_id' => $tenant->id,
+            'tenant_slug' => $tenant->slug,
             'name' => 'John Doe',
             'email' => 'existing@example.com',
             'password' => 'password123',
@@ -108,6 +108,7 @@ class AuthenticationTest extends FeatureTestCase
         ]);
 
         $response = $this->postJson("{$this->baseUri}/login", [
+            'tenant_slug' => $this->tenant->slug,
             'email' => 'user@example.com',
             'password' => 'password123',
         ]);
@@ -145,6 +146,7 @@ class AuthenticationTest extends FeatureTestCase
         ]);
 
         $response = $this->postJson("{$this->baseUri}/login", [
+            'tenant_slug' => $this->tenant->slug,
             'email' => 'user@example.com',
             'password' => 'wrong-password',
         ]);
@@ -165,6 +167,7 @@ class AuthenticationTest extends FeatureTestCase
         ]);
 
         $response = $this->postJson("{$this->baseUri}/login", [
+            'tenant_slug' => $this->tenant->slug,
             'email' => 'inactive@example.com',
             'password' => 'password123',
         ]);
@@ -205,7 +208,7 @@ class AuthenticationTest extends FeatureTestCase
     /** @test */
     public function authenticated_users_can_logout()
     {
-        $user = $this->actingAsUser();
+        $user = User::factory()->forTenant($this->tenant)->create();
 
         // Create a token for the user
         $token = $user->createToken('auth-token')->plainTextToken;

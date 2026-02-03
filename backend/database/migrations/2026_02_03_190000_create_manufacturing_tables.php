@@ -36,7 +36,7 @@ return new class extends Migration
             $table->foreignId('bill_of_material_id')->constrained()->onDelete('cascade');
             $table->foreignId('component_product_id')->constrained('products')->onDelete('restrict');
             $table->decimal('quantity', 15, 4);
-            $table->foreignId('uom_id')->nullable()->constrained('units_of_measure')->onDelete('restrict');
+            $table->foreignId('uom_id')->nullable()->constrained('units')->onDelete('restrict');
             $table->decimal('scrap_factor', 5, 2)->default(0)->comment('Percentage of waste/scrap');
             $table->text('notes')->nullable();
             $table->timestamps();
@@ -84,7 +84,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained()->onDelete('restrict');
             $table->decimal('planned_quantity', 15, 4);
             $table->decimal('consumed_quantity', 15, 4)->default(0);
-            $table->foreignId('uom_id')->nullable()->constrained('units_of_measure')->onDelete('restrict');
+            $table->foreignId('uom_id')->nullable()->constrained('units')->onDelete('restrict');
             $table->text('notes')->nullable();
             $table->timestamps();
 

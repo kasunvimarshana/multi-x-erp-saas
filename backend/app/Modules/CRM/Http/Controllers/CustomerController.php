@@ -53,7 +53,7 @@ class CustomerController extends BaseController
             $customer = $this->service->getCustomer($id);
 
             if (!$customer) {
-                return $this->errorResponse('Customer not found', 404);
+                return $this->errorResponse('Customer not found', null, 404);
             }
 
             return $this->successResponse($customer);

@@ -41,11 +41,11 @@ class ReportService extends BaseService
     /**
      * Update a report
      *
-     * @param int $reportId
+     * @param string|int $reportId
      * @param array $data
      * @return bool
      */
-    public function updateReport(int $reportId, array $data): bool
+    public function updateReport(string|int $reportId, array $data): bool
     {
         return $this->reportRepository->update($reportId, $data);
     }
@@ -53,10 +53,10 @@ class ReportService extends BaseService
     /**
      * Delete a report
      *
-     * @param int $reportId
+     * @param string|int $reportId
      * @return bool
      */
-    public function deleteReport(int $reportId): bool
+    public function deleteReport(string|int $reportId): bool
     {
         return $this->reportRepository->delete($reportId);
     }
@@ -813,10 +813,10 @@ class ReportService extends BaseService
     /**
      * Get report by ID
      *
-     * @param int $reportId
+     * @param string|int $reportId
      * @return Report
      */
-    public function getReport(int $reportId): Report
+    public function getReport(string|int $reportId): Report
     {
         return $this->reportRepository->findOrFail($reportId);
     }

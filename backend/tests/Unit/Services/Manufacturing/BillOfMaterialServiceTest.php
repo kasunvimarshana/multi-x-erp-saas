@@ -51,10 +51,12 @@ class BillOfMaterialServiceTest extends UnitTestCase
         );
 
         $bom = BillOfMaterial::factory()->make([
+            'id' => 1,
             'tenant_id' => $tenant->id,
             'product_id' => $product->id,
             'bom_number' => 'BOM-001',
         ]);
+        $bom->exists = true; // Mark as persisted
 
         $this->repositoryMock
             ->shouldReceive('create')
