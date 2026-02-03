@@ -1,113 +1,560 @@
-Act as a Senior Full-Stack Engineer and Principal Systems Architect and, before generating or modifying any code, thoroughly review, analyze, and understand all existing codebases, documentation, schemas, migrations, services, configurations, and business rules, then design, implement, refactor, and maintain a fully production-ready, enterprise-grade, highly dynamic, fully customizable, and modular ERP SaaS platform with a comprehensive Inventory Management System using Laravel (backend) and Vue.js with Vite (frontend), strictly following Clean Architecture, Domain-Driven Design, and the Controller → Service → Repository pattern while rigorously enforcing SOLID, DRY, and KISS principles to ensure scalability, extensibility, performance, high testability, minimal technical debt, and long-term maintainability; architect the solution as a pluggable modular system where each module is independently installable, removable, and extendable using standardized module contracts, dependency inversion, configuration-driven initialization, and event-based communication; enforce strict multi-tenancy with complete tenant isolation and runtime configurability supporting multi-organization, multi-vendor, multi-branch, multi-warehouse, multi-location, multi-currency, multi-language (i18n), multi-time-zone, multi-unit-of-measure, and multi-tax compliance with fine-grained RBAC/ABAC using authentication, policies, guards, scopes, and permission-driven workflows; implement all core ERP and cross-cutting modules including IAM, tenants and subscriptions, users, roles and permissions, master data, CRM, configurable product and catalog management supporting inventory, service, combo, bundle, and configurable product types with dynamic attributes, SKU/variant modeling, barcode support, batch/lot/serial/expiry tracking, flexible pricing engines supporting buying and selling prices, multi-unit pricing, discounts (flat, percentage, tiered), profit margins, conditional, seasonal, and customer-specific pricing, and configurable item-level and document-level adjustments for VAT, tax, coupons, and additional charges; implement full inventory lifecycle management using append-only stock ledger architecture supporting procurement, purchase orders, goods receipts, stock transfers, returns, adjustments, cycle counting, reorder automation, warehouse operations, manufacturing integration, POS, quotations, sales orders, invoicing, payments, supplier and vendor management, financial integration hooks, reporting, analytics, workflow automation, notification systems, document and attachment management, and integration gateways, ensuring all business logic is metadata-driven, configuration-driven, and tenant-configurable without requiring code changes; orchestrate all cross-module interactions exclusively through the service layer with clearly defined transactional boundaries guaranteeing atomicity, idempotency, rollback safety, and consistent exception propagation while using event-driven architecture strictly for asynchronous workflows such as recalculations, reporting, notifications, and third-party integrations; expose clean, versioned REST APIs with bulk CSV/API operations, strict validation, DTO mapping, enum-driven domain modeling using native enums persisted as indexed strings, and enterprise SaaS security standards including HTTPS enforcement, encryption at rest, secure credential storage, rate limiting, structured logging, immutable audit trails, and compliance-ready traceability; implement push notifications using only native platform capabilities such as database notifications, events, queues, Web Push via Service Workers, and polling fallback mechanisms without third-party services; and deliver a fully scaffolded, LTS-ready, CI/CD-ready, plugin-extensible solution including migrations, seeders, models, repositories, DTOs, services, controllers, middleware, policies, events, listeners, background jobs, notification handlers, OpenAPI documentation, automated testing coverage, caching and performance optimization, feature toggles, and a modular, permission-aware, dynamically configurable Vue frontend with routing, state management, localization, reusable components, dynamic form builders, customizable dashboards, responsive accessible layouts, theming support, and runtime extensibility suitable for long-term real-world enterprise ERP SaaS deployment.
+# GitHub Copilot Instructions
+
+This document provides comprehensive guidelines for developing the Multi-X ERP SaaS platform. These instructions help ensure consistency, quality, and adherence to architectural principles across the codebase.
+
+## Project Overview
+
+Multi-X ERP SaaS is a fully production-ready, enterprise-grade, modular ERP SaaS platform featuring:
+
+- **Purpose**: Enterprise Resource Planning system with comprehensive Inventory Management
+- **Target Users**: Multi-tenant businesses requiring organization, vendor, branch, and warehouse management
+- **Core Features**: IAM, Inventory Management, CRM, POS, Invoicing, Procurement, Manufacturing, Warehouse Operations, Reporting, and Analytics
+
+## Technology Stack
+
+### Backend
+- **Framework**: Laravel (PHP)
+- **Architecture**: Clean Architecture with Domain-Driven Design
+- **Pattern**: Controller → Service → Repository
+- **Database**: MySQL/PostgreSQL with append-only stock ledgers
+- **API**: RESTful with versioning and OpenAPI documentation
+
+### Frontend
+- **Framework**: Vue.js 3 with Vite
+- **State Management**: Pinia/Vuex
+- **UI Components**: Reusable, modular component architecture
+- **Styling**: Responsive and accessible layouts with professional theming
+- **Internationalization**: Multi-language support (i18n)
+
+### Key Technologies
+- Event-driven architecture for asynchronous workflows
+- Native Web Push via Service Workers for notifications
+- Background job processing with queues
+- Multi-tenancy with complete tenant isolation
+
+## Architecture Principles
+
+### Design Patterns
+- **Clean Architecture** with clear modular boundaries
+- **Controller → Service → Repository** pattern strictly enforced
+- **SOLID principles** rigorously applied
+- **DRY (Don't Repeat Yourself)** to minimize code duplication
+- **KISS (Keep It Simple, Stupid)** for maintainability
+
+### Modular Architecture
+- Each module is independently installable, removable, and extendable
+- Standardized module contracts and interfaces
+- Dependency inversion for loose coupling
+- Configuration-driven initialization
+- Event-based communication between modules
+
+### Multi-Tenancy
+- Complete tenant isolation at all layers
+- Support for:
+  - Nested multi-organization structures
+  - Multi-vendor management
+  - Multi-branch operations
+  - Multi-warehouse/location tracking
+  - Multi-currency operations
+  - Multi-language (i18n)
+  - Multi-time-zone
+  - Multi-unit-of-measure
+  - Multi-tax compliance
+
+## Coding Guidelines
+
+### General Principles
+
+1. **Always review existing code** before making changes
+   - Read and understand current implementations
+   - Review documentation, schemas, and migrations
+   - Understand business rules and architectural decisions
+
+2. **Service Layer Orchestration**
+   - All cross-module interactions MUST go through the service layer
+   - Explicit transactional boundaries
+   - Guarantee atomicity, idempotency, and rollback safety
+   - Consistent exception propagation
+
+3. **Event-Driven Architecture**
+   - Use events STRICTLY for asynchronous workflows
+   - Examples: recalculations, notifications, integrations, reporting
+   - Never use events for synchronous business logic
+
+### Code Organization
+
+#### Backend (Laravel)
+
+\`\`\`
+app/
+├── Http/Controllers/      # Thin controllers - validation and routing only
+├── Services/             # Business logic and orchestration
+├── Repositories/         # Data access layer
+├── Models/              # Eloquent models with relationships
+├── DTOs/                # Data Transfer Objects
+├── Policies/            # Authorization logic
+├── Events/              # Event definitions
+└── Listeners/           # Event handlers
+\`\`\`
+
+**Controller Responsibilities:**
+- Request validation
+- Call appropriate service methods
+- Return standardized responses
+- NO business logic
+
+**Service Responsibilities:**
+- Business logic implementation
+- Transaction management
+- Cross-repository orchestration
+- Event dispatching
+- Error handling
+
+**Repository Responsibilities:**
+- Database queries
+- Data retrieval and persistence
+- Query optimization
+- NO business logic
+
+#### Frontend (Vue.js)
+
+\`\`\`
+src/
+├── components/          # Reusable UI components
+├── views/              # Page-level components
+├── composables/        # Reusable composition functions
+├── stores/             # State management
+├── services/           # API communication
+├── router/             # Route definitions
+└── locales/            # i18n translations
+\`\`\`
+
+### Naming Conventions
+
+- **Classes**: PascalCase (e.g., \`ProductService\`, \`InventoryRepository\`)
+- **Methods**: camelCase (e.g., \`createProduct\`, \`updateInventory\`)
+- **Variables**: camelCase (e.g., \`productId\`, \`stockLevel\`)
+- **Constants**: UPPER_SNAKE_CASE (e.g., \`MAX_RETRY_ATTEMPTS\`)
+- **Database Tables**: snake_case plural (e.g., \`products\`, \`stock_ledgers\`)
+- **Routes**: kebab-case (e.g., \`/api/v1/products\`, \`/inventory-items\`)
+
+### Enum Usage
+
+- Use native language enums for stable business concepts
+- Persist as indexed strings, NOT database ENUM types
+- Validate at request boundaries
+- Cast explicitly at model/domain layer
+- Encapsulate behavior within enum classes
+
+Example:
+\`\`\`php
+enum ProductType: string
+{
+    case INVENTORY = 'inventory';
+    case SERVICE = 'service';
+    case COMBO = 'combo';
+    case BUNDLE = 'bundle';
+    
+    public function isPhysical(): bool
+    {
+        return \$this === self::INVENTORY;
+    }
+}
+\`\`\`
+
+### Error Handling
+
+- Use specific exception classes
+- Provide meaningful error messages
+- Log errors with appropriate context
+- Return standardized error responses
+- Never expose sensitive information in errors
+
+## Security Practices
+
+### Authentication & Authorization
+
+- Fine-grained RBAC (Role-Based Access Control) and ABAC (Attribute-Based Access Control)
+- Use Laravel policies for authorization
+- Implement guards and scopes
+- Permission-driven workflows
+- Session management with secure cookies
+
+### Data Security
+
+- **Encryption at rest** for sensitive data
+- **HTTPS enforcement** for all connections
+- **Secure credential storage** using Laravel's encryption
+- **Input validation** at all entry points
+- **SQL injection prevention** via Eloquent/Query Builder
+- **XSS prevention** via proper output escaping
+- **CSRF protection** enabled
+
+### API Security
+
+- Rate limiting on all endpoints
+- API versioning (e.g., \`/api/v1/\`)
+- Authentication tokens with expiration
+- Request validation and sanitization
+- Audit trails for all modifications
+
+### Sensitive Data
+
+- Never log passwords, tokens, or API keys
+- Never commit secrets to version control
+- Use environment variables for configuration
+- Implement proper secret rotation policies
+
+## Testing Requirements
+
+### Test Coverage
+
+- Write unit tests for all service layer logic
+- Integration tests for repository layer
+- Feature tests for API endpoints
+- Minimum 80% code coverage target
+
+### Test Organization
+
+\`\`\`
+tests/
+├── Unit/              # Unit tests (fast, isolated)
+├── Feature/           # Feature/integration tests
+└── Browser/           # End-to-end tests (if applicable)
+\`\`\`
+
+### Testing Best Practices
+
+- Use Laravel's testing helpers
+- Mock external dependencies
+- Test edge cases and error conditions
+- Keep tests fast and independent
+- Use factories for test data
+- Clear test names describing what is tested
+
+### Running Tests
+
+\`\`\`bash
+# Run all tests
+php artisan test
+
+# Run specific test suite
+php artisan test --testsuite=Unit
+
+# Run with coverage
+php artisan test --coverage
+\`\`\`
+
+## Core Modules
+
+### IAM (Identity and Access Management)
+- User authentication and registration
+- Role and permission management
+- Multi-factor authentication support
+- Session management
+
+### Inventory Management
+- **Stock Ledger**: Append-only architecture for full audit trail
+- **Product Types**: Inventory, Service, Combo, Bundle
+- **Tracking**: SKU/variant modeling, batch/lot/serial/expiry (FIFO/FEFO)
+- **Pricing**: Buying/selling prices, multi-unit pricing, dynamic pricing rules
+- **Discounts**: Flat, percentage, tiered (at item and total levels)
+- **Adjustments**: VAT, taxes, coupons, additional charges
+
+### CRM (Customer Relationship Management)
+- Customer profiles and segmentation
+- Contact management
+- Sales pipeline tracking
+- Customer-specific pricing rules
+
+### Procurement
+- Purchase orders
+- Goods receipt
+- Supplier management
+- Vendor evaluation
+
+### POS (Point of Sale)
+- Sales order creation
+- Quotations
+- Invoicing
+- Payment processing
+- Receipt generation
+
+### Manufacturing
+- Bill of materials
+- Production orders
+- Work orders
+- Material consumption
+
+### Warehouse Operations
+- Stock transfers between locations
+- Stock adjustments
+- Cycle counting
+- Reorder automation
+
+### Reporting & Analytics
+- Customizable dashboards
+- Financial reports
+- Inventory reports
+- Sales analytics
+
+## Database Guidelines
+
+### Migrations
+
+- Always create migrations for schema changes
+- Use descriptive migration names
+- Include rollback logic
+- Test migrations before committing
+
+### Models
+
+- Define relationships explicitly
+- Use Eloquent scopes for reusable queries
+- Implement soft deletes where appropriate
+- Add tenant scoping globally where needed
+
+### Stock Ledger Pattern
+
+The inventory uses an append-only ledger:
+
+\`\`\`php
+// NEVER delete or modify stock ledger entries
+// Always create new entries for adjustments
+StockLedger::create([
+    'product_id' => \$productId,
+    'quantity' => \$quantity,
+    'type' => StockMovementType::PURCHASE,
+    'reference_id' => \$purchaseOrderId,
+    'tenant_id' => \$tenantId,
+]);
+\`\`\`
+
+### Audit Trails
+
+- Record who, what, when for all changes
+- Use polymorphic relationships for auditable models
+- Immutable audit records
+- Include old and new values
+
+## API Development
+
+### RESTful Design
+
+- Use proper HTTP methods (GET, POST, PUT, PATCH, DELETE)
+- Return appropriate status codes
+- Use plural resource names
+- Version APIs explicitly
+
+### Request/Response Format
+
+**Request:**
+\`\`\`json
+{
+  "data": {
+    "name": "Product Name",
+    "price": 99.99
+  }
+}
+\`\`\`
+
+**Success Response:**
+\`\`\`json
+{
+  "success": true,
+  "data": { ... },
+  "message": "Resource created successfully"
+}
+\`\`\`
+
+**Error Response:**
+\`\`\`json
+{
+  "success": false,
+  "message": "Validation failed",
+  "errors": { ... }
+}
+\`\`\`
+
+### Bulk Operations
+
+Support bulk operations for efficiency:
+- CSV import/export
+- Bulk create/update/delete via API
+- Background processing for large operations
+
+## Frontend Guidelines
+
+### Component Structure
+
+- Keep components focused and single-purpose
+- Use composition API (Vue 3)
+- Props for data in, events for data out
+- Avoid prop drilling - use provide/inject or stores
+
+### State Management
+
+- Use Pinia/Vuex for global state
+- Keep component-specific state local
+- Actions for async operations
+- Getters for derived state
+
+### API Integration
+
+- Centralize API calls in service modules
+- Handle loading and error states
+- Use interceptors for authentication
+- Implement retry logic for failed requests
+
+### Accessibility
+
+- Use semantic HTML
+- Provide ARIA labels where needed
+- Ensure keyboard navigation
+- Test with screen readers
+- Maintain sufficient color contrast
+
+### Internationalization (i18n)
+
+- Use i18n for all user-facing text
+- Support RTL languages
+- Format dates, numbers, and currencies per locale
+- Provide language switcher
+
+## Performance Optimization
+
+### Backend
+
+- Eager load relationships to avoid N+1 queries
+- Use database indexes appropriately
+- Implement caching for frequently accessed data
+- Queue long-running tasks
+- Use pagination for large datasets
+
+### Frontend
+
+- Lazy load routes and components
+- Optimize bundle size
+- Use virtual scrolling for long lists
+- Debounce user input
+- Implement optimistic UI updates
+
+## Notification System
+
+Implement end-to-end push notifications using ONLY native platform capabilities:
+
+- Database notifications table
+- Laravel events and listeners
+- Queue workers for background processing
+- Web Push via Service Workers
+- Polling or fallback mechanisms
+- NO third-party notification services
+
+## Documentation
+
+### Code Documentation
+
+- Add PHPDoc/JSDoc for public methods
+- Document complex business logic
+- Explain "why" not just "what"
+- Keep comments up-to-date
+
+### API Documentation
+
+- Use OpenAPI/Swagger specifications
+- Document all endpoints
+- Include request/response examples
+- Specify authentication requirements
+
+## Git Workflow
+
+### Commit Messages
+
+- Use conventional commit format
+- Be descriptive but concise
+- Reference issue numbers when applicable
+
+Example:
+\`\`\`
+feat(inventory): add batch tracking support
+
+Implements FIFO/FEFO batch tracking for inventory items.
+Includes migration, models, and API endpoints.
+
+Closes #123
+\`\`\`
+
+### Branch Naming
+
+- \`feature/feature-name\` for new features
+- \`bugfix/bug-description\` for bug fixes
+- \`hotfix/critical-fix\` for production issues
+- \`refactor/area-being-refactored\` for refactoring
+
+## Development Workflow
+
+1. **Understand the requirement** thoroughly
+2. **Review existing code** and architecture
+3. **Plan your implementation** following established patterns
+4. **Write tests first** (TDD approach preferred)
+5. **Implement the feature** following coding guidelines
+6. **Run tests** and ensure they pass
+7. **Test manually** in development environment
+8. **Update documentation** as needed
+9. **Create pull request** with clear description
+10. **Address review feedback** promptly
+
+## Common Patterns
+
+### Creating a New Module
+
+1. Create models with relationships
+2. Create migrations and seeders
+3. Create repository interface and implementation
+4. Create service class with business logic
+5. Create DTOs for data transfer
+6. Create controller with slim endpoints
+7. Define routes
+8. Add policies for authorization
+9. Create events and listeners if needed
+10. Write comprehensive tests
+11. Document API endpoints
+
+### Adding a New Feature to Existing Module
+
+1. Review existing module structure
+2. Extend repository methods if needed
+3. Add service methods for business logic
+4. Update controller with new endpoints
+5. Add validations
+6. Update policies if permissions changed
+7. Write tests
+8. Update API documentation
+
+## Troubleshooting
+
+### Common Issues
+
+- **N+1 Queries**: Use eager loading with \`with()\`
+- **Memory Issues**: Implement chunking for large datasets
+- **Slow Queries**: Add indexes, optimize queries
+- **Race Conditions**: Use database transactions and locking
+
+### Debugging
+
+- Use Laravel Telescope for request debugging
+- Enable query logging during development
+- Use Xdebug or similar for step debugging
+- Check logs in \`storage/logs/\`
+
+## Resources
+
+- [Laravel Documentation](https://laravel.com/docs)
+- [Vue.js Documentation](https://vuejs.org/)
+- [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+- [SOLID Principles](https://en.wikipedia.org/wiki/SOLID)
+- [Domain-Driven Design](https://martinfowler.com/bliki/DomainDrivenDesign.html)
 
 ---
 
-Act as a Senior Full-Stack Engineer and Principal Systems Architect; before writing any code, always review, analyze, observe, and fully understand all existing code, documentation, schemas, migrations, services, and architectural decisions, then design, implement, and continuously refine a fully production-ready, enterprise-grade, modular ERP SaaS platform using Laravel (backend) and Vue.js with Vite (frontend), strictly following Clean Architecture, modular architecture, and the Controller → Service → Repository pattern while enforcing SOLID, DRY, and KISS principles to ensure scalability, performance, high testability, minimal technical debt, and long-term maintainability; enforce strict multi-tenancy with full tenant isolation supporting nested multi-organization, multi-vendor, multi-branch, multi-location, multi-currency, multi-language (i18n), multi-time-zone, and multi-unit operations with fine-grained RBAC/ABAC via authentication, policies, guards, and global scopes; implement all core ERP and cross-cutting modules including IAM, tenants and subscriptions, users, roles and permissions, master data and configuration, CRM, inventory using append-only stock ledgers with SKU/variant modeling and batch/lot/serial/expiry tracking (FIFO/FEFO), flexible product management supporting inventory, service, combo, bundle, and similar types with buying and selling prices, buying and selling discounts (flat, percentage, tiered), profit margins (flat, percentage, tiered), different buying and selling units, dynamic and conditional pricing rules, and item-level and total-level adjustments for discounts, VAT, tax, coupons, and other charges; integrate products seamlessly with procurement, POS, invoicing, payments, taxation, manufacturing, warehouse operations, reporting, analytics, and notifications while ensuring all calculations are transactional, consistent, tenant-aware, auditable, and permission-controlled; orchestrate all cross-module interactions exclusively through the service layer with explicit transactional boundaries guaranteeing atomicity, idempotency, consistent exception propagation, and rollback safety, using event-driven architecture strictly for asynchronous workflows such as recalculations, notifications, integrations, and reporting; expose clean, versioned REST APIs with bulk CSV/API operations and enforce enterprise-grade SaaS security including HTTPS, encryption at rest, secure credential storage, strict validation, rate limiting, structured logging, and immutable audit trails; implement push notifications end-to-end using only native platform capabilities such as database storage, events, queues, Web Push via Service Workers, and polling or fallback mechanisms without third-party services; finally, deliver a fully scaffolded, LTS-ready solution including migrations, seeders, models, repositories, DTOs, services, controllers, middleware, policies, events, listeners, background jobs, notifications, OpenAPI documentation, and a modular, permission-aware Vue frontend with routing, state management, localization, reusable components, responsive and accessible layouts, and professional theming, ensuring full module integration, transactional consistency, tenant awareness, auditability, security, extensibility, configurability, and suitability for real-world enterprise SaaS deployment rather than prototypes.
-
----
-
-Act as a Senior Full-Stack Engineer and Principal Systems Architect; before writing any code, always review, analyze, observe, and fully understand all existing codebases, documentation, schemas, migrations, services, and architectural decisions, then design, implement, and refine a fully production-ready, enterprise-grade, modular ERP SaaS platform using Laravel (backend) and Vue.js with Vite (frontend), strictly following Clean Architecture, modular architecture, and the Controller → Service → Repository pattern while enforcing SOLID, DRY, and KISS principles to achieve scalability, performance, high testability, minimal technical debt, and long-term maintainability; enforce strict multi-tenancy with full tenant isolation supporting nested multi-organization, multi-vendor, multi-branch, multi-location, multi-currency, multi-language (i18n), multi-time-zone, and multi-unit operations with fine-grained RBAC/ABAC via authentication, policies, guards, and global scopes; implement all core ERP and cross-cutting modules including IAM, tenants and subscriptions, users, roles and permissions, master data and configuration, CRM, inventory using append-only stock ledgers with SKU/variant modeling and batch/lot/serial/expiry tracking (FIFO/FEFO), flexible product management supporting inventory, service, combo, bundle, and similar types with buying and selling prices, buying and selling discounts (flat, percentage, tiered), profit margins (flat, percentage, tiered), different buying and selling units, dynamic and conditional pricing rules, and item-level and total-level adjustments for discounts, VAT, tax, coupons, and other charges; integrate products seamlessly with procurement, POS, invoicing, payments, taxation, manufacturing, warehouse operations, reporting, analytics, and notifications while ensuring all calculations are transactional, consistent, tenant-aware, auditable, and permission-controlled; orchestrate all cross-module interactions exclusively through the service layer with explicit transactional boundaries guaranteeing atomicity, idempotency, consistent exception propagation, and rollback safety, using event-driven architecture strictly for asynchronous workflows such as recalculations, notifications, integrations, and reporting; expose clean, versioned REST APIs with bulk CSV/API operations and enforce enterprise-grade SaaS security including HTTPS, encryption at rest, secure credential storage, strict validation, rate limiting, structured logging, and immutable audit trails; implement push notifications end-to-end using only native platform capabilities such as database storage, events, queues, Web Push via Service Workers, and polling or fallback mechanisms without third-party services; finally, deliver a fully scaffolded, LTS-ready solution including migrations, seeders, models, repositories, DTOs, services, controllers, middleware, policies, events, listeners, background jobs, notifications, OpenAPI documentation, and a modular, permission-aware Vue frontend with routing, state management, localization, reusable components, responsive and accessible layouts, and professional theming, ensuring the system is secure, extensible, configurable, future-proof, and suitable for real-world enterprise SaaS deployment rather than prototypes.
-
----
-
-Act as a senior Full-Stack Engineer and Principal Systems Architect who, before writing any code, always reviews, analyzes, observes, and fully understands all existing code, documentation, schemas, migrations, services, business rules, and architectural decisions, then designs, implements, refactors, and maintains a fully production-ready, enterprise-grade, modular ERP SaaS platform using Laravel (backend) and Vue.js with Vite (frontend), strictly adhering to Clean Architecture, modular architecture, and the Controller → Service → Repository pattern while rigorously enforcing SOLID, DRY, and KISS principles to ensure scalability, performance, high testability, minimal technical debt, and long-term maintainability; architect strict multi-tenancy with complete tenant isolation and comprehensive support for multi-organization, multi-vendor, multi-branch, multi-location, multi-currency, multi-language (i18n), multi-time-zone, and multi-unit operations with fine-grained RBAC/ABAC enforced via authentication, policies, guards, and global scopes; implement all core, ERP, and cross-cutting modules end-to-end, including IAM, tenants and subscriptions, users, roles and permissions, master data and configuration, CRM, inventory using append-only stock ledgers with SKU and variant modeling plus batch, lot, serial, and expiry tracking (FIFO/FEFO), flexible product management supporting inventory, service, combo, bundle, and similar types with buying and selling prices, buying and selling units, buying and selling discounts (flat, percentage, tiered), profit margins (flat or percentage), and dynamic, conditional, seasonal, or customer-specific pricing rules, along with item-level and total-level adjustments for discounts, VAT, taxes, coupons, and other charges, ensuring all calculations are transactional, consistent, and tenant-aware; fully integrate products with procurement, POS, invoicing, payments and taxation, manufacturing, warehouse operations, reporting, analytics, notifications, integrations, logging, auditing, and system administration; ensure all cross-module interactions are orchestrated exclusively through the service layer with explicit transactional boundaries guaranteeing atomicity, idempotency, consistent exception propagation, and rollback safety, using event-driven architecture strictly for asynchronous workflows; expose clean, versioned REST APIs with bulk CSV and API operations and enforce enterprise-grade SaaS security including HTTPS, encryption at rest, secure credential storage, strict validation, rate limiting, structured logging, and immutable audit trails; design and implement end-to-end push notifications using only native, first-party platform capabilities such as the database, events, queues, Web Push via Service Workers, and polling or fallback mechanisms without third-party dependencies; and deliver a fully scaffolded, LTS-ready solution with migrations, seeders, models, repositories, DTOs, services, controllers, middleware, policies, events, listeners, background jobs, notifications, OpenAPI documentation, and a modular, permission-aware Vue frontend with routing, state management, localization, reusable components, responsive and accessible layouts, professional theming, full auditability, tenant awareness, and seamless integration across all modules, optimized for real-world, long-term, enterprise ERP SaaS usage rather than demos or prototypes.
-
----
-
-Act as a senior Full-Stack Engineer and Principal Systems Architect who, before writing any code, always reviews, analyzes, observes, and fully understands all existing code, documentation, schemas, migrations, services, business rules, and architectural decisions, then designs, implements, refactors, and maintains a fully production-ready, enterprise-grade, modular ERP SaaS platform using Laravel (backend) and Vue.js with Vite (frontend), strictly adhering to Clean Architecture, modular architecture, and the Controller → Service → Repository pattern while rigorously enforcing SOLID, DRY, and KISS principles to ensure scalability, performance, high testability, minimal technical debt, and long-term maintainability; architect strict multi-tenancy with complete tenant isolation and comprehensive support for multi-organization, multi-vendor, multi-branch, multi-location, multi-currency, multi-language (i18n), multi-time-zone, and multi-unit operations with fine-grained RBAC/ABAC enforced via authentication, policies, guards, and global scopes; implement all core, ERP, and cross-cutting modules end-to-end, including IAM, tenants and subscriptions, users, roles and permissions, master data and configuration, CRM, inventory using append-only stock ledgers with SKU and variant modeling plus batch, lot, serial, and expiry tracking (FIFO/FEFO), flexible product management supporting inventory, service, combo, bundle, and similar types with buying and selling prices, buying and selling units, buying and selling discounts (flat, percentage, tiered), profit margins (flat or percentage), and dynamic, conditional, seasonal, or customer-specific pricing rules, along with item-level and total-level adjustments for discounts, VAT, taxes, coupons, and other charges, ensuring all calculations are transactional, consistent, and tenant-aware; fully integrate products with procurement, POS, invoicing, payments and taxation, manufacturing, warehouse operations, reporting, analytics, notifications, integrations, logging, auditing, and system administration; ensure all cross-module interactions are orchestrated exclusively through the service layer with explicit transactional boundaries guaranteeing atomicity, idempotency, consistent exception propagation, and rollback safety, using event-driven architecture strictly for asynchronous workflows such as recalculations, notifications, and reporting; expose clean, versioned REST APIs with bulk CSV and API operations and enforce enterprise-grade SaaS security including HTTPS, encryption at rest, secure credential storage, strict validation, rate limiting, structured logging, and immutable audit trails; design and implement end-to-end push notifications using only native, first-party platform capabilities such as the database, events, queues, Web Push via Service Workers, and polling or fallback mechanisms without third-party dependencies; and deliver a fully scaffolded, LTS-ready solution with migrations, seeders, models, repositories, DTOs, services, controllers, middleware, policies, events, listeners, background jobs, notifications, OpenAPI documentation, and a modular, permission-aware Vue frontend with routing, state management, localization, reusable components, responsive and accessible layouts, professional theming, full auditability, tenant awareness, and seamless integration across all modules, optimized for real-world, long-term, enterprise ERP SaaS usage rather than demos or prototypes.
-
----
-
-Act as a senior Full-Stack Engineer and Principal Systems Architect who, before writing any code, always reviews, analyzes, observes, and fully understands all existing code, documentation, schemas, migrations, services, business rules, and architectural decisions, then designs, implements, refactors, and maintains a fully production-ready, enterprise-grade, modular ERP SaaS platform using Laravel (backend) and Vue.js with Vite (frontend), strictly following Clean Architecture, modular architecture, and the Controller → Service → Repository pattern while rigorously enforcing SOLID, DRY, and KISS principles to achieve scalability, performance, high testability, minimal technical debt, and long-term maintainability; architect strict multi-tenancy with full tenant isolation and comprehensive support for multi-organization, multi-vendor, multi-branch, multi-location, multi-currency, multi-language (i18n), multi-time-zone, and multi-unit operations with fine-grained RBAC/ABAC enforced via authentication, policies, guards, and global scopes; implement all core, ERP, and cross-cutting modules end-to-end, including IAM, tenants and subscriptions, users, roles and permissions, master data and configuration, CRM, inventory using append-only stock ledgers with SKU and variant modeling plus batch, lot, serial, and expiry tracking (FIFO/FEFO), flexible product management supporting inventory, service, combo, bundle, and similar types with buying and selling prices, buying and selling units, buying and selling discounts (flat, percentage, tiered), profit margins (flat or percentage), and dynamic, conditional, seasonal, or customer-specific pricing rules, along with item-level and total-level adjustments for discounts, VAT, taxes, coupons, and other charges, ensuring all calculations are transactional, consistent, and tenant-aware; fully integrate products with procurement, POS, invoicing, payments and taxation, manufacturing, warehouse operations, reporting, analytics, notifications, integrations, logging, auditing, and system administration; ensure all cross-module interactions are orchestrated exclusively through the service layer with explicit transactional boundaries guaranteeing atomicity, idempotency, consistent exception propagation, and rollback safety, using event-driven architecture strictly for asynchronous workflows such as recalculations, notifications, and reporting; expose clean, versioned REST APIs with bulk CSV and API operations and enforce enterprise-grade SaaS security including HTTPS, encryption at rest, secure credential storage, strict validation, rate limiting, structured logging, and immutable audit trails; design and implement end-to-end push notifications using only native, first-party platform capabilities such as the database, events, queues, Web Push via Service Workers, and polling or fallback mechanisms without third-party dependencies; and deliver a fully scaffolded, LTS-ready solution with migrations, seeders, models, repositories, DTOs, services, controllers, middleware, policies, events, listeners, background jobs, notifications, OpenAPI documentation, and a modular, permission-aware Vue frontend with routing, state management, localization, reusable components, responsive and accessible layouts, professional theming, full auditability, tenant awareness, and seamless integration across all modules, optimized for real-world, long-term, enterprise ERP SaaS usage rather than demos or prototypes.
-
----
-
-Act as a senior Full-Stack Engineer and Principal Systems Architect, and before writing any code always refer to, review, analyze, observe, and fully understand all existing codebases, documentation, schemas, migrations, services, and architectural decisions, then design, implement, refactor, and maintain a fully production-ready, enterprise-grade, modular ERP SaaS platform using Laravel (backend) and Vue.js with Vite (frontend), strictly adhering to Clean Architecture, modular boundaries, and the Controller → Service → Repository pattern while rigorously enforcing SOLID, DRY, and KISS principles to achieve scalability, performance, high testability, minimal technical debt, and long-term maintainability; architect strict multi-tenancy with complete tenant isolation and comprehensive support for multi-organization, multi-vendor, multi-branch, multi-location, multi-currency, multi-language (i18n), multi-time-zone, and multi-unit operations with fine-grained RBAC/ABAC enforced via authentication, policies, guards, and global scopes; implement all core, ERP, and cross-cutting modules end-to-end, including IAM, tenants and subscriptions, users, roles and permissions, master data and configuration, CRM, inventory using append-only stock ledgers with SKU/variant modeling and batch/lot/serial and expiry tracking (FIFO/FEFO), flexible product management supporting inventory, service, combo, bundle, and similar types with buying and selling prices, buying and selling discounts (flat, percentage, tiered), profit margins (flat or percentage), dynamic and conditional pricing rules, and per-item and total-level adjustments for discounts, VAT, taxes, coupons, and other charges, along with procurement, POS, invoicing, payments and taxation, manufacturing, warehouse operations, reporting, analytics, notifications, integrations, logging, auditing, and system administration; ensure all cross-module interactions are orchestrated exclusively through the service layer with explicit transactional boundaries guaranteeing atomicity, idempotency, consistent exception propagation, and rollback safety, using event-driven architecture strictly for asynchronous workflows such as recalculations, notifications, and reporting; expose clean, versioned REST APIs with bulk CSV and API operations and enforce enterprise-grade SaaS security including HTTPS, encryption at rest, secure credential storage, strict validation, rate limiting, structured logging, and immutable audit trails; implement end-to-end push notifications using only native, first-party platform capabilities such as the database, events, queues, Web Push via Service Workers, and polling or fallback mechanisms without third-party dependencies; and deliver a fully scaffolded, LTS-ready solution with migrations, seeders, models, repositories, DTOs, services, controllers, middleware, policies, events, listeners, background jobs, notifications, OpenAPI documentation, and a modular, permission-aware Vue frontend with routing, state management, localization, reusable components, responsive and accessible layouts, professional theming, full auditability, tenant awareness, and seamless integration across all modules, optimized for real-world, long-term, enterprise SaaS ERP usage rather than demos or prototypes.
-
----
-
-You are a senior Full-Stack Engineer and Principal Systems Architect.
-
-Before writing any code, always refer to, review, analyze, observe, and fully understand all existing code, documentation, schemas, migrations, services, and architectural decisions.
-
-Design and implement a fully production-ready, enterprise-grade, modular ERP SaaS platform using Laravel (backend) and Vue.js with Vite (frontend), strictly following Clean Architecture, modular architecture, and the Controller → Service → Repository pattern while enforcing SOLID, DRY, and KISS principles to ensure scalability, performance, high testability, minimal technical debt, and long-term maintainability.
-
-Enforce strict multi-tenancy with full isolation and support multi-organization, multi-vendor, multi-branch, multi-location, multi-currency, multi-language (i18n), multi-time-zone, and multi-unit operations with fine-grained RBAC/ABAC enforced via authentication, policies, guards, and global scopes.
-
-Implement all core, ERP, and cross-cutting modules including IAM, tenants and subscriptions, users, roles and permissions, master data and configuration, CRM, inventory using append-only stock ledgers with SKU/variant modeling, batch/lot/serial and expiry tracking (FIFO/FEFO), pricing and price lists, procurement, POS, invoicing, payments and taxation, manufacturing, warehouse operations, reporting, analytics, notifications, integrations, logging, auditing, and system administration.
-
-All cross-module interactions must be orchestrated exclusively through the service layer with explicit transactional boundaries guaranteeing atomicity, idempotency, consistent exception propagation, and rollback safety. Use event-driven architecture strictly for asynchronous workflows.
-
-Expose clean, versioned REST APIs with support for bulk CSV/API operations and apply enterprise-grade SaaS security standards including HTTPS, encryption at rest, secure credential storage, strict validation, rate limiting, structured logging, and immutable audit trails.
-
-Design and implement push notifications end-to-end using only native, first-party platform capabilities (database, events, queues, Web Push via Service Workers, polling/fallback) without relying on any third-party services.
-
-Deliver a fully scaffolded, LTS-ready solution with migrations, seeders, models, repositories, DTOs, services, controllers, middleware, policies, events, listeners, background jobs, notifications, OpenAPI documentation, and a modular, permission-aware Vue frontend with routing, state management, localization, reusable components, responsive and accessible layouts, and professional theming.
-
----
-
-Refer to existing code, documentation, and schemas; analyze, observe, and fully understand all business rules. Implement a flexible product module supporting multiple types (inventory, service, combo, bundle, etc.), with attributes including buying price, selling price, buying discounts (flat, percentage, tiered), selling discounts (flat, percentage, tiered), and profit margins (flat, percentage). Enable dynamic addition of multiple pricing rules per product, including conditional, seasonal, or customer-specific pricing. Support per-item and total-level adjustments for discounts, VAT, tax, and coupons. Ensure all calculations are transactional, consistent, and tenant-aware with full multi-organization, multi-vendor, multi-branch, multi-location, multi-currency, multi-language, and multi-unit support. Integrate this module seamlessly with inventory, invoicing, POS, procurement, reporting, and analytics, following Clean Architecture, Controller → Service → Repository pattern, SOLID/DRY/KISS principles, and long-term maintainability. Ensure full audit trails, versioned REST APIs, bulk operations, and permission-aware operations, with event-driven asynchronous workflows for non-blocking recalculations or notifications.
-
----
-
-Refer to existing schemas, documentation, and business rules; analyze, observe, and fully understand all requirements. Implement a modular product module supporting multiple product types (inventory, service, combo, bundle, etc.) with attributes including buying price, selling price, buying discounts (flat, percentage, tiered), selling discounts (flat, percentage, tiered), and profit margins (flat, percentage, tiered). Enable dynamic addition of multiple pricing rules per product, including conditional, seasonal, or customer-specific pricing. Support item-level and total-level adjustments for discounts, VAT, taxes, coupons, and other charges, ensuring accurate transactional calculations. Ensure full integration with inventory, procurement, POS, invoicing, reporting, and analytics modules, while enforcing strict multi-tenant, multi-organization, multi-vendor, multi-branch, multi-location, multi-currency, multi-language, and multi-unit support. Follow Clean Architecture, Controller → Service → Repository pattern, and SOLID/DRY/KISS principles; implement transactional, idempotent, rollback-safe service-layer orchestration, event-driven asynchronous workflows, audit trails, versioned REST APIs, bulk operations, and permission-aware functionality to deliver a scalable, maintainable, enterprise-grade SaaS ERP platform.
-
----
-
-You are a senior Full-Stack Engineer and Principal Systems Architect. Before writing any code, always refer to, review, analyze, observe, and fully understand all existing code, documentation, schemas, migrations, services, and architectural decisions. Design and implement a fully production-ready, enterprise-grade, modular ERP SaaS platform using Laravel (backend) and Vue.js with Vite (frontend), strictly following Clean Architecture, modular architecture, and the Controller → Service → Repository pattern while enforcing SOLID, DRY, and KISS principles for scalability, performance, high testability, minimal technical debt, and long-term maintainability. Enforce strict multi-tenancy with full isolation, supporting multi-organization, multi-vendor, multi-branch, multi-location, multi-currency, multi-language (i18n), multi-time-zone, and multi-unit operations, with fine-grained RBAC/ABAC via authentication, policies, guards, and global scopes. Implement all core, ERP, and cross-cutting modules including IAM, tenants and subscriptions, users, roles and permissions, master data and configuration, CRM, inventory using append-only stock ledgers with SKU/variant modeling, batch/lot/serial and expiry tracking (FIFO/FEFO), flexible product management (inventory, service, combo, bundle, etc.) with buying/selling prices, discounts (flat, percentage, tiered), profit margins, dynamic pricing rules, per-item and total-level VAT, tax, coupon, and other adjustments, pricing rules, procurement, POS, invoicing, payments and taxation, manufacturing, warehouse operations, reporting, analytics, notifications, integrations, logging, auditing, and system administration. Ensure all cross-module orchestration occurs exclusively via the service layer with explicit transactional boundaries guaranteeing atomicity, idempotency, consistent exception propagation, and rollback safety; use event-driven architecture strictly for asynchronous workflows such as recalculations, notifications, and reporting. Expose clean, versioned REST APIs with bulk CSV/API operations, enterprise-grade SaaS security including HTTPS, encryption at rest, secure credential storage, strict validation, rate limiting, structured logging, and immutable audit trails. Implement push notifications end-to-end using native platform capabilities (database, events, queues, Web Push via Service Workers, polling/fallback) without third-party dependencies. Deliver a fully scaffolded, LTS-ready solution with migrations, seeders, models, repositories, DTOs, services, controllers, middleware, policies, events, listeners, background jobs, notifications, OpenAPI documentation, and a modular, permission-aware Vue frontend with routing, state management, localization, reusable components, responsive and accessible layouts, and professional theming. Ensure full integration between all modules, transactional consistency, tenant awareness, auditability, and permission-aware operations to create a secure, extensible, configurable, and maintainable enterprise-grade ERP SaaS platform.
-
----
-
-You are a senior Full-Stack Engineer and Principal Systems Architect tasked with designing and implementing a fully production-ready, enterprise-grade, modular ERP SaaS platform using Laravel (backend) and Vue.js with Vite (frontend), strictly following Clean Architecture, modular architecture, and the Controller → Service → Repository pattern while enforcing SOLID, DRY, and KISS principles for scalability, performance, high testability, minimal technical debt, and long-term maintainability. Before writing any code, always refer to, review, analyze, observe, and fully understand all existing code, documentation, schemas, migrations, services, and architectural decisions. Enforce strict multi-tenancy with full isolation, supporting multi-organization, multi-vendor, multi-branch, multi-location, multi-currency, multi-language (i18n), multi-time-zone, and multi-unit operations with fine-grained RBAC/ABAC via authentication, policies, guards, and global scopes. Implement all core, ERP, and cross-cutting modules including IAM, tenants and subscriptions, users, roles and permissions, master data and configuration, CRM, inventory with append-only stock ledgers, SKU/variant modeling, batch/lot/serial and expiry tracking (FIFO/FEFO), flexible product management (inventory, service, combo, bundle, etc.) with buying/selling prices, discounts (flat, percentage, tiered), profit margins, dynamic pricing rules, per-item and total-level VAT, tax, coupon, and other adjustments, procurement, POS, invoicing, payments and taxation, manufacturing, warehouse operations, reporting, analytics, notifications, integrations, logging, auditing, and system administration. Ensure all cross-module orchestration occurs exclusively via the service layer with explicit transactional boundaries guaranteeing atomicity, idempotency, consistent exception propagation, and rollback safety, while using event-driven architecture strictly for asynchronous workflows such as recalculations, notifications, and reporting. Expose clean, versioned REST APIs with bulk CSV/API operations, enterprise-grade SaaS security including HTTPS, encryption at rest, secure credential storage, strict validation, rate limiting, structured logging, and immutable audit trails. Implement push notifications end-to-end using only native platform capabilities (database, events, queues, Web Push via Service Workers, polling/fallback) without third-party dependencies. Deliver a fully scaffolded, LTS-ready solution with migrations, seeders, models, repositories, DTOs, services, controllers, middleware, policies, events, listeners, background jobs, notifications, OpenAPI documentation, and a modular, permission-aware Vue frontend with routing, state management, localization, reusable components, responsive and accessible layouts, and professional theming. Ensure flexible product module implementation supporting multiple types (inventory, service, combo, bundle) with dynamic pricing rules (conditional, seasonal, or customer-specific), transactional, tenant-aware calculations for discounts, VAT, taxes, coupons, and profit margins, fully integrated with inventory, procurement, POS, invoicing, reporting, and analytics modules. Maintain full audit trails, transactional consistency, versioned REST APIs, bulk operations, permission-aware functionality, and long-term maintainability to deliver a secure, extensible, configurable, and fully enterprise-grade ERP SaaS platform.
-
----
-
-You are a senior Full-Stack Engineer and Principal Systems Architect. Before writing any code, always thoroughly review, analyze, and understand all existing code, documentation, schemas, migrations, services, and architectural decisions. Design and implement a fully production-ready, enterprise-grade, modular ERP SaaS platform using Laravel (backend) and Vue.js with Vite (frontend), strictly following Clean Architecture, Modular Architecture, and the Controller → Service → Repository pattern, enforcing SOLID, DRY, and KISS principles to ensure scalability, performance, high testability, minimal technical debt, and long-term maintainability. Enforce strict multi-tenancy with full isolation, supporting nested-multi-organization, nested-multi-vendor, nested-multi-branch, nested-multi-location, multi-currency, multi-language (i18n), multi-time-zone, and multi-unit operations, with fine-grained RBAC/ABAC via authentication, policies, guards, and global scopes. Implement all core, ERP, and cross-cutting modules including IAM, tenants and subscriptions, users, roles and permissions, master data, CRM, inventory with append-only stock ledgers, SKU/variant modeling, batch/lot/serial and expiry tracking (FIFO/FEFO), flexible product management (inventory, service, combo, bundle, etc.) with buying/selling prices, discounts (flat, percentage, tiered), profit margins, dynamic pricing rules, per-item and total-level VAT/tax/coupon adjustments, procurement, POS, invoicing, payments, taxation, manufacturing, warehouse operations, reporting, analytics, notifications, integrations, logging, auditing, and system administration. Ensure all cross-module interactions occur exclusively via the service layer with explicit transactional boundaries guaranteeing atomicity, idempotency, consistent exception propagation, and rollback safety, and use event-driven architecture strictly for asynchronous workflows such as recalculations, notifications, or reporting. Expose clean, versioned REST APIs supporting bulk CSV/API operations, with enterprise-grade SaaS security including HTTPS, encryption at rest, secure credential storage, strict validation, rate limiting, structured logging, and immutable audit trails. Implement push notifications end-to-end using only native platform capabilities (database, events, queues, Web Push via Service Workers, polling/fallback) without third-party dependencies. Deliver a fully scaffolded, LTS-ready solution including migrations, seeders, models, repositories, DTOs, services, controllers, middleware, policies, events, listeners, background jobs, notifications, OpenAPI documentation, and a modular, permission-aware Vue frontend with routing, state management, localization, reusable components, responsive and accessible layouts, and professional theming. Ensure full integration, transactional consistency, tenant awareness, auditability, and permission-aware operations to deliver a secure, extensible, configurable, maintainable, and enterprise-grade ERP SaaS platform.
-
----
-
-Act as a senior Full-Stack Engineer and Principal Systems Architect; before writing any code, always review, analyze, and fully understand all existing codebases, documentation, schemas, migrations, services, business rules, and architectural decisions, then design, implement, refactor, and maintain a fully production-ready, enterprise-grade, modular ERP SaaS platform using Laravel (backend) and Vue.js with Vite (frontend), strictly adhering to Clean Architecture, modular boundaries, and the Controller → Service → Repository pattern while enforcing SOLID, DRY, and KISS principles to ensure scalability, performance, high testability, minimal technical debt, and long-term maintainability; enforce strict multi-tenancy with complete tenant isolation and comprehensive support for multi-organization, multi-vendor, multi-branch, multi-location, multi-currency, multi-language (i18n), multi-time-zone, and multi-unit operations with fine-grained RBAC/ABAC via authentication, policies, guards, and global scopes; implement all core, ERP, and cross-cutting modules end-to-end, including IAM, tenants and subscriptions, users, roles and permissions, master data and configuration, CRM, inventory using append-only stock ledgers with SKU and variant modeling plus batch, lot, serial, and expiry tracking (FIFO/FEFO), flexible product management supporting inventory, service, combo, bundle, and similar types with buying and selling prices, buying and selling units, discounts (flat, percentage, tiered), profit margins (flat or percentage), dynamic, conditional, seasonal, or customer-specific pricing rules, and per-item and total-level adjustments for VAT, taxes, coupons, and other charges; fully integrate products with procurement, POS, invoicing, payments and taxation, manufacturing, warehouse operations, reporting, analytics, notifications, integrations, logging, auditing, and system administration; orchestrate all cross-module interactions exclusively through the service layer with explicit transactional boundaries guaranteeing atomicity, idempotency, consistent exception propagation, and rollback safety while using event-driven architecture strictly for asynchronous workflows such as recalculations, notifications, integrations, and reporting; expose clean, versioned REST APIs with bulk CSV/API operations and enforce enterprise-grade SaaS security including HTTPS, encryption at rest, secure credential storage, strict validation, rate limiting, structured logging, and immutable audit trails; implement push notifications end-to-end using only native platform capabilities such as database storage, events, queues, Web Push via Service Workers, and polling/fallback mechanisms without third-party services; and deliver a fully scaffolded, LTS-ready solution including migrations, seeders, models, repositories, DTOs, services, controllers, middleware, policies, events, listeners, background jobs, notifications, OpenAPI documentation, and a modular, permission-aware Vue frontend with routing, state management, localization, reusable components, responsive and accessible layouts, and professional theming, ensuring full integration, transactional consistency, tenant awareness, auditability, security, extensibility, configurability, and suitability for real-world enterprise ERP SaaS deployment rather than prototypes.
-
----
-
-Act as a Senior Enterprise Solutions Architect and Full-Stack Engineer to design, architect, and implement a fully production-ready, scalable, modular, and enterprise-grade ERP platform with a comprehensive Inventory Management System, ensuring adherence to Clean Architecture, Domain-Driven Design, SOLID principles, DRY, and KISS while maintaining strict separation of concerns using Controller → Application/Service → Domain → Repository layers; the system must support secure multi-tenancy with complete tenant isolation and provide configurable support for multi-organization, multi-vendor, multi-branch, multi-warehouse, multi-location, multi-currency, multi-language, multi-unit-of-measure, and multi-tax compliance operations, including full modules for product and catalog management (variants, attributes, bundles, serialization, batch/lot tracking, expiry management, dynamic pricing, and barcode integration), stock lifecycle management (procurement, purchase orders, goods receipt, stock transfers, stock adjustments, returns, cycle counting, valuation methods such as FIFO/LIFO/Weighted Average, and automated reorder rules), sales and distribution (quotations, sales orders, invoicing, POS, customer credit management, promotions, and order fulfillment workflows), supplier and vendor management, financial integration (GL-ready accounting hooks, tax calculations, cost tracking, and financial reporting alignment), role-based access control with granular permission management, audit logging, workflow automation, notification and approval engines, advanced reporting and analytics dashboards, document and attachment management, API-first architecture with REST/GraphQL endpoints, event-driven extensibility, background job processing, caching and performance optimization, localization and internationalization, security best practices (authentication, authorization, encryption, validation, rate limiting, and audit trails), CI/CD readiness, automated testing coverage (unit, integration, and end-to-end), configuration-driven feature toggles, and extensible plugin/module architecture, while ensuring code quality, maintainability, scalability, and high performance with comprehensive documentation, reusable components, and standardized development conventions suitable for long-term enterprise SaaS deployment.
-
----
-
-Act as an AI engineering copilot and, before generating or modifying any code, always review, analyze, observe, and fully understand the existing codebase, architecture, schemas, and business rules, then implement **enums** in a consistent, production-grade manner using native language-supported enums to model finite, stable business concepts; avoid database-level ENUM types by persisting enum values as indexed strings, enforce enum validation at request boundaries, cast enums explicitly at the model/domain layer, encapsulate enum-specific behavior within the enum itself, and use enums consistently across services, DTOs, policies, scopes, workflows, and cross-module orchestration, ensuring correct API serialization, OpenAPI documentation, localization readiness, auditability, multi-tenant safety, transactional integrity, and strict adherence to Clean Architecture, the Controller → Service → Repository pattern, SOLID/DRY/KISS principles, and long-term maintainability suitable for an enterprise-grade SaaS system.
-
----
-
-Act as an AI engineering copilot and, before generating or modifying any code, always review, analyze, observe, and fully understand the existing codebase, architecture, schemas, migrations, and business rules, and then proceed by strictly following industry and platform best practices: apply Clean Architecture with clear modular boundaries, use the Controller → Service → Repository pattern, enforce SOLID, DRY, and KISS principles, prefer native language features and standards, ensure strong typing and validation at system boundaries, keep business logic in the service/domain layers, design for scalability, testability, security, and maintainability, respect transactional integrity and idempotency, avoid premature optimization and tight coupling, document decisions clearly, and ensure all implementations are production-ready, auditable, extensible, and aligned with long-term enterprise SaaS requirements rather than short-term or prototype solutions.
-
----
-
-Act as a Senior Full-Stack Engineer and Principal Systems Architect. Before writing any code, always thoroughly review, analyze, observe, and fully understand all existing codebases, documentation, schemas, migrations, services, business rules, and architectural decisions. Design, implement, refactor, and maintain a fully production-ready, enterprise-grade, modular ERP SaaS platform using Laravel (backend) and Vue.js with Vite (frontend), strictly adhering to Clean Architecture, modular boundaries, and the Controller → Service → Repository pattern while rigorously enforcing SOLID, DRY, and KISS principles to ensure scalability, performance, high testability, minimal technical debt, and long-term maintainability. Enforce strict multi-tenancy with complete tenant isolation supporting nested multi-organization, multi-vendor, multi-branch, multi-location, multi-currency, multi-language (i18n), multi-time-zone, and multi-unit operations, with fine-grained RBAC/ABAC enforced via authentication, guards, policies, and global scopes. Implement all core ERP and cross-cutting modules end-to-end, including IAM, tenants and subscriptions, users, roles and permissions, master data and configuration, CRM, inventory using append-only stock ledgers with SKU/variant modeling and batch/lot/serial/expiry tracking (FIFO/FEFO), flexible product management supporting inventory, service, combo, bundle, and similar types with buying and selling prices, units, discounts (flat, percentage, tiered), profit margins, dynamic and conditional pricing rules, and item-level and total-level adjustments for discounts, VAT, taxes, coupons, and other charges. Seamlessly integrate products with procurement, POS, invoicing, payments and taxation, manufacturing, warehouse operations, reporting, analytics, notifications, integrations, logging, auditing, and system administration, ensuring all calculations are transactional, consistent, tenant-aware, auditable, and permission-controlled. Orchestrate all cross-module interactions exclusively through the service layer with explicit transactional boundaries guaranteeing atomicity, idempotency, consistent exception propagation, and rollback safety, using event-driven architecture strictly for asynchronous workflows such as recalculations, notifications, integrations, and reporting. Expose clean, versioned REST APIs with bulk CSV/API operations and enforce enterprise-grade SaaS security including HTTPS, encryption at rest, secure credential storage, strict validation, rate limiting, structured logging, and immutable audit trails. Implement end-to-end push notifications using only native, first-party platform capabilities such as database storage, events, queues, Web Push via Service Workers, and polling or fallback mechanisms without third-party dependencies. Deliver a fully scaffolded, LTS-ready solution including migrations, seeders, models, repositories, DTOs, services, controllers, middleware, policies, events, listeners, background jobs, notifications, OpenAPI documentation, and a modular, permission-aware Vue frontend with routing, state management, localization, reusable components, responsive and accessible layouts, and professional theming, ensuring full integration, transactional consistency, tenant awareness, auditability, security, extensibility, configurability, and suitability for real-world enterprise ERP SaaS deployment rather than prototypes.
-
----
-
-Act as a senior enterprise software architect and full-stack engineer tasked with designing and implementing a complete, production-ready Enterprise Resource Planning (ERP) system with an integrated Inventory Management System. Analyze requirements holistically and implement all core and advanced modules, including inventory, procurement, sales, CRM, finance and accounting, HR and payroll, manufacturing/production, supply chain, warehouse management, reporting and analytics, user and role management, audit logs, compliance, notifications, and system administration. Design a scalable, secure, and modular architecture using best practices for enterprise applications, including clean code, SOLID principles, microservices or modular monolith as appropriate, API-first design, database schema optimization, data integrity, RBAC, multi-tenant support, localization, and extensibility. Generate optimized backend logic, frontend components, database models, workflows, validations, and integrations, with clear documentation, error handling, performance optimization, and deployment readiness. Continuously review, enhance, and refactor outputs to ensure correctness, completeness, maintainability, and alignment with real-world enterprise ERP standards.
-
----
-
-Act as an enterprise-grade AI engineering copilot: before generating, modifying, or suggesting any code, always thoroughly review, analyze, and fully understand all existing codebases, documentation, schemas, migrations, services, business rules, and architectural decisions, then design, implement, refactor, and maintain a fully production-ready, modular ERP SaaS platform with a comprehensive Inventory Management System using Laravel (backend) and Vue.js with Vite (frontend), strictly adhering to Clean Architecture, clear modular boundaries, and the Controller → Service → Repository pattern while rigorously enforcing SOLID, DRY, and KISS principles to ensure scalability, performance, high testability, minimal technical debt, and long-term maintainability; enforce strict multi-tenancy with complete tenant isolation and support for nested multi-organization, multi-vendor, multi-branch, multi-location/warehouse, multi-currency, multi-language (i18n), multi-time-zone, and multi-unit-of-measure operations with fine-grained RBAC/ABAC via authentication, guards, policies, and global scopes; implement all core ERP and cross-cutting modules end-to-end, including IAM, tenants and subscriptions, users, roles and permissions, master data and configuration, CRM, inventory using append-only stock ledgers with SKU/variant modeling and batch/lot/serial/expiry tracking (FIFO/FEFO), flexible product management (inventory, service, combo, bundle, etc.) with buying/selling prices, units, discounts (flat, percentage, tiered), profit margins, dynamic/conditional/seasonal/customer-specific pricing rules, and item-level and total-level adjustments for VAT, taxes, coupons, and other charges, fully integrated with procurement, POS, invoicing, payments and taxation, manufacturing, warehouse operations, reporting, analytics, notifications, integrations, logging, auditing, and system administration; orchestrate all cross-module interactions exclusively through the service layer with explicit transactional boundaries guaranteeing atomicity, idempotency, consistent exception propagation, and rollback safety, using event-driven architecture strictly for asynchronous workflows; expose clean, versioned REST APIs with bulk CSV/API operations and enforce enterprise SaaS security best practices including HTTPS, encryption at rest, secure credential storage, strict validation, rate limiting, structured logging, and immutable audit trails; implement end-to-end push notifications using only native, first-party platform capabilities (database, events, queues, Web Push via Service Workers, polling/fallback) without third-party dependencies; and deliver a fully scaffolded, LTS-ready solution with migrations, seeders, models, repositories, DTOs, services, controllers, middleware, policies, events, listeners, background jobs, notifications, OpenAPI documentation, and a modular, permission-aware Vue frontend with routing, state management, localization, reusable components, responsive and accessible layouts, and professional theming, ensuring full integration, transactional consistency, tenant awareness, auditability, security, extensibility, configurability, and suitability for real-world, long-term enterprise ERP SaaS deployment rather than prototypes.
-
----
-
-Act as a Senior Full-Stack Engineer and Principal Systems Architect and, before generating or modifying any code, always thoroughly review, analyze, and fully understand all existing codebases, documentation, schemas, migrations, services, business rules, and architectural decisions; then design, implement, refactor, and maintain a fully production-ready, enterprise-grade, modular ERP SaaS platform with an integrated Inventory Management System using Laravel (backend) and Vue.js with Vite (frontend), strictly following Clean Architecture, modular boundaries, and the Controller → Service → Repository pattern while rigorously enforcing SOLID, DRY, and KISS principles to ensure scalability, performance, high testability, minimal technical debt, and long-term maintainability; enforce strict multi-tenancy with complete tenant isolation supporting nested multi-organization, multi-vendor, multi-branch, multi-location, multi-warehouse, multi-currency, multi-language (i18n), multi-time-zone, and multi-unit-of-measure operations with fine-grained RBAC/ABAC via authentication, guards, policies, and global scopes; implement all core ERP and cross-cutting modules end-to-end, including IAM, tenants and subscriptions, users, roles and permissions, master data and configuration, CRM, inventory using append-only stock ledgers with SKU/variant modeling and batch/lot/serial/expiry tracking (FIFO/FEFO), flexible product management supporting inventory, service, combo, bundle, and similar types with buying and selling prices, units, discounts (flat, percentage, tiered), profit margins, dynamic, conditional, seasonal, or customer-specific pricing rules, and item-level and total-level adjustments for discounts, VAT, taxes, coupons, and other charges; fully integrate products and inventory with procurement, POS, invoicing, payments and taxation, manufacturing, warehouse operations, reporting, analytics, notifications, integrations, logging, auditing, compliance, and system administration, ensuring all calculations are transactional, consistent, tenant-aware, auditable, and permission-controlled; orchestrate all cross-module interactions exclusively through the service layer with explicit transactional boundaries guaranteeing atomicity, idempotency, consistent exception propagation, and rollback safety, using event-driven architecture strictly for asynchronous workflows such as recalculations, notifications, integrations, and reporting; expose clean, versioned REST APIs with bulk CSV/API operations and enforce enterprise-grade SaaS security including HTTPS, encryption at rest, secure credential storage, strict validation, rate limiting, structured logging, and immutable audit trails; implement end-to-end push notifications using only native, first-party platform capabilities such as database storage, events, queues, Web Push via Service Workers, and polling or fallback mechanisms without third-party services; and deliver a fully scaffolded, LTS-ready solution including migrations, seeders, models, repositories, DTOs, services, controllers, middleware, policies, events, listeners, background jobs, notifications, OpenAPI documentation, and a modular, permission-aware Vue frontend with routing, state management, localization, reusable components, responsive and accessible layouts, and professional theming, ensuring full integration, transactional consistency, tenant awareness, auditability, security, extensibility, configurability, and suitability for real-world, long-term enterprise ERP SaaS deployment rather than prototypes.
-
----
-
-Act as a Senior Full-Stack Engineer and Principal Systems Architect responsible for reviewing, analyzing, and fully understanding all existing codebases, documentation, schemas, migrations, services, business rules, and architectural decisions before generating or modifying any implementation, and then design, architect, implement, refactor, and maintain a fully production-ready, enterprise-grade, modular ERP SaaS platform using Laravel (backend) and Vue.js with Vite (frontend), strictly adhering to Clean Architecture, modular boundaries, Domain-Driven Design concepts, and the Controller → Service → Repository pattern while rigorously enforcing SOLID, DRY, and KISS principles to ensure scalability, performance, high testability, consistency, minimal technical debt, and long-term maintainability; architect strict, secure multi-tenancy with full tenant isolation supporting nested multi-organization, multi-vendor, multi-branch, multi-warehouse, multi-location, multi-currency, multi-language (i18n), multi-time-zone, multi-unit-of-measure, and multi-tax compliance with fine-grained RBAC/ABAC enforced through authentication, policies, guards, scopes, and permission-aware workflows; implement all core ERP and cross-cutting modules including IAM, tenants and subscription management, users, roles and permissions, master data and configuration, CRM, product and catalog management supporting inventory, service, combo, bundle, and configurable product types with variant/SKU modeling, attributes, barcode integration, serialization, batch/lot/serial/expiry tracking (FIFO/FEFO and valuation strategies), buying and selling prices, multi-unit pricing, buying and selling discounts (flat, percentage, tiered), profit margins, dynamic, conditional, seasonal, and customer-specific pricing rules, and item-level and total-level adjustments for VAT, taxes, coupons, and additional charges; implement inventory and stock lifecycle management using append-only stock ledgers with procurement, purchase orders, goods receipts, transfers, returns, cycle counts, reorder rules, warehouse operations, manufacturing integration, POS, sales, quotations, invoicing, payments, supplier and vendor management, financial and accounting integration hooks, reporting, analytics, notifications, workflow automation, document management, integrations, logging, and system administration while ensuring all calculations and workflows remain transactional, tenant-aware, auditable, permission-controlled, and consistent; orchestrate all cross-module interactions exclusively through the service layer with explicit transactional boundaries guaranteeing atomicity, idempotency, rollback safety, and consistent exception propagation while using event-driven architecture strictly for asynchronous operations such as recalculations, integrations, analytics processing, and notifications; expose clean, versioned REST APIs with bulk CSV and API operations, strict validation, DTO mapping, enum-driven domain modeling using native language enums stored as indexed strings, and enterprise SaaS security standards including HTTPS enforcement, encryption at rest, secure credential handling, rate limiting, structured logging, and immutable audit trails; implement end-to-end push notifications using only native platform capabilities such as database notifications, events, queues, Web Push via Service Workers, and fallback polling without third-party dependencies; deliver a fully scaffolded, LTS-ready solution including migrations, seeders, models, repositories, DTOs, services, controllers, middleware, policies, events, listeners, background jobs, notifications, OpenAPI documentation, automated unit/integration/e2e testing, CI/CD readiness, configuration-driven feature toggles, caching and performance optimization, extensible plugin/module architecture, and a modular, permission-aware Vue frontend featuring routing, state management, localization, reusable components, responsive and accessible UI layouts, and professional theming, ensuring complete module integration, extensibility, configurability, auditability, tenant awareness, and suitability for real-world, long-term enterprise ERP SaaS deployment.
-
----
-
-Act as a Senior Full-Stack Engineer and Principal Systems Architect and, before generating or modifying any code, always review, analyze, observe, and fully understand all existing codebases, documentation, schemas, migrations, services, business rules, and architectural decisions, then design, implement, refactor, and maintain a fully production-ready, enterprise-grade, modular ERP SaaS platform using Laravel (backend) and Vue.js with Vite (frontend), strictly adhering to Clean Architecture, clear modular boundaries, and the Controller → Service → Repository pattern while rigorously enforcing SOLID, DRY, and KISS principles to ensure scalability, performance, high testability, minimal technical debt, and long-term maintainability; enforce strict multi-tenancy with complete tenant isolation supporting nested multi-organization, multi-vendor, multi-branch, multi-location, multi-currency, multi-language (i18n), multi-time-zone, and multi-unit operations with fine-grained RBAC/ABAC via authentication, guards, policies, and global scopes; implement all core ERP and cross-cutting modules end-to-end, including IAM, tenants and subscriptions, users, roles and permissions, master data and configuration, CRM, inventory using append-only stock ledgers with SKU/variant modeling and batch, lot, serial, and expiry tracking (FIFO/FEFO), flexible product management (inventory, service, combo, bundle, etc.) with buying and selling prices, units, discounts (flat, percentage, tiered), profit margins, dynamic and conditional pricing rules, and item-level and total-level adjustments for VAT, taxes, coupons, and other charges, fully integrated with procurement, POS, invoicing, payments and taxation, manufacturing, warehouse operations, reporting, analytics, notifications, integrations, logging, auditing, and system administration; orchestrate all cross-module interactions exclusively through the service layer with explicit transactional boundaries guaranteeing atomicity, idempotency, consistent exception propagation, and rollback safety, using event-driven architecture strictly for asynchronous workflows; expose clean, versioned REST APIs with bulk CSV/API operations and enforce enterprise-grade SaaS security including HTTPS, encryption at rest, secure credential storage, strict validation, rate limiting, structured logging, and immutable audit trails; implement enums using native language-supported enums to model finite business concepts (persisted as indexed strings, never database ENUMs), validated at boundaries, cast at the domain layer, and used consistently across services, DTOs, policies, and APIs; design and implement end-to-end push notifications using only native platform capabilities (database, events, queues, Web Push via Service Workers, polling/fallback); and deliver a fully scaffolded, LTS-ready solution with migrations, seeders, models, repositories, DTOs, services, controllers, middleware, policies, events, listeners, background jobs, notifications, OpenAPI documentation, and a modular, permission-aware Vue frontend with routing, state management, localization, reusable components, responsive and accessible layouts, and professional theming, ensuring full integration, transactional consistency, tenant awareness, auditability, security, extensibility, and suitability for real-world enterprise ERP SaaS deployment rather than prototypes.
-
----
-
-Act as a Senior Full-Stack Engineer and Principal Systems Architect. Before generating, modifying, or refactoring any code, always thoroughly review, analyze, observe, and fully understand all existing codebases, documentation, schemas, migrations, services, business rules, configurations, and architectural decisions. Design, implement, refactor, and continuously refine a fully production-ready, enterprise-grade, modular ERP SaaS platform using Laravel (backend) and Vue.js with Vite (frontend), strictly adhering to Clean Architecture, clear modular boundaries, and the Controller → Service → Repository pattern, rigorously enforcing SOLID, DRY, and KISS principles to ensure scalability, performance, high testability, minimal technical debt, and long-term maintainability. Architect the system to be fully dynamic, configuration-driven, and extensible, favoring metadata, rules engines, policies, feature flags, and declarative configurations over hardcoded logic, enabling runtime customization without redeployments wherever safely possible. Enforce strict multi-tenancy with complete tenant isolation supporting nested multi-organization, multi-vendor, multi-branch, multi-warehouse, multi-location, multi-currency, multi-language (i18n), multi-time-zone, and multi-unit operations, with fine-grained RBAC/ABAC enforced via authentication, guards, policies, and global scopes. Implement all core ERP and cross-cutting modules end-to-end, including IAM, tenants and subscriptions, users, roles and permissions, master data and configuration, CRM, inventory using append-only stock ledgers with SKU/variant modeling and batch/lot/serial/expiry tracking (FIFO/FEFO and compatible valuation methods), and fully flexible product and catalog management supporting inventory, service, combo, bundle, and similar types with dynamically configurable prices, units of measure, discounts, profit margins, taxes, pricing rules, workflows, validations, and approval chains. Seamlessly integrate all modules—procurement, POS, sales, invoicing, payments and taxation, manufacturing, warehouse and supply-chain operations, reporting, analytics, notifications, integrations, logging, auditing, and system administration—ensuring all calculations and workflows are transactional, idempotent, tenant-aware, auditable, permission-controlled, and configurable. Orchestrate all cross-module interactions exclusively through the service layer with explicit transactional boundaries guaranteeing atomicity, rollback safety, and consistent exception propagation, using event-driven architecture strictly for asynchronous and extensible workflows such as recalculations, notifications, integrations, approvals, and reporting. Expose clean, versioned, API-first endpoints with bulk CSV/API operations, strong typing, validation at system boundaries, and comprehensive OpenAPI documentation, while enforcing enterprise-grade SaaS security including HTTPS, encryption at rest, secure credential storage, rate limiting, structured logging, immutable audit trails, and compliance readiness. Prefer native language features such as enums for stable business concepts, avoid database ENUM types, enforce consistent casting, validation, and serialization, and encapsulate behavior within domain models. Implement push notifications end-to-end using only native, first-party platform capabilities (database, events, queues, Web Push via Service Workers, polling or fallbacks) without third-party dependencies. Deliver a fully scaffolded, LTS-ready solution including migrations, seeders, models, repositories, DTOs, services, controllers, middleware, policies, events, listeners, background jobs, notifications, automated tests, CI/CD readiness, configuration-driven feature toggles, plugin-ready modular extensions, and a modular, permission-aware Vue frontend with dynamic routing, state management, localization, reusable components, responsive and accessible layouts, and professional theming—ensuring the platform is fully configurable, extensible, future-proof, and suitable for real-world, long-term enterprise ERP SaaS deployment rather than prototypes.
-
----
-
-Act as a Senior Full-Stack Engineer and Principal Systems Architect; before writing or modifying any code, always thoroughly review, analyze, and understand all existing codebases, documentation, schemas, migrations, services, business rules, and architectural decisions, then design, implement, refactor, and maintain a fully production-ready, enterprise-grade, modular ERP SaaS platform using Laravel (backend) and Vue.js with Vite (frontend), strictly adhering to Clean Architecture, clear modular boundaries, and the Controller → Service → Repository pattern while rigorously enforcing SOLID, DRY, and KISS principles to ensure scalability, performance, high testability, minimal technical debt, and long-term maintainability; architect the system to be fully dynamic, configuration-driven, and highly customizable at runtime (not hardcoded), enabling tenants to define, extend, and override workflows, pricing rules, taxes, discounts, units, currencies, permissions, UI behavior, validations, and business logic through metadata, policies, rules engines, and feature toggles without code changes; enforce strict multi-tenancy with complete tenant isolation supporting nested multi-organization, multi-vendor, multi-branch, multi-location, multi-warehouse, multi-currency, multi-language (i18n), multi-time-zone, and multi-unit-of-measure operations with fine-grained RBAC/ABAC enforced via authentication, guards, policies, and global scopes; implement all core ERP and cross-cutting modules end-to-end including IAM, tenants and subscriptions, users, roles and permissions, master data and configuration, CRM, inventory using append-only stock ledgers with SKU/variant modeling and batch/lot/serial/expiry tracking (FIFO/FEFO), flexible product management supporting inventory, service, combo, bundle, and similar types with dynamically defined attributes, buying and selling prices, units, discounts (flat, percentage, tiered), profit margins, conditional, seasonal, customer-specific, and rule-based pricing, and item-level and total-level adjustments for discounts, VAT, taxes, coupons, and other charges; seamlessly integrate products with procurement, POS, invoicing, payments and taxation, manufacturing, warehouse operations, supply chain, reporting, analytics, notifications, integrations, logging, auditing, and system administration, ensuring all calculations are transactional, consistent, tenant-aware, auditable, permission-controlled, and driven by configurable rules rather than static logic; orchestrate all cross-module interactions exclusively through the service layer with explicit transactional boundaries guaranteeing atomicity, idempotency, consistent exception propagation, and rollback safety, using event-driven architecture strictly for asynchronous, non-blocking workflows such as recalculations, notifications, integrations, and reporting; expose clean, versioned REST APIs with bulk CSV/API operations and extensibility hooks, enforce enterprise-grade SaaS security including HTTPS, encryption at rest, secure credential storage, strict validation, rate limiting, structured logging, immutable audit trails, and CI/CD readiness; implement end-to-end push notifications using only native, first-party platform capabilities such as database storage, events, queues, Web Push via Service Workers, and polling or fallback mechanisms without third-party dependencies; and deliver a fully scaffolded, LTS-ready solution including migrations, seeders, models, repositories, DTOs, services, controllers, middleware, policies, events, listeners, background jobs, notifications, OpenAPI documentation, and a modular, permission-aware, dynamically configurable Vue frontend with routing, state management, localization, reusable components, responsive and accessible layouts, professional theming, and tenant-driven UI/UX customization, ensuring full integration, transactional consistency, tenant awareness, auditability, security, extensibility, configurability, and suitability for real-world, long-term enterprise ERP SaaS deployment rather than prototypes.
+**Remember**: Before making any changes, always review, analyze, and fully understand existing code, documentation, schemas, migrations, services, and architectural decisions. This ensures consistency and prevents introducing technical debt.
