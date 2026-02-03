@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use App\Modules\CRM\Http\Controllers\CustomerController;
+use App\Modules\IAM\Http\Controllers\PermissionController;
+use App\Modules\IAM\Http\Controllers\RoleController;
+use App\Modules\IAM\Http\Controllers\UserController;
 use App\Modules\Inventory\Http\Controllers\ProductController;
 use App\Modules\Procurement\Http\Controllers\PurchaseOrderController;
 use App\Modules\Procurement\Http\Controllers\SupplierController;
@@ -86,12 +89,34 @@ Route::prefix('v1')->group(function () {
             
         });
         
-        // IAM Module Routes (to be implemented)
-        // Route::prefix('iam')->group(function () {
-        //     Route::apiResource('users', UserController::class);
-        //     Route::apiResource('roles', RoleController::class);
-        //     Route::apiResource('permissions', PermissionController::class);
-        // });
+        // IAM Module Routes
+        Route::prefix('iam')->group(function () {
+            
+            // Users
+            Route::get('users/search', [UserController::class, 'search']);
+            Route::get('users/active', [UserController::class, 'active']);
+            Route::post('users/{id}/assign-roles', [UserController::class, 'assignRoles']);
+            Route::post('users/{id}/sync-roles', [UserController::class, 'syncRoles']);
+            Route::get('users/{id}/roles', [UserController::class, 'getRoles']);
+            Route::get('users/{id}/permissions', [UserController::class, 'getPermissions']);
+            Route::apiResource('users', UserController::class);
+            
+            // Roles
+            Route::get('roles/system', [RoleController::class, 'systemRoles']);
+            Route::get('roles/custom', [RoleController::class, 'customRoles']);
+            Route::post('roles/{id}/assign-permissions', [RoleController::class, 'assignPermissions']);
+            Route::post('roles/{id}/sync-permissions', [RoleController::class, 'syncPermissions']);
+            Route::get('roles/{id}/permissions', [RoleController::class, 'getPermissions']);
+            Route::get('roles/{id}/users', [RoleController::class, 'getUsers']);
+            Route::apiResource('roles', RoleController::class);
+            
+            // Permissions (read-only)
+            Route::get('permissions/grouped', [PermissionController::class, 'grouped']);
+            Route::get('permissions/{id}/roles', [PermissionController::class, 'getRoles']);
+            Route::get('permissions/{id}', [PermissionController::class, 'show']);
+            Route::get('permissions', [PermissionController::class, 'index']);
+            
+        });
         
     });
 });
