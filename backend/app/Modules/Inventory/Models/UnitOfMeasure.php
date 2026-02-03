@@ -18,7 +18,7 @@ class UnitOfMeasure extends Model
 {
     use HasFactory, SoftDeletes, TenantScoped;
 
-    protected $table = 'units_of_measure';
+    protected $table = 'units';
 
     /**
      * The attributes that are mass assignable.

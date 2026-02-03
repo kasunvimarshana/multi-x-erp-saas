@@ -119,7 +119,7 @@ class AuthController extends BaseController
             }
 
             if (!$user->is_active) {
-                return $this->errorResponse('Account is inactive', null, 403);
+                return $this->errorResponse('User account is inactive', null, 403);
             }
 
             // Check password
