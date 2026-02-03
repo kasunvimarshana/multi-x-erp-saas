@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NotificationController;
 use App\Modules\CRM\Http\Controllers\CustomerController;
 use App\Modules\IAM\Http\Controllers\PermissionController;
 use App\Modules\IAM\Http\Controllers\RoleController;
@@ -9,6 +10,10 @@ use App\Modules\Inventory\Http\Controllers\ProductController;
 use App\Modules\Inventory\Http\Controllers\StockMovementController;
 use App\Modules\Procurement\Http\Controllers\PurchaseOrderController;
 use App\Modules\Procurement\Http\Controllers\SupplierController;
+use App\Modules\POS\Http\Controllers\InvoiceController;
+use App\Modules\POS\Http\Controllers\PaymentController;
+use App\Modules\POS\Http\Controllers\QuotationController;
+use App\Modules\POS\Http\Controllers\SalesOrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -121,6 +126,59 @@ Route::prefix('v1')->group(function () {
             Route::get('permissions/{id}/roles', [PermissionController::class, 'getRoles']);
             Route::get('permissions/{id}', [PermissionController::class, 'show']);
             Route::get('permissions', [PermissionController::class, 'index']);
+            
+        });
+        
+        // POS (Point of Sale) Module Routes
+        Route::prefix('pos')->group(function () {
+            
+            // Quotations
+            Route::get('quotations/expired', [QuotationController::class, 'expired']);
+            Route::get('quotations/customer/{customerId}', [QuotationController::class, 'byCustomer']);
+            Route::post('quotations/{id}/convert-to-sales-order', [QuotationController::class, 'convertToSalesOrder']);
+            Route::apiResource('quotations', QuotationController::class);
+            
+            // Sales Orders
+            Route::get('sales-orders/search', [SalesOrderController::class, 'search']);
+            Route::get('sales-orders/status/{status}', [SalesOrderController::class, 'byStatus']);
+            Route::get('sales-orders/customer/{customerId}', [SalesOrderController::class, 'byCustomer']);
+            Route::post('sales-orders/{id}/confirm', [SalesOrderController::class, 'confirm']);
+            Route::post('sales-orders/{id}/cancel', [SalesOrderController::class, 'cancel']);
+            Route::apiResource('sales-orders', SalesOrderController::class);
+            
+            // Invoices
+            Route::get('invoices/overdue', [InvoiceController::class, 'overdue']);
+            Route::get('invoices/status/{status}', [InvoiceController::class, 'byStatus']);
+            Route::get('invoices/customer/{customerId}', [InvoiceController::class, 'byCustomer']);
+            Route::post('invoices/from-sales-order/{salesOrderId}', [InvoiceController::class, 'createFromSalesOrder']);
+            Route::apiResource('invoices', InvoiceController::class);
+            
+            // Payments
+            Route::get('payments/invoice/{invoiceId}', [PaymentController::class, 'byInvoice']);
+            Route::get('payments/customer/{customerId}', [PaymentController::class, 'byCustomer']);
+            Route::post('payments/{id}/void', [PaymentController::class, 'void']);
+            Route::apiResource('payments', PaymentController::class)->except(['update']);
+            
+        });
+        
+        // Notifications Module Routes
+        Route::prefix('notifications')->group(function () {
+            
+            // Push Notifications
+            Route::post('push/subscribe', [NotificationController::class, 'subscribePush']);
+            Route::post('push/unsubscribe', [NotificationController::class, 'unsubscribePush']);
+            Route::get('push/subscriptions', [NotificationController::class, 'getPushSubscriptions']);
+            Route::post('push/test', [NotificationController::class, 'sendTestNotification']);
+            
+            // Notification Preferences
+            Route::get('preferences', [NotificationController::class, 'getPreferences']);
+            Route::put('preferences', [NotificationController::class, 'updatePreferences']);
+            
+            // Notification History
+            Route::get('history', [NotificationController::class, 'getHistory']);
+            Route::post('{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
+            Route::post('mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
+            Route::delete('{id}', [NotificationController::class, 'deleteNotification']);
             
         });
         
