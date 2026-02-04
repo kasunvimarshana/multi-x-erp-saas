@@ -177,7 +177,7 @@ import Modal from '../../../components/common/Modal.vue'
 import FormInput from '../../../components/forms/FormInput.vue'
 import FormSelect from '../../../components/forms/FormSelect.vue'
 import FormTextarea from '../../../components/forms/FormTextarea.vue'
-import contactService from '../../../services/contactService'
+import crmService from '../../../services/crmService'
 import customerService from '../../../services/customerService'
 
 const loading = ref(false)
@@ -241,7 +241,7 @@ const fetchContacts = async () => {
       customer_id: filters.value.customer_id,
       status: filters.value.status
     }
-    const response = await contactService.getAll(params)
+    const response = await crmService.getContacts(params)
     contacts.value = response.data.data || []
     totalPages.value = response.data.meta?.last_page || 1
   } catch (error) {
@@ -293,9 +293,9 @@ const resetForm = () => {
 const handleSaveContact = async () => {
   try {
     if (isEditMode.value) {
-      await contactService.update(form.value.id, form.value)
+      await crmService.updateContact(form.value.id, form.value)
     } else {
-      await contactService.create(form.value)
+      await crmService.createContact(form.value)
     }
     closeModal()
     await fetchContacts()
@@ -307,7 +307,7 @@ const handleSaveContact = async () => {
 
 const viewContact = async (contact) => {
   try {
-    const response = await contactService.getById(contact.id)
+    const response = await crmService.getContact(contact.id)
     selectedContact.value = response.data.data
     showViewModal.value = true
   } catch (error) {
@@ -317,7 +317,7 @@ const viewContact = async (contact) => {
 
 const editContact = async (contact) => {
   try {
-    const response = await contactService.getById(contact.id)
+    const response = await crmService.getContact(contact.id)
     const data = response.data.data
     form.value = { ...data }
     isEditMode.value = true
@@ -330,7 +330,7 @@ const editContact = async (contact) => {
 const deleteContact = async (contact) => {
   if (confirm(`Are you sure you want to delete ${contact.name}?`)) {
     try {
-      await contactService.delete(contact.id)
+      await crmService.deleteContact(contact.id)
       await fetchContacts()
     } catch (error) {
       console.error('Failed to delete contact:', error)

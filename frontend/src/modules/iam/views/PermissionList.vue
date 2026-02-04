@@ -97,7 +97,7 @@ import DataTable from '../../../components/common/DataTable.vue'
 import Modal from '../../../components/common/Modal.vue'
 import FormInput from '../../../components/forms/FormInput.vue'
 import FormTextarea from '../../../components/forms/FormTextarea.vue'
-import permissionService from '../../../services/permissionService'
+import iamService from '../../../services/iamService'
 
 const loading = ref(false)
 const showModal = ref(false)
@@ -163,7 +163,7 @@ const fetchPermissions = async () => {
     const params = {
       page: currentPage.value
     }
-    const response = await permissionService.getAll(params)
+    const response = await iamService.getPermissions(params)
     permissions.value = response.data.data || []
     totalPages.value = response.data.meta?.last_page || 1
   } catch (error) {
@@ -197,9 +197,9 @@ const resetForm = () => {
 const handleSavePermission = async () => {
   try {
     if (isEditMode.value) {
-      await permissionService.update(form.value.id, form.value)
+      await iamService.updatePermission(form.value.id, form.value)
     } else {
-      await permissionService.create(form.value)
+      await iamService.createPermission(form.value)
     }
     closeModal()
     await fetchPermissions()
@@ -218,7 +218,7 @@ const editPermission = async (permission) => {
 const deletePermission = async (permission) => {
   if (confirm(`Are you sure you want to delete permission "${permission.name}"?`)) {
     try {
-      await permissionService.delete(permission.id)
+      await iamService.deletePermission(permission.id)
       await fetchPermissions()
     } catch (error) {
       console.error('Failed to delete permission:', error)

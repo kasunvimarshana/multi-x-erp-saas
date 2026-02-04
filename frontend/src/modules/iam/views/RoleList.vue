@@ -176,8 +176,7 @@ import DataTable from '../../../components/common/DataTable.vue'
 import Modal from '../../../components/common/Modal.vue'
 import FormInput from '../../../components/forms/FormInput.vue'
 import FormTextarea from '../../../components/forms/FormTextarea.vue'
-import roleService from '../../../services/roleService'
-import permissionService from '../../../services/permissionService'
+import iamService from '../../../services/iamService'
 
 const loading = ref(false)
 const showModal = ref(false)
@@ -230,7 +229,7 @@ const fetchRoles = async () => {
       page: currentPage.value,
       search: filters.value.search
     }
-    const response = await roleService.getAll(params)
+    const response = await iamService.getRoles(params)
     roles.value = response.data.data || []
     totalPages.value = response.data.meta?.last_page || 1
   } catch (error) {
@@ -243,7 +242,7 @@ const fetchRoles = async () => {
 
 const fetchPermissions = async () => {
   try {
-    const response = await permissionService.getAll()
+    const response = await iamService.getPermissions()
     permissions.value = response.data.data || []
   } catch (error) {
     console.error('Failed to fetch permissions:', error)
@@ -301,9 +300,9 @@ const resetForm = () => {
 const handleSaveRole = async () => {
   try {
     if (isEditMode.value) {
-      await roleService.update(form.value.id, form.value)
+      await iamService.updateRole(form.value.id, form.value)
     } else {
-      await roleService.create(form.value)
+      await iamService.createRole(form.value)
     }
     closeModal()
     await fetchRoles()
@@ -315,7 +314,7 @@ const handleSaveRole = async () => {
 
 const viewRole = async (role) => {
   try {
-    const response = await roleService.getById(role.id)
+    const response = await iamService.getRole(role.id)
     selectedRole.value = response.data.data
     showViewModal.value = true
   } catch (error) {
@@ -325,7 +324,7 @@ const viewRole = async (role) => {
 
 const editRole = async (role) => {
   try {
-    const response = await roleService.getById(role.id)
+    const response = await iamService.getRole(role.id)
     const data = response.data.data
     form.value = {
       id: data.id,
@@ -348,7 +347,7 @@ const managePermissions = (role) => {
 const deleteRole = async (role) => {
   if (confirm(`Are you sure you want to delete role "${role.name}"?`)) {
     try {
-      await roleService.delete(role.id)
+      await iamService.deleteRole(role.id)
       await fetchRoles()
     } catch (error) {
       console.error('Failed to delete role:', error)
