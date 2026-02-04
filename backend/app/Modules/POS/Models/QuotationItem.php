@@ -3,15 +3,17 @@
 namespace App\Modules\POS\Models;
 
 use App\Modules\Inventory\Models\Product;
+use App\Traits\TenantScoped;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class QuotationItem extends Model
 {
-    use HasFactory;
+    use HasFactory, TenantScoped;
 
     protected $fillable = [
+        'tenant_id',
         'quotation_id',
         'product_id',
         'line_number',

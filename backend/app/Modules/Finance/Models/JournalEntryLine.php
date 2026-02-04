@@ -2,6 +2,7 @@
 
 namespace App\Modules\Finance\Models;
 
+use App\Traits\TenantScoped;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class JournalEntryLine extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, TenantScoped;
 
     protected static function newFactory()
     {
@@ -17,6 +18,7 @@ class JournalEntryLine extends Model
     }
 
     protected $fillable = [
+        'tenant_id',
         'journal_entry_id',
         'account_id',
         'debit',
