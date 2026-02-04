@@ -317,6 +317,9 @@ const totalPages = ref(1)
 const customers = ref([])
 const products = ref([])
 
+// Constants
+const DEFAULT_QUOTATION_VALIDITY_DAYS = 30
+
 const filters = ref({
   search: '',
   status: '',
@@ -327,7 +330,7 @@ const filters = ref({
 const form = ref({
   customer_id: '',
   quotation_date: new Date().toISOString().split('T')[0],
-  valid_until: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+  valid_until: new Date(Date.now() + DEFAULT_QUOTATION_VALIDITY_DAYS * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
   status: 'draft',
   notes: '',
   terms: '',
@@ -426,7 +429,7 @@ const resetForm = () => {
   form.value = {
     customer_id: '',
     quotation_date: new Date().toISOString().split('T')[0],
-    valid_until: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    valid_until: new Date(Date.now() + DEFAULT_QUOTATION_VALIDITY_DAYS * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     status: 'draft',
     notes: '',
     terms: '',

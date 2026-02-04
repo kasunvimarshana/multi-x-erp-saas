@@ -640,9 +640,12 @@ const getStatusColor = (status) => {
   return colors[status] || 'gray'
 }
 
+// Constants
+const LOW_STOCK_THRESHOLD = 10
+
 const getStockClass = (quantity) => {
   if (quantity === 0) return 'stock-out'
-  if (quantity < 10) return 'stock-low'
+  if (quantity < LOW_STOCK_THRESHOLD) return 'stock-low'
   return 'stock-good'
 }
 </script>

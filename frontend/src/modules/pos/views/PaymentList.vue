@@ -406,6 +406,7 @@ const editPayment = async (payment) => {
 const deletePaymentConfirm = async (payment) => {
   if (confirm(`Are you sure you want to delete payment ${payment.payment_number}?`)) {
     try {
+      // TODO: Implement payment deletion when backend API is ready
       alert('Payment deletion would be implemented here with proper backend support.')
     } catch (error) {
       console.error('Failed to delete payment:', error)
@@ -415,6 +416,7 @@ const deletePaymentConfirm = async (payment) => {
 }
 
 const printReceipt = (payment) => {
+  // TODO: Implement PDF receipt generation and printing
   alert(`Print receipt functionality for payment ${payment.payment_number} would be implemented here.`)
 }
 

@@ -424,6 +424,9 @@ const totalPages = ref(1)
 const customers = ref([])
 const products = ref([])
 
+// Constants
+const DEFAULT_PAYMENT_TERM_DAYS = 30
+
 const filters = ref({
   search: '',
   status: '',
@@ -434,7 +437,7 @@ const filters = ref({
 const form = ref({
   customer_id: '',
   invoice_date: new Date().toISOString().split('T')[0],
-  due_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+  due_date: new Date(Date.now() + DEFAULT_PAYMENT_TERM_DAYS * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
   payment_terms: 'net_30',
   status: 'draft',
   notes: '',
@@ -563,7 +566,7 @@ const resetForm = () => {
   form.value = {
     customer_id: '',
     invoice_date: new Date().toISOString().split('T')[0],
-    due_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    due_date: new Date(Date.now() + DEFAULT_PAYMENT_TERM_DAYS * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     payment_terms: 'net_30',
     status: 'draft',
     notes: '',
@@ -715,6 +718,7 @@ const handleRecordPayment = async () => {
 }
 
 const printInvoice = (invoice) => {
+  // TODO: Implement PDF generation and printing functionality
   alert(`Print/Download functionality for invoice ${invoice.invoice_number} would be implemented here.`)
 }
 
