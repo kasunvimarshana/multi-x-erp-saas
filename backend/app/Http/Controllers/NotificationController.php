@@ -12,8 +12,7 @@ class NotificationController extends BaseController
 {
     public function __construct(
         private readonly WebPushNotificationService $webPushService
-    ) {
-    }
+    ) {}
 
     /**
      * Subscribe to push notifications
@@ -104,6 +103,7 @@ class NotificationController extends BaseController
     public function getPushSubscriptions(): JsonResponse
     {
         $subscriptions = PushSubscription::where('user_id', auth()->id())->get();
+
         return $this->success($subscriptions);
     }
 
@@ -132,7 +132,7 @@ class NotificationController extends BaseController
     public function getHistory(Request $request): JsonResponse
     {
         $perPage = $request->get('per_page', 20);
-        
+
         $notifications = auth()->user()
             ->notifications()
             ->orderBy('created_at', 'desc')
@@ -151,7 +151,7 @@ class NotificationController extends BaseController
             ->where('id', $id)
             ->first();
 
-        if (!$notification) {
+        if (! $notification) {
             return $this->error('Notification not found', 404);
         }
 
@@ -180,7 +180,7 @@ class NotificationController extends BaseController
             ->where('id', $id)
             ->first();
 
-        if (!$notification) {
+        if (! $notification) {
             return $this->error('Notification not found', 404);
         }
 

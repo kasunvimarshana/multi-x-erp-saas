@@ -3,7 +3,6 @@
 namespace Database\Factories\Finance;
 
 use App\Modules\Finance\Models\Account;
-use App\Modules\Finance\Models\CostCenter;
 use App\Modules\Finance\Models\JournalEntry;
 use App\Modules\Finance\Models\JournalEntryLine;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -24,7 +23,7 @@ class JournalEntryLineFactory extends Factory
             'journal_entry_id' => JournalEntry::factory(),
             'account_id' => Account::factory(),
             'debit' => $isDebit ? $amount : 0,
-            'credit' => !$isDebit ? $amount : 0,
+            'credit' => ! $isDebit ? $amount : 0,
             'description' => fake()->optional()->sentence(),
             'cost_center_id' => null,
         ];

@@ -17,7 +17,7 @@ class CostCenterFactory extends Factory
     {
         return [
             'tenant_id' => Tenant::factory(),
-            'code' => 'CC-' . fake()->unique()->numerify('####'),
+            'code' => 'CC-'.fake()->unique()->numerify('####'),
             'name' => fake()->words(3, true),
             'description' => fake()->optional()->sentence(),
             'is_active' => true,

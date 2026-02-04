@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Unit of Measure Model
- * 
+ *
  * Represents a unit of measurement for products.
  */
 class UnitOfMeasure extends Model

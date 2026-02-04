@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 
 /**
  * Journal Entry Repository
- * 
+ *
  * Handles data access for journal entries.
  */
 class JournalEntryRepository extends BaseRepository

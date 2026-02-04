@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 
 /**
  * Journal Entry Service
- * 
+ *
  * Handles business logic for journal entries including double-entry validation.
  */
 class JournalEntryService extends BaseService
@@ -47,8 +47,8 @@ class JournalEntryService extends BaseService
 
             // Check fiscal year is open
             $fiscalYear = $this->fiscalYearRepository->getCurrentFiscalYear();
-            if (!$fiscalYear) {
-                throw new \InvalidArgumentException("No open fiscal year found for the entry date");
+            if (! $fiscalYear) {
+                throw new \InvalidArgumentException('No open fiscal year found for the entry date');
             }
 
             // Create journal entry
@@ -82,7 +82,7 @@ class JournalEntryService extends BaseService
             $journalEntry = $this->journalEntryRepository->findOrFail($id);
 
             // Check if can be edited
-            if (!$journalEntry->status->canEdit()) {
+            if (! $journalEntry->status->canEdit()) {
                 throw new \InvalidArgumentException(
                     "Journal entry with status '{$journalEntry->status->label()}' cannot be edited"
                 );
@@ -91,7 +91,7 @@ class JournalEntryService extends BaseService
             $this->logInfo('Updating journal entry', ['id' => $id]);
 
             // Check if entry number changed and already exists
-            if ($journalEntry->entry_number !== $dto->entryNumber 
+            if ($journalEntry->entry_number !== $dto->entryNumber
                 && $this->journalEntryRepository->findByEntryNumber($dto->entryNumber)) {
                 throw new \InvalidArgumentException("Journal entry with number '{$dto->entryNumber}' already exists");
             }
@@ -130,7 +130,7 @@ class JournalEntryService extends BaseService
         $journalEntry = $this->journalEntryRepository->findOrFail($id);
 
         // Check if can be deleted
-        if (!$journalEntry->status->canEdit()) {
+        if (! $journalEntry->status->canEdit()) {
             throw new \InvalidArgumentException(
                 "Journal entry with status '{$journalEntry->status->label()}' cannot be deleted"
             );
@@ -161,7 +161,7 @@ class JournalEntryService extends BaseService
             $journalEntry = $this->journalEntryRepository->findWithRelations($id);
 
             // Check if can be posted
-            if (!$journalEntry->status->canPost()) {
+            if (! $journalEntry->status->canPost()) {
                 throw new \InvalidArgumentException(
                     "Journal entry with status '{$journalEntry->status->label()}' cannot be posted"
                 );
@@ -170,16 +170,16 @@ class JournalEntryService extends BaseService
             $this->logInfo('Posting journal entry', ['id' => $id]);
 
             // Validate entry is balanced
-            if (!$journalEntry->isBalanced()) {
+            if (! $journalEntry->isBalanced()) {
                 throw new \InvalidArgumentException(
-                    "Journal entry is not balanced. Total debits must equal total credits"
+                    'Journal entry is not balanced. Total debits must equal total credits'
                 );
             }
 
             // Check fiscal year is open
             $fiscalYear = $this->fiscalYearRepository->getCurrentFiscalYear();
-            if (!$fiscalYear) {
-                throw new \InvalidArgumentException("No open fiscal year found");
+            if (! $fiscalYear) {
+                throw new \InvalidArgumentException('No open fiscal year found');
             }
 
             // Update status
@@ -207,7 +207,7 @@ class JournalEntryService extends BaseService
             $journalEntry = $this->journalEntryRepository->findOrFail($id);
 
             // Check if can be voided
-            if (!$journalEntry->status->canVoid()) {
+            if (! $journalEntry->status->canVoid()) {
                 throw new \InvalidArgumentException(
                     "Journal entry with status '{$journalEntry->status->label()}' cannot be voided"
                 );
@@ -260,7 +260,7 @@ class JournalEntryService extends BaseService
     protected function validateJournalEntryLines(array $lines): void
     {
         if (empty($lines)) {
-            throw new \InvalidArgumentException("Journal entry must have at least one line");
+            throw new \InvalidArgumentException('Journal entry must have at least one line');
         }
 
         $totalDebit = 0;
@@ -268,12 +268,12 @@ class JournalEntryService extends BaseService
 
         foreach ($lines as $line) {
             // Validate account exists
-            if (!isset($line['account_id'])) {
-                throw new \InvalidArgumentException("Each line must have an account_id");
+            if (! isset($line['account_id'])) {
+                throw new \InvalidArgumentException('Each line must have an account_id');
             }
 
             $account = $this->accountRepository->find($line['account_id']);
-            if (!$account) {
+            if (! $account) {
                 throw new \InvalidArgumentException("Account with ID {$line['account_id']} not found");
             }
 
@@ -282,15 +282,15 @@ class JournalEntryService extends BaseService
 
             // Validate amounts
             if ($debit < 0 || $credit < 0) {
-                throw new \InvalidArgumentException("Debit and credit amounts must be non-negative");
+                throw new \InvalidArgumentException('Debit and credit amounts must be non-negative');
             }
 
             if ($debit > 0 && $credit > 0) {
-                throw new \InvalidArgumentException("A line cannot have both debit and credit amounts");
+                throw new \InvalidArgumentException('A line cannot have both debit and credit amounts');
             }
 
             if ($debit == 0 && $credit == 0) {
-                throw new \InvalidArgumentException("A line must have either a debit or credit amount");
+                throw new \InvalidArgumentException('A line must have either a debit or credit amount');
             }
 
             $totalDebit += $debit;
@@ -310,7 +310,7 @@ class JournalEntryService extends BaseService
         $prefix = 'JE';
         $date = now()->format('Ymd');
         $count = $this->journalEntryRepository->count(['entry_number' => "{$prefix}-{$date}-%"]) + 1;
-        
+
         return sprintf('%s-%s-%04d', $prefix, $date, $count);
     }
 }

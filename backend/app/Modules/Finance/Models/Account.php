@@ -84,16 +84,18 @@ class Account extends Model
     public function getFullCodeAttribute(): string
     {
         if ($this->parent) {
-            return $this->parent->full_code . '.' . $this->code;
+            return $this->parent->full_code.'.'.$this->code;
         }
+
         return $this->code;
     }
 
     public function getFullNameAttribute(): string
     {
         if ($this->parent) {
-            return $this->parent->full_name . ' > ' . $this->name;
+            return $this->parent->full_name.' > '.$this->name;
         }
+
         return $this->name;
     }
 }

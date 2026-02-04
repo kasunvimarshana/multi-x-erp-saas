@@ -4,7 +4,7 @@ namespace App\Enums;
 
 /**
  * Product Type Enum
- * 
+ *
  * Defines the different types of products in the system.
  */
 enum ProductType: string
@@ -16,8 +16,6 @@ enum ProductType: string
 
     /**
      * Check if the product type is physical inventory
-     *
-     * @return bool
      */
     public function isPhysical(): bool
     {
@@ -26,8 +24,6 @@ enum ProductType: string
 
     /**
      * Check if the product type requires stock tracking
-     *
-     * @return bool
      */
     public function requiresStockTracking(): bool
     {
@@ -36,12 +32,10 @@ enum ProductType: string
 
     /**
      * Get display label
-     *
-     * @return string
      */
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::INVENTORY => 'Inventory Item',
             self::SERVICE => 'Service',
             self::COMBO => 'Combo Product',
@@ -51,8 +45,6 @@ enum ProductType: string
 
     /**
      * Get all values as array
-     *
-     * @return array
      */
     public static function values(): array
     {

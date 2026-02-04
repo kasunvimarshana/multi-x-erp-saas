@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MetadataWorkflow extends Model
 {
@@ -59,7 +59,7 @@ class MetadataWorkflow extends Model
     public function getTransitionsFrom(string $state): array
     {
         return collect($this->transitions ?? [])
-            ->filter(fn($t) => $t['from'] === $state)
+            ->filter(fn ($t) => $t['from'] === $state)
             ->values()
             ->toArray();
     }
@@ -70,7 +70,7 @@ class MetadataWorkflow extends Model
     public function canTransition(string $from, string $to): bool
     {
         return collect($this->transitions ?? [])
-            ->contains(fn($t) => $t['from'] === $from && $t['to'] === $to);
+            ->contains(fn ($t) => $t['from'] === $from && $t['to'] === $to);
     }
 
     /**

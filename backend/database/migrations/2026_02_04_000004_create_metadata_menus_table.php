@@ -28,7 +28,7 @@ return new class extends Migration
             $table->json('config')->nullable(); // Additional configuration
             $table->timestamps();
             $table->softDeletes();
-            
+
             $table->index(['tenant_id', 'parent_id', 'order']);
             $table->index(['is_active']);
         });

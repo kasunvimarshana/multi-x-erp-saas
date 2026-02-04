@@ -10,15 +10,13 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * ReportExecutionRepository
- * 
+ *
  * Repository for managing report execution data access.
  */
 class ReportExecutionRepository extends BaseRepository
 {
     /**
      * Specify Model class name
-     *
-     * @return string
      */
     protected function model(): string
     {
@@ -27,10 +25,6 @@ class ReportExecutionRepository extends BaseRepository
 
     /**
      * Get executions by report ID
-     *
-     * @param int $reportId
-     * @param int $perPage
-     * @return LengthAwarePaginator
      */
     public function getByReport(int $reportId, int $perPage = 15): LengthAwarePaginator
     {
@@ -43,9 +37,6 @@ class ReportExecutionRepository extends BaseRepository
 
     /**
      * Get executions by user ID
-     *
-     * @param int $userId
-     * @return Collection
      */
     public function getByUser(int $userId): Collection
     {
@@ -58,9 +49,6 @@ class ReportExecutionRepository extends BaseRepository
 
     /**
      * Get executions by status
-     *
-     * @param ReportExecutionStatus $status
-     * @return Collection
      */
     public function getByStatus(ReportExecutionStatus $status): Collection
     {
@@ -73,8 +61,6 @@ class ReportExecutionRepository extends BaseRepository
 
     /**
      * Get running executions
-     *
-     * @return Collection
      */
     public function getRunning(): Collection
     {
@@ -83,8 +69,6 @@ class ReportExecutionRepository extends BaseRepository
 
     /**
      * Get failed executions
-     *
-     * @return Collection
      */
     public function getFailed(): Collection
     {
@@ -93,8 +77,6 @@ class ReportExecutionRepository extends BaseRepository
 
     /**
      * Get completed executions
-     *
-     * @return Collection
      */
     public function getCompleted(): Collection
     {
@@ -103,9 +85,6 @@ class ReportExecutionRepository extends BaseRepository
 
     /**
      * Get recent executions
-     *
-     * @param int $limit
-     * @return Collection
      */
     public function getRecent(int $limit = 10): Collection
     {
@@ -118,9 +97,6 @@ class ReportExecutionRepository extends BaseRepository
 
     /**
      * Get average execution time for a report
-     *
-     * @param int $reportId
-     * @return float
      */
     public function getAverageExecutionTime(int $reportId): float
     {
@@ -132,9 +108,6 @@ class ReportExecutionRepository extends BaseRepository
 
     /**
      * Get execution statistics for a report
-     *
-     * @param int $reportId
-     * @return array
      */
     public function getStatistics(int $reportId): array
     {
@@ -174,7 +147,6 @@ class ReportExecutionRepository extends BaseRepository
     /**
      * Clean up old executions
      *
-     * @param int $daysOld
      * @return int Number of deleted records
      */
     public function cleanupOldExecutions(int $daysOld = 90): int

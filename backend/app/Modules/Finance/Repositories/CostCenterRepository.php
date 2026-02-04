@@ -8,15 +8,13 @@ use Illuminate\Database\Eloquent\Collection;
 
 /**
  * CostCenterRepository
- * 
+ *
  * Repository for managing cost center data access.
  */
 class CostCenterRepository extends BaseRepository
 {
     /**
      * Specify Model class name
-     *
-     * @return string
      */
     protected function model(): string
     {
@@ -25,8 +23,6 @@ class CostCenterRepository extends BaseRepository
 
     /**
      * Get active cost centers
-     *
-     * @return Collection
      */
     public function getActive(): Collection
     {
@@ -35,9 +31,6 @@ class CostCenterRepository extends BaseRepository
 
     /**
      * Find cost center by code
-     *
-     * @param string $code
-     * @return CostCenter|null
      */
     public function findByCode(string $code): ?CostCenter
     {
@@ -46,9 +39,6 @@ class CostCenterRepository extends BaseRepository
 
     /**
      * Search cost centers by keyword
-     *
-     * @param string $keyword
-     * @return Collection
      */
     public function search(string $keyword): Collection
     {
@@ -63,8 +53,6 @@ class CostCenterRepository extends BaseRepository
 
     /**
      * Get cost centers with journal entry line count
-     *
-     * @return Collection
      */
     public function withUsageCount(): Collection
     {

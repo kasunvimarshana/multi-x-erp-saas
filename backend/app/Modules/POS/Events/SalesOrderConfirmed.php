@@ -11,7 +11,5 @@ class SalesOrderConfirmed
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public SalesOrder $salesOrder)
-    {
-    }
+    public function __construct(public SalesOrder $salesOrder) {}
 }

@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api\Manufacturing;
 
-use App\Models\Tenant;
 use App\Modules\Inventory\Models\Product;
 use App\Modules\Manufacturing\Models\BillOfMaterial;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -17,7 +16,7 @@ class BillOfMaterialApiTest extends FeatureTestCase
     public function test_can_list_boms(): void
     {
         $this->actingAsUser();
-        
+
         BillOfMaterial::factory()
             ->forTenant($this->tenant)
             ->count(3)
@@ -29,16 +28,16 @@ class BillOfMaterialApiTest extends FeatureTestCase
             ->assertJsonStructure([
                 'data' => [
                     'data' => [
-                        '*' => ['id', 'bom_number', 'product_id', 'version', 'is_active']
-                    ]
-                ]
+                        '*' => ['id', 'bom_number', 'product_id', 'version', 'is_active'],
+                    ],
+                ],
             ]);
     }
 
     public function test_can_create_bom(): void
     {
         $this->actingAsUser();
-        
+
         $product = Product::factory()->forTenant($this->tenant)->create();
 
         $data = [
@@ -53,8 +52,8 @@ class BillOfMaterialApiTest extends FeatureTestCase
                     'component_product_id' => $product->id,
                     'quantity' => 2,
                     'scrap_factor' => 0,
-                ]
-            ]
+                ],
+            ],
         ];
 
         $response = $this->postJson($this->baseUrl, $data);
@@ -66,7 +65,7 @@ class BillOfMaterialApiTest extends FeatureTestCase
     public function test_can_show_bom(): void
     {
         $this->actingAsUser();
-        
+
         $bom = BillOfMaterial::factory()
             ->forTenant($this->tenant)
             ->create();
@@ -80,7 +79,7 @@ class BillOfMaterialApiTest extends FeatureTestCase
     public function test_can_update_bom(): void
     {
         $this->actingAsUser();
-        
+
         $bom = BillOfMaterial::factory()
             ->forTenant($this->tenant)
             ->create();
@@ -102,7 +101,7 @@ class BillOfMaterialApiTest extends FeatureTestCase
     public function test_can_delete_bom(): void
     {
         $this->actingAsUser();
-        
+
         $bom = BillOfMaterial::factory()
             ->forTenant($this->tenant)
             ->create();
@@ -110,17 +109,17 @@ class BillOfMaterialApiTest extends FeatureTestCase
         $response = $this->deleteJson("{$this->baseUrl}/{$bom->id}");
 
         $this->assertJsonSuccess($response);
-        
+
         $this->assertDatabaseMissing('bill_of_materials', [
             'id' => $bom->id,
-            'deleted_at' => null
+            'deleted_at' => null,
         ]);
     }
 
     public function test_cannot_create_bom_with_invalid_data(): void
     {
         $this->actingAsUser();
-        
+
         $data = [
             'bom_number' => '', // Invalid
         ];

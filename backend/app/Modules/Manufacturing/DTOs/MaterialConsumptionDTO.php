@@ -4,7 +4,7 @@ namespace App\Modules\Manufacturing\DTOs;
 
 /**
  * Material Consumption Data Transfer Object
- * 
+ *
  * Encapsulates data for recording material consumption in production.
  */
 class MaterialConsumptionDTO

@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Report Executed Event
- * 
+ *
  * Fired when a report is successfully executed.
  */
 class ReportExecuted

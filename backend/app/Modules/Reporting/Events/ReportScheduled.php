@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Report Scheduled Event
- * 
+ *
  * Fired when a report is scheduled.
  */
 class ReportScheduled

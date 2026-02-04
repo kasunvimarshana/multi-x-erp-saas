@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 /**
  * Purchase Order API Controller
- * 
+ *
  * Handles HTTP requests for purchase order management.
  */
 class PurchaseOrderController extends BaseController
@@ -22,23 +22,17 @@ class PurchaseOrderController extends BaseController
 
     /**
      * Display a listing of purchase orders
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
     {
         $perPage = $request->input('per_page', 15);
         $purchaseOrders = $this->purchaseOrderService->getAllPurchaseOrders($perPage);
-        
+
         return $this->successResponse($purchaseOrders, 'Purchase orders retrieved successfully');
     }
 
     /**
      * Store a newly created purchase order
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function store(Request $request): JsonResponse
     {
@@ -63,39 +57,32 @@ class PurchaseOrderController extends BaseController
             'items.*.total_amount' => 'required|numeric|min:0',
             'items.*.notes' => 'nullable|string',
         ]);
-        
+
         $dto = PurchaseOrderDTO::fromArray($validated);
         $purchaseOrder = $this->purchaseOrderService->createPurchaseOrder($dto);
-        
+
         return $this->createdResponse($purchaseOrder, 'Purchase order created successfully');
     }
 
     /**
      * Display the specified purchase order
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function show(int $id): JsonResponse
     {
         $purchaseOrder = $this->purchaseOrderService->getPurchaseOrderById($id);
-        
+
         return $this->successResponse($purchaseOrder, 'Purchase order retrieved successfully');
     }
 
     /**
      * Update the specified purchase order
-     *
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
      */
     public function update(Request $request, int $id): JsonResponse
     {
         $validated = $request->validate([
             'supplier_id' => 'required|integer|exists:suppliers,id',
             'warehouse_id' => 'required|integer',
-            'po_number' => 'required|string|unique:purchase_orders,po_number,' . $id,
+            'po_number' => 'required|string|unique:purchase_orders,po_number,'.$id,
             'po_date' => 'required|date',
             'expected_delivery_date' => 'nullable|date|after_or_equal:po_date',
             'subtotal' => 'required|numeric|min:0',
@@ -112,37 +99,31 @@ class PurchaseOrderController extends BaseController
             'items.*.total_amount' => 'required|numeric|min:0',
             'items.*.notes' => 'nullable|string',
         ]);
-        
+
         $dto = PurchaseOrderDTO::fromArray($validated);
         $purchaseOrder = $this->purchaseOrderService->updatePurchaseOrder($id, $dto);
-        
+
         return $this->successResponse($purchaseOrder, 'Purchase order updated successfully');
     }
 
     /**
      * Remove the specified purchase order
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function destroy(int $id): JsonResponse
     {
         $this->purchaseOrderService->deletePurchaseOrder($id);
-        
+
         return $this->successResponse(null, 'Purchase order deleted successfully');
     }
 
     /**
      * Approve a purchase order
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function approve(int $id): JsonResponse
     {
         try {
             $purchaseOrder = $this->purchaseOrderService->approve($id);
-            
+
             return $this->successResponse($purchaseOrder, 'Purchase order approved successfully');
         } catch (\InvalidArgumentException $e) {
             return $this->errorResponse($e->getMessage(), null, 422);
@@ -151,10 +132,6 @@ class PurchaseOrderController extends BaseController
 
     /**
      * Receive goods from a purchase order
-     *
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
      */
     public function receive(Request $request, int $id): JsonResponse
     {
@@ -170,7 +147,7 @@ class PurchaseOrderController extends BaseController
             'received_at' => 'nullable|date',
             'notes' => 'nullable|string',
         ]);
-        
+
         try {
             $dto = new PurchaseOrderReceiptDTO(
                 purchaseOrderId: $id,
@@ -179,9 +156,9 @@ class PurchaseOrderController extends BaseController
                 receivedAt: $validated['received_at'] ?? null,
                 notes: $validated['notes'] ?? null
             );
-            
+
             $purchaseOrder = $this->purchaseOrderService->receive($id, $dto);
-            
+
             return $this->successResponse($purchaseOrder, 'Goods received successfully');
         } catch (\InvalidArgumentException $e) {
             return $this->errorResponse($e->getMessage(), null, 422);
@@ -190,15 +167,12 @@ class PurchaseOrderController extends BaseController
 
     /**
      * Cancel a purchase order
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function cancel(int $id): JsonResponse
     {
         try {
             $purchaseOrder = $this->purchaseOrderService->cancel($id);
-            
+
             return $this->successResponse($purchaseOrder, 'Purchase order cancelled successfully');
         } catch (\InvalidArgumentException $e) {
             return $this->errorResponse($e->getMessage(), null, 422);
@@ -207,27 +181,22 @@ class PurchaseOrderController extends BaseController
 
     /**
      * Search purchase orders
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function search(Request $request): JsonResponse
     {
         $search = $request->input('q', '');
         $purchaseOrders = $this->purchaseOrderService->searchPurchaseOrders($search);
-        
+
         return $this->successResponse($purchaseOrders, 'Search results retrieved successfully');
     }
 
     /**
      * Get purchase orders pending approval
-     *
-     * @return JsonResponse
      */
     public function pending(): JsonResponse
     {
         $purchaseOrders = $this->purchaseOrderService->getPendingPurchaseOrders();
-        
+
         return $this->successResponse($purchaseOrders, 'Pending purchase orders retrieved successfully');
     }
 }

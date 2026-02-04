@@ -11,7 +11,7 @@ enum ExportFormat: string
 
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::CSV => 'CSV',
             self::PDF => 'PDF',
             self::EXCEL => 'Excel',
@@ -21,7 +21,7 @@ enum ExportFormat: string
 
     public function mimeType(): string
     {
-        return match($this) {
+        return match ($this) {
             self::CSV => 'text/csv',
             self::PDF => 'application/pdf',
             self::EXCEL => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -31,7 +31,7 @@ enum ExportFormat: string
 
     public function extension(): string
     {
-        return match($this) {
+        return match ($this) {
             self::CSV => 'csv',
             self::PDF => 'pdf',
             self::EXCEL => 'xlsx',

@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 /**
  * Scheduled Report Controller
- * 
+ *
  * Handles HTTP requests for scheduled reports.
  */
 class ScheduledReportController extends BaseController
@@ -21,13 +21,12 @@ class ScheduledReportController extends BaseController
 
     /**
      * Get all scheduled reports
-     *
-     * @return JsonResponse
      */
     public function index(): JsonResponse
     {
         try {
             $schedules = $this->scheduledReportService->getAllSchedules();
+
             return $this->successResponse($schedules, 'Scheduled reports retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -36,14 +35,12 @@ class ScheduledReportController extends BaseController
 
     /**
      * Get scheduled reports for a report
-     *
-     * @param int $reportId
-     * @return JsonResponse
      */
     public function getForReport(int $reportId): JsonResponse
     {
         try {
             $schedules = $this->scheduledReportService->getSchedulesForReport($reportId);
+
             return $this->successResponse($schedules, 'Scheduled reports retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -52,9 +49,6 @@ class ScheduledReportController extends BaseController
 
     /**
      * Create a scheduled report
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function store(Request $request): JsonResponse
     {
@@ -70,7 +64,7 @@ class ScheduledReportController extends BaseController
 
             $dto = ScheduleReportDTO::fromArray($validated);
             $scheduledReport = $this->scheduledReportService->scheduleReport($dto);
-            
+
             return $this->createdResponse($scheduledReport, 'Report scheduled successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -79,10 +73,6 @@ class ScheduledReportController extends BaseController
 
     /**
      * Update a scheduled report
-     *
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
      */
     public function update(Request $request, int $id): JsonResponse
     {
@@ -96,7 +86,7 @@ class ScheduledReportController extends BaseController
             ]);
 
             $this->scheduledReportService->updateSchedule($id, $validated);
-            
+
             return $this->successResponse(null, 'Scheduled report updated successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -105,14 +95,12 @@ class ScheduledReportController extends BaseController
 
     /**
      * Delete a scheduled report
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function destroy(int $id): JsonResponse
     {
         try {
             $this->scheduledReportService->deleteSchedule($id);
+
             return $this->successResponse(null, 'Scheduled report deleted successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -121,13 +109,12 @@ class ScheduledReportController extends BaseController
 
     /**
      * Get due reports
-     *
-     * @return JsonResponse
      */
     public function getDueReports(): JsonResponse
     {
         try {
             $dueReports = $this->scheduledReportService->getDueReports();
+
             return $this->successResponse($dueReports, 'Due reports retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -136,13 +123,12 @@ class ScheduledReportController extends BaseController
 
     /**
      * Process all due reports
-     *
-     * @return JsonResponse
      */
     public function processDueReports(): JsonResponse
     {
         try {
             $results = $this->scheduledReportService->processDueReports();
+
             return $this->successResponse($results, 'Due reports processed successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);

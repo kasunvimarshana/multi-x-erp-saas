@@ -2,18 +2,18 @@
 
 namespace Tests\Unit;
 
+use App\Models\Tenant;
+use App\Modules\Inventory\Models\Product;
 use App\Modules\Procurement\Models\GoodsReceiptNote;
 use App\Modules\Procurement\Models\GoodsReceiptNoteItem;
 use App\Modules\Procurement\Models\PurchaseOrder;
 use App\Modules\Procurement\Models\Supplier;
-use App\Modules\Inventory\Models\Product;
-use App\Models\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 /**
  * Goods Receipt Note Model Tests
- * 
+ *
  * Tests the GRN model functionality including
  * discrepancy detection and quantity calculations
  */
@@ -22,8 +22,11 @@ class GoodsReceiptNoteTest extends TestCase
     use RefreshDatabase;
 
     protected Tenant $tenant;
+
     protected Supplier $supplier;
+
     protected PurchaseOrder $purchaseOrder;
+
     protected Product $product;
 
     protected function setUp(): void

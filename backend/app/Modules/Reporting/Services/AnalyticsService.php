@@ -7,17 +7,13 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * Analytics Service
- * 
+ *
  * Handles KPI calculations and analytics metrics.
  */
 class AnalyticsService extends BaseService
 {
     /**
      * Calculate total revenue for a period
-     *
-     * @param string $startDate
-     * @param string $endDate
-     * @return float
      */
     public function getTotalRevenue(string $startDate, string $endDate): float
     {
@@ -29,10 +25,6 @@ class AnalyticsService extends BaseService
 
     /**
      * Calculate total expenses for a period
-     *
-     * @param string $startDate
-     * @param string $endDate
-     * @return float
      */
     public function getTotalExpenses(string $startDate, string $endDate): float
     {
@@ -47,15 +39,11 @@ class AnalyticsService extends BaseService
 
     /**
      * Calculate gross profit margin
-     *
-     * @param string $startDate
-     * @param string $endDate
-     * @return float
      */
     public function getGrossProfitMargin(string $startDate, string $endDate): float
     {
         $revenue = $this->getTotalRevenue($startDate, $endDate);
-        
+
         if ($revenue <= 0) {
             return 0;
         }
@@ -67,37 +55,29 @@ class AnalyticsService extends BaseService
             ->sum('total_cost');
 
         $grossProfit = $revenue - abs($cogs);
-        
+
         return ($grossProfit / $revenue) * 100;
     }
 
     /**
      * Calculate net profit margin
-     *
-     * @param string $startDate
-     * @param string $endDate
-     * @return float
      */
     public function getNetProfitMargin(string $startDate, string $endDate): float
     {
         $revenue = $this->getTotalRevenue($startDate, $endDate);
-        
+
         if ($revenue <= 0) {
             return 0;
         }
 
         $expenses = $this->getTotalExpenses($startDate, $endDate);
         $netProfit = $revenue - $expenses;
-        
+
         return ($netProfit / $revenue) * 100;
     }
 
     /**
      * Calculate inventory turnover ratio
-     *
-     * @param string $startDate
-     * @param string $endDate
-     * @return float
      */
     public function getInventoryTurnoverRatio(string $startDate, string $endDate): float
     {
@@ -127,15 +107,11 @@ class AnalyticsService extends BaseService
 
     /**
      * Calculate Days Sales Outstanding (DSO)
-     *
-     * @param string $startDate
-     * @param string $endDate
-     * @return float
      */
     public function getDaysSalesOutstanding(string $startDate, string $endDate): float
     {
         $revenue = $this->getTotalRevenue($startDate, $endDate);
-        
+
         if ($revenue <= 0) {
             return 0;
         }
@@ -152,10 +128,6 @@ class AnalyticsService extends BaseService
 
     /**
      * Calculate order fulfillment rate
-     *
-     * @param string $startDate
-     * @param string $endDate
-     * @return float
      */
     public function getOrderFulfillmentRate(string $startDate, string $endDate): float
     {
@@ -177,10 +149,6 @@ class AnalyticsService extends BaseService
 
     /**
      * Calculate production efficiency
-     *
-     * @param string $startDate
-     * @param string $endDate
-     * @return float
      */
     public function getProductionEfficiency(string $startDate, string $endDate): float
     {
@@ -202,10 +170,6 @@ class AnalyticsService extends BaseService
 
     /**
      * Calculate customer acquisition cost
-     *
-     * @param string $startDate
-     * @param string $endDate
-     * @return float
      */
     public function getCustomerAcquisitionCost(string $startDate, string $endDate): float
     {
@@ -230,15 +194,11 @@ class AnalyticsService extends BaseService
 
     /**
      * Calculate average order value
-     *
-     * @param string $startDate
-     * @param string $endDate
-     * @return float
      */
     public function getAverageOrderValue(string $startDate, string $endDate): float
     {
         $totalRevenue = $this->getTotalRevenue($startDate, $endDate);
-        
+
         $totalOrders = DB::table('sales_orders')
             ->whereBetween('order_date', [$startDate, $endDate])
             ->count();
@@ -252,10 +212,6 @@ class AnalyticsService extends BaseService
 
     /**
      * Get all KPIs for a period
-     *
-     * @param string $startDate
-     * @param string $endDate
-     * @return array
      */
     public function getAllKPIs(string $startDate, string $endDate): array
     {

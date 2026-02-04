@@ -6,13 +6,13 @@ use App\Modules\Finance\Events\FiscalYearClosed;
 use App\Modules\Finance\Models\FiscalYear;
 use App\Modules\Finance\Repositories\FiscalYearRepository;
 use App\Services\BaseService;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 /**
  * Fiscal Year Service
- * 
+ *
  * Business logic for fiscal year management operations.
  */
 class FiscalYearService extends BaseService
@@ -56,7 +56,7 @@ class FiscalYearService extends BaseService
 
     /**
      * Update fiscal year
-     * 
+     *
      * @throws \Exception if fiscal year is closed
      */
     public function update(int $id, array $data): FiscalYear
@@ -79,7 +79,7 @@ class FiscalYearService extends BaseService
 
     /**
      * Delete fiscal year
-     * 
+     *
      * @throws \Exception if fiscal year is closed
      */
     public function delete(int $id): void
@@ -99,7 +99,7 @@ class FiscalYearService extends BaseService
 
     /**
      * Close fiscal year
-     * 
+     *
      * @throws \Exception if fiscal year is already closed
      */
     public function close(int $id): FiscalYear

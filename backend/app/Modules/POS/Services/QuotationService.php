@@ -70,7 +70,7 @@ class QuotationService extends BaseService
                 throw new \Exception('Quotation already converted to sales order');
             }
 
-            if (!$quotation->isValid()) {
+            if (! $quotation->isValid()) {
                 throw new \Exception('Quotation has expired');
             }
 

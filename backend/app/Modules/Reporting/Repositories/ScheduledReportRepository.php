@@ -8,15 +8,13 @@ use Illuminate\Database\Eloquent\Collection;
 
 /**
  * ScheduledReportRepository
- * 
+ *
  * Repository for managing scheduled report data access.
  */
 class ScheduledReportRepository extends BaseRepository
 {
     /**
      * Specify Model class name
-     *
-     * @return string
      */
     protected function model(): string
     {
@@ -25,8 +23,6 @@ class ScheduledReportRepository extends BaseRepository
 
     /**
      * Get active scheduled reports
-     *
-     * @return Collection
      */
     public function getActive(): Collection
     {
@@ -38,9 +34,6 @@ class ScheduledReportRepository extends BaseRepository
 
     /**
      * Get scheduled reports by report ID
-     *
-     * @param int $reportId
-     * @return Collection
      */
     public function getByReport(int $reportId): Collection
     {
@@ -51,8 +44,6 @@ class ScheduledReportRepository extends BaseRepository
 
     /**
      * Get due scheduled reports
-     *
-     * @return Collection
      */
     public function getDueReports(): Collection
     {
@@ -65,9 +56,6 @@ class ScheduledReportRepository extends BaseRepository
 
     /**
      * Update last run timestamp
-     *
-     * @param int $id
-     * @return bool
      */
     public function updateLastRun(int $id): bool
     {
@@ -78,10 +66,6 @@ class ScheduledReportRepository extends BaseRepository
 
     /**
      * Update next run timestamp
-     *
-     * @param int $id
-     * @param \DateTime $nextRunAt
-     * @return bool
      */
     public function updateNextRun(int $id, \DateTime $nextRunAt): bool
     {
@@ -92,9 +76,6 @@ class ScheduledReportRepository extends BaseRepository
 
     /**
      * Activate scheduled report
-     *
-     * @param int $id
-     * @return bool
      */
     public function activate(int $id): bool
     {
@@ -105,9 +86,6 @@ class ScheduledReportRepository extends BaseRepository
 
     /**
      * Deactivate scheduled report
-     *
-     * @param int $id
-     * @return bool
      */
     public function deactivate(int $id): bool
     {
@@ -118,9 +96,6 @@ class ScheduledReportRepository extends BaseRepository
 
     /**
      * Get scheduled reports by recipient email
-     *
-     * @param string $email
-     * @return Collection
      */
     public function getByRecipient(string $email): Collection
     {
@@ -133,8 +108,7 @@ class ScheduledReportRepository extends BaseRepository
     /**
      * Get upcoming scheduled reports
      *
-     * @param int $hours Number of hours to look ahead
-     * @return Collection
+     * @param  int  $hours  Number of hours to look ahead
      */
     public function getUpcoming(int $hours = 24): Collection
     {

@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Product Model
- * 
+ *
  * Represents a product in the inventory system.
  * Supports multiple product types: inventory, service, combo, bundle.
  */
@@ -84,8 +84,6 @@ class Product extends Model
 
     /**
      * Get the tenant that owns the product
-     *
-     * @return BelongsTo
      */
     public function tenant(): BelongsTo
     {
@@ -94,8 +92,6 @@ class Product extends Model
 
     /**
      * Get the stock ledger entries for the product
-     *
-     * @return HasMany
      */
     public function stockLedgers(): HasMany
     {
@@ -104,8 +100,6 @@ class Product extends Model
 
     /**
      * Check if product requires stock tracking
-     *
-     * @return bool
      */
     public function requiresStockTracking(): bool
     {
@@ -114,8 +108,6 @@ class Product extends Model
 
     /**
      * Check if product is a physical inventory item
-     *
-     * @return bool
      */
     public function isPhysical(): bool
     {
@@ -124,8 +116,6 @@ class Product extends Model
 
     /**
      * Check if product is active
-     *
-     * @return bool
      */
     public function isActive(): bool
     {
@@ -134,47 +124,39 @@ class Product extends Model
 
     /**
      * Get current stock balance
-     *
-     * @param int|null $warehouseId
-     * @return float
      */
     public function getCurrentStock(?int $warehouseId = null): float
     {
         $query = $this->stockLedgers();
-        
+
         if ($warehouseId) {
             $query->where('warehouse_id', $warehouseId);
         }
-        
+
         return $query->sum('quantity');
     }
 
     /**
      * Check if product is below reorder level
-     *
-     * @param int|null $warehouseId
-     * @return bool
      */
     public function isBelowReorderLevel(?int $warehouseId = null): bool
     {
-        if (!$this->reorder_level) {
+        if (! $this->reorder_level) {
             return false;
         }
-        
+
         return $this->getCurrentStock($warehouseId) <= $this->reorder_level;
     }
 
     /**
      * Get profit margin
-     *
-     * @return float
      */
     public function getProfitMargin(): float
     {
         if ($this->buying_price <= 0) {
             return 0;
         }
-        
+
         return (($this->selling_price - $this->buying_price) / $this->buying_price) * 100;
     }
 }

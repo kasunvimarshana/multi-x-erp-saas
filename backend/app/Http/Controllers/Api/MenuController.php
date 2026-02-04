@@ -25,7 +25,7 @@ class MenuController extends BaseController
         try {
             $user = Auth::user();
             $menu = $this->menuService->getMenuForUser($user);
-            
+
             return $this->successResponse($menu, 'Menu retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to retrieve menu', $e->getMessage(), 500);
@@ -39,7 +39,7 @@ class MenuController extends BaseController
     {
         try {
             $menus = $this->menuService->getAllMenus();
-            
+
             return $this->successResponse($menus, 'All menus retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to retrieve menus', $e->getMessage(), 500);
@@ -67,7 +67,7 @@ class MenuController extends BaseController
             ]);
 
             $menu = $this->menuService->createMenu($validated);
-            
+
             return $this->successResponse($menu, 'Menu created successfully', 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return $this->errorResponse('Validation failed', $e->errors(), 422);
@@ -96,11 +96,11 @@ class MenuController extends BaseController
             ]);
 
             $result = $this->menuService->updateMenu($id, $validated);
-            
-            if (!$result) {
+
+            if (! $result) {
                 return $this->errorResponse('Menu not found or cannot be updated', null, 404);
             }
-            
+
             return $this->successResponse(null, 'Menu updated successfully');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return $this->errorResponse('Validation failed', $e->errors(), 422);
@@ -116,11 +116,11 @@ class MenuController extends BaseController
     {
         try {
             $result = $this->menuService->deleteMenu($id);
-            
-            if (!$result) {
+
+            if (! $result) {
                 return $this->errorResponse('Menu not found or cannot be deleted', null, 404);
             }
-            
+
             return $this->successResponse(null, 'Menu deleted successfully');
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to delete menu', $e->getMessage(), 500);
@@ -139,7 +139,7 @@ class MenuController extends BaseController
             ]);
 
             $this->menuService->reorderMenus($validated['items']);
-            
+
             return $this->successResponse(null, 'Menus reordered successfully');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return $this->errorResponse('Validation failed', $e->errors(), 422);

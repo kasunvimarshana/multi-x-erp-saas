@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * Report Service
- * 
+ *
  * Handles report generation, execution, and management.
  */
 class ReportService extends BaseService
@@ -26,9 +26,6 @@ class ReportService extends BaseService
 
     /**
      * Create a new report
-     *
-     * @param CreateReportDTO $dto
-     * @return Report
      */
     public function createReport(CreateReportDTO $dto): Report
     {
@@ -40,10 +37,6 @@ class ReportService extends BaseService
 
     /**
      * Update a report
-     *
-     * @param string|int $reportId
-     * @param array $data
-     * @return bool
      */
     public function updateReport(string|int $reportId, array $data): bool
     {
@@ -52,9 +45,6 @@ class ReportService extends BaseService
 
     /**
      * Delete a report
-     *
-     * @param string|int $reportId
-     * @return bool
      */
     public function deleteReport(string|int $reportId): bool
     {
@@ -64,16 +54,14 @@ class ReportService extends BaseService
     /**
      * Execute a report
      *
-     * @param ExecuteReportDTO $dto
-     * @return array
      * @throws \Throwable
      */
     public function executeReport(ExecuteReportDTO $dto): array
     {
         $report = $this->reportRepository->findOrFail($dto->reportId);
-        
+
         $startTime = microtime(true);
-        
+
         // Create execution record
         $execution = ReportExecution::create([
             'tenant_id' => auth()->user()->tenant_id,
@@ -86,9 +74,9 @@ class ReportService extends BaseService
         try {
             // Execute the report query
             $results = $this->runReportQuery($report, $dto);
-            
+
             $executionTime = microtime(true) - $startTime;
-            
+
             // Update execution record
             $execution->update([
                 'status' => ReportExecutionStatus::COMPLETED,
@@ -128,15 +116,11 @@ class ReportService extends BaseService
 
     /**
      * Run report query based on configuration
-     *
-     * @param Report $report
-     * @param ExecuteReportDTO $dto
-     * @return array
      */
     protected function runReportQuery(Report $report, ExecuteReportDTO $dto): array
     {
         $config = $report->query_config;
-        
+
         // Check if it's a pre-built report
         if (isset($config['pre_built']) && $config['pre_built']) {
             return $this->executePreBuiltReport(
@@ -153,12 +137,6 @@ class ReportService extends BaseService
 
     /**
      * Execute pre-built report
-     *
-     * @param string $reportName
-     * @param array $parameters
-     * @param string|null $startDate
-     * @param string|null $endDate
-     * @return array
      */
     protected function executePreBuiltReport(
         string $reportName,
@@ -166,7 +144,7 @@ class ReportService extends BaseService
         ?string $startDate,
         ?string $endDate
     ): array {
-        return match($reportName) {
+        return match ($reportName) {
             'stock_level' => $this->getStockLevelReport($parameters),
             'stock_movement' => $this->getStockMovementReport($startDate, $endDate, $parameters),
             'low_stock_alert' => $this->getLowStockAlertReport(),
@@ -193,10 +171,6 @@ class ReportService extends BaseService
 
     /**
      * Execute custom query
-     *
-     * @param array $config
-     * @param array $parameters
-     * @return array
      */
     protected function executeCustomQuery(array $config, array $parameters): array
     {
@@ -754,7 +728,7 @@ class ReportService extends BaseService
         foreach ($allDates as $date) {
             $inflow = $inflowsData->get($date)->cash_inflow ?? 0;
             $outflow = $outflowsData->get($date)->cash_outflow ?? 0;
-            
+
             $result[] = [
                 'date' => $date,
                 'cash_inflow' => $inflow,
@@ -812,9 +786,6 @@ class ReportService extends BaseService
 
     /**
      * Get report by ID
-     *
-     * @param string|int $reportId
-     * @return Report
      */
     public function getReport(string|int $reportId): Report
     {
@@ -834,7 +805,6 @@ class ReportService extends BaseService
     /**
      * Get reports by module
      *
-     * @param string $module
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getReportsByModule(string $module)

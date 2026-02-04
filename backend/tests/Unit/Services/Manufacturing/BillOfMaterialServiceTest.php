@@ -17,6 +17,7 @@ class BillOfMaterialServiceTest extends UnitTestCase
     use RefreshDatabase;
 
     protected BillOfMaterialService $service;
+
     protected $repositoryMock;
 
     protected function setUp(): void
@@ -46,7 +47,7 @@ class BillOfMaterialServiceTest extends UnitTestCase
                     'uom_id' => null,
                     'scrap_factor' => 0,
                     'notes' => null,
-                ]
+                ],
             ]
         );
 

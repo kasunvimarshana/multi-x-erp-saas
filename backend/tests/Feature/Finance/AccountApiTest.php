@@ -15,7 +15,9 @@ class AccountApiTest extends TestCase
     use RefreshDatabase;
 
     private string $baseUri = '/api/v1/finance/accounts';
+
     private Tenant $tenant;
+
     private User $user;
 
     protected function setUp(): void
@@ -131,7 +133,7 @@ class AccountApiTest extends TestCase
         Account::factory()->forTenant($this->tenant)->asset()->count(2)->create();
         Account::factory()->forTenant($this->tenant)->liability()->count(1)->create();
 
-        $response = $this->getJson("{$this->baseUri}/by-type?type=" . AccountType::ASSET->value);
+        $response = $this->getJson("{$this->baseUri}/by-type?type=".AccountType::ASSET->value);
 
         $response->assertStatus(200)
             ->assertJsonCount(2, 'data');

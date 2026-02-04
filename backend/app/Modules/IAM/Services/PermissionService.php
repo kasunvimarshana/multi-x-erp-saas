@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Permission Service
- * 
+ *
  * Handles business logic for permission management.
  * Note: Permissions are system-defined and not created via API.
  */
@@ -21,8 +21,6 @@ class PermissionService extends BaseService
 
     /**
      * Get all permissions
-     *
-     * @return Collection
      */
     public function getAllPermissions(): Collection
     {
@@ -32,7 +30,6 @@ class PermissionService extends BaseService
     /**
      * Get paginated permissions
      *
-     * @param int $perPage
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function getPaginatedPermissions(int $perPage = 15)
@@ -42,9 +39,6 @@ class PermissionService extends BaseService
 
     /**
      * Get permission by ID
-     *
-     * @param int $id
-     * @return Permission
      */
     public function getPermissionById(int $id): Permission
     {
@@ -53,9 +47,6 @@ class PermissionService extends BaseService
 
     /**
      * Get permission by slug
-     *
-     * @param string $slug
-     * @return Permission|null
      */
     public function getPermissionBySlug(string $slug): ?Permission
     {
@@ -64,9 +55,6 @@ class PermissionService extends BaseService
 
     /**
      * Get permissions by module
-     *
-     * @param string $module
-     * @return Collection
      */
     public function getPermissionsByModule(string $module): Collection
     {
@@ -75,8 +63,6 @@ class PermissionService extends BaseService
 
     /**
      * Get all permissions grouped by module
-     *
-     * @return Collection
      */
     public function getPermissionsGroupedByModule(): Collection
     {
@@ -85,9 +71,6 @@ class PermissionService extends BaseService
 
     /**
      * Get permission roles
-     *
-     * @param int $permissionId
-     * @return Collection
      */
     public function getPermissionRoles(int $permissionId): Collection
     {

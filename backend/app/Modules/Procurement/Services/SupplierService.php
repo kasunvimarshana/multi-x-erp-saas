@@ -7,7 +7,7 @@ use App\Services\BaseService;
 
 /**
  * Supplier Service
- * 
+ *
  * Handles business logic for supplier management.
  */
 class SupplierService extends BaseService
@@ -19,7 +19,6 @@ class SupplierService extends BaseService
     /**
      * Get all suppliers
      *
-     * @param int $perPage
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function getAllSuppliers(int $perPage = 15)
@@ -30,62 +29,55 @@ class SupplierService extends BaseService
     /**
      * Create a new supplier
      *
-     * @param array $data
      * @return \App\Modules\Procurement\Models\Supplier
      */
     public function createSupplier(array $data)
     {
         $this->logInfo('Creating new supplier', ['name' => $data['name']]);
-        
+
         $supplier = $this->supplierRepository->create($data);
-        
+
         $this->logInfo('Supplier created successfully', ['id' => $supplier->id]);
-        
+
         return $supplier;
     }
 
     /**
      * Update a supplier
      *
-     * @param int $id
-     * @param array $data
      * @return \App\Modules\Procurement\Models\Supplier
      */
     public function updateSupplier(int $id, array $data)
     {
         $this->logInfo('Updating supplier', ['id' => $id]);
-        
+
         $this->supplierRepository->update($id, $data);
         $supplier = $this->supplierRepository->findOrFail($id);
-        
+
         $this->logInfo('Supplier updated successfully', ['id' => $id]);
-        
+
         return $supplier;
     }
 
     /**
      * Delete a supplier
-     *
-     * @param int $id
-     * @return bool
      */
     public function deleteSupplier(int $id): bool
     {
         $this->logInfo('Deleting supplier', ['id' => $id]);
-        
+
         $result = $this->supplierRepository->delete($id);
-        
+
         if ($result) {
             $this->logInfo('Supplier deleted successfully', ['id' => $id]);
         }
-        
+
         return $result;
     }
 
     /**
      * Get a supplier by ID
      *
-     * @param int $id
      * @return \App\Modules\Procurement\Models\Supplier
      */
     public function getSupplierById(int $id)
@@ -106,7 +98,6 @@ class SupplierService extends BaseService
     /**
      * Search suppliers
      *
-     * @param string $search
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function searchSuppliers(string $search)

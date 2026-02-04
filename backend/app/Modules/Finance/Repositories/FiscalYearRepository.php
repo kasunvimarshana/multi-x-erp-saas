@@ -7,7 +7,7 @@ use App\Repositories\BaseRepository;
 
 /**
  * Fiscal Year Repository
- * 
+ *
  * Handles data access for fiscal years.
  */
 class FiscalYearRepository extends BaseRepository

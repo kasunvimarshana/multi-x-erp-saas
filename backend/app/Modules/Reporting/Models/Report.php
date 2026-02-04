@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Report Model
- * 
+ *
  * Represents a saved report definition with query configuration.
  */
 class Report extends Model
@@ -60,8 +60,6 @@ class Report extends Model
 
     /**
      * Get the tenant that owns the report
-     *
-     * @return BelongsTo
      */
     public function tenant(): BelongsTo
     {
@@ -70,8 +68,6 @@ class Report extends Model
 
     /**
      * Get the user who created the report
-     *
-     * @return BelongsTo
      */
     public function createdBy(): BelongsTo
     {
@@ -80,8 +76,6 @@ class Report extends Model
 
     /**
      * Get the executions for the report
-     *
-     * @return HasMany
      */
     public function executions(): HasMany
     {
@@ -90,8 +84,6 @@ class Report extends Model
 
     /**
      * Get the scheduled reports for this report
-     *
-     * @return HasMany
      */
     public function schedules(): HasMany
     {
@@ -100,8 +92,6 @@ class Report extends Model
 
     /**
      * Check if report is public
-     *
-     * @return bool
      */
     public function isPublic(): bool
     {
@@ -110,8 +100,6 @@ class Report extends Model
 
     /**
      * Get the last execution
-     *
-     * @return ReportExecution|null
      */
     public function getLastExecution(): ?ReportExecution
     {

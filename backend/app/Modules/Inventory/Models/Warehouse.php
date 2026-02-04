@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Warehouse Model
- * 
+ *
  * Represents a physical warehouse/location for storing inventory.
  */
 class Warehouse extends Model

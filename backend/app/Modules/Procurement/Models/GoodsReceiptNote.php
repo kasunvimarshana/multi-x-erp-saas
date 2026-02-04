@@ -3,7 +3,6 @@
 namespace App\Modules\Procurement\Models;
 
 use App\Models\Tenant;
-use App\Modules\Inventory\Models\Product;
 use App\Modules\Procurement\Enums\GoodsReceiptStatus;
 use App\Traits\TenantScoped;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Goods Receipt Note Model
- * 
+ *
  * Represents a physical receipt of goods from a supplier against a purchase order.
  * Tracks what was actually received, enabling 3-way matching (PO-GRN-Invoice).
  */

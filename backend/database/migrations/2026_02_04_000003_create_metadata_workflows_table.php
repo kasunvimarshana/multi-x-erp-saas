@@ -24,7 +24,7 @@ return new class extends Migration
             $table->json('config')->nullable(); // Additional workflow configuration
             $table->timestamps();
             $table->softDeletes();
-            
+
             $table->index(['entity_id', 'is_active']);
         });
     }

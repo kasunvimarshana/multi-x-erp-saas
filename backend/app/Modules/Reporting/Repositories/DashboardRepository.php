@@ -7,15 +7,13 @@ use App\Repositories\BaseRepository;
 
 /**
  * Dashboard Repository
- * 
+ *
  * Handles data access for dashboards.
  */
 class DashboardRepository extends BaseRepository
 {
     /**
      * Specify Model class name
-     *
-     * @return string
      */
     protected function model(): string
     {
@@ -25,7 +23,6 @@ class DashboardRepository extends BaseRepository
     /**
      * Get dashboards by user
      *
-     * @param int $userId
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getByUser(int $userId)
@@ -35,9 +32,6 @@ class DashboardRepository extends BaseRepository
 
     /**
      * Get default dashboard for user
-     *
-     * @param int $userId
-     * @return Dashboard|null
      */
     public function getDefaultDashboard(int $userId): ?Dashboard
     {
@@ -49,9 +43,6 @@ class DashboardRepository extends BaseRepository
 
     /**
      * Get dashboard with widgets
-     *
-     * @param int $id
-     * @return Dashboard
      */
     public function getWithWidgets(int $id): Dashboard
     {
@@ -60,28 +51,24 @@ class DashboardRepository extends BaseRepository
 
     /**
      * Set dashboard as default
-     *
-     * @param int $dashboardId
-     * @param int $userId
-     * @return bool
      */
     public function setAsDefault(int $dashboardId, int $userId): bool
     {
         $this->beginTransaction();
-        
+
         try {
             // Unset all other dashboards as default
             $this->model
                 ->where('user_id', $userId)
                 ->update(['is_default' => false]);
-            
+
             // Set the specified dashboard as default
             $dashboard = $this->findOrFail($dashboardId);
             $dashboard->is_default = true;
             $dashboard->save();
-            
+
             $this->commit();
-            
+
             return true;
         } catch (\Exception $e) {
             $this->rollback();

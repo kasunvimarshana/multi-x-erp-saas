@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Response;
 
 /**
  * Export Service
- * 
+ *
  * Handles report export to various formats.
  */
 class ExportService extends BaseService
@@ -17,13 +17,11 @@ class ExportService extends BaseService
     /**
      * Export report data
      *
-     * @param ExportReportDTO $dto
-     * @param array $data
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function export(ExportReportDTO $dto, array $data)
     {
-        return match($dto->format) {
+        return match ($dto->format) {
             ExportFormat::CSV => $this->exportToCsv($data, $dto->filename),
             ExportFormat::PDF => $this->exportToPdf($data, $dto->filename),
             ExportFormat::EXCEL => $this->exportToExcel($data, $dto->filename),
@@ -34,19 +32,17 @@ class ExportService extends BaseService
     /**
      * Export to CSV
      *
-     * @param array $data
-     * @param string|null $filename
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function exportToCsv(array $data, ?string $filename = null)
     {
-        $filename = $filename ?? 'report_' . date('Y-m-d_His') . '.csv';
+        $filename = $filename ?? 'report_'.date('Y-m-d_His').'.csv';
 
         return Response::streamDownload(function () use ($data) {
             $handle = fopen('php://output', 'w');
 
             // Write headers if data is not empty
-            if (!empty($data)) {
+            if (! empty($data)) {
                 $headers = array_keys($data[0]);
                 fputcsv($handle, $headers);
 
@@ -66,17 +62,15 @@ class ExportService extends BaseService
     /**
      * Export to PDF
      *
-     * @param array $data
-     * @param string|null $filename
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function exportToPdf(array $data, ?string $filename = null)
     {
-        $filename = $filename ?? 'report_' . date('Y-m-d_His') . '.pdf';
+        $filename = $filename ?? 'report_'.date('Y-m-d_His').'.pdf';
 
         // Note: This is a placeholder. In production, use a library like DomPDF or mPDF
         $html = $this->generateHtmlTable($data);
-        
+
         return Response::streamDownload(function () use ($html) {
             echo $html;
         }, $filename, [
@@ -88,13 +82,11 @@ class ExportService extends BaseService
     /**
      * Export to Excel
      *
-     * @param array $data
-     * @param string|null $filename
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function exportToExcel(array $data, ?string $filename = null)
     {
-        $filename = $filename ?? 'report_' . date('Y-m-d_His') . '.xlsx';
+        $filename = $filename ?? 'report_'.date('Y-m-d_His').'.xlsx';
 
         // Note: This is a placeholder. In production, use PhpSpreadsheet or similar
         return $this->exportToCsv($data, str_replace('.xlsx', '.csv', $filename));
@@ -103,13 +95,11 @@ class ExportService extends BaseService
     /**
      * Export to JSON
      *
-     * @param array $data
-     * @param string|null $filename
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function exportToJson(array $data, ?string $filename = null)
     {
-        $filename = $filename ?? 'report_' . date('Y-m-d_His') . '.json';
+        $filename = $filename ?? 'report_'.date('Y-m-d_His').'.json';
 
         return Response::streamDownload(function () use ($data) {
             echo json_encode($data, JSON_PRETTY_PRINT);
@@ -121,9 +111,6 @@ class ExportService extends BaseService
 
     /**
      * Generate HTML table for PDF export
-     *
-     * @param array $data
-     * @return string
      */
     protected function generateHtmlTable(array $data): string
     {
@@ -132,33 +119,33 @@ class ExportService extends BaseService
         }
 
         $headers = array_keys($data[0]);
-        
+
         $html = '<html><head><style>
             table { border-collapse: collapse; width: 100%; }
             th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
             th { background-color: #4CAF50; color: white; }
         </style></head><body>';
-        
+
         $html .= '<table>';
         $html .= '<thead><tr>';
-        
+
         foreach ($headers as $header) {
-            $html .= '<th>' . htmlspecialchars($header) . '</th>';
+            $html .= '<th>'.htmlspecialchars($header).'</th>';
         }
-        
+
         $html .= '</tr></thead><tbody>';
-        
+
         foreach ($data as $row) {
             $html .= '<tr>';
             foreach ($row as $cell) {
-                $html .= '<td>' . htmlspecialchars($cell ?? '') . '</td>';
+                $html .= '<td>'.htmlspecialchars($cell ?? '').'</td>';
             }
             $html .= '</tr>';
         }
-        
+
         $html .= '</tbody></table>';
         $html .= '</body></html>';
-        
+
         return $html;
     }
 }

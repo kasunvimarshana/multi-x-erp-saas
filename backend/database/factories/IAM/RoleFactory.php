@@ -22,7 +22,7 @@ class RoleFactory extends Factory
     public function definition(): array
     {
         $name = fake()->unique()->jobTitle();
-        
+
         return [
             'tenant_id' => Tenant::factory(),
             'name' => $name,

@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api\Manufacturing;
 
-use App\Models\Tenant;
 use App\Modules\Inventory\Models\Product;
 use App\Modules\Manufacturing\Enums\ProductionOrderStatus;
 use App\Modules\Manufacturing\Models\BillOfMaterial;
@@ -19,7 +18,7 @@ class ProductionOrderApiTest extends FeatureTestCase
     public function test_can_list_production_orders(): void
     {
         $this->actingAsUser();
-        
+
         ProductionOrder::factory()
             ->forTenant($this->tenant)
             ->count(3)
@@ -31,16 +30,16 @@ class ProductionOrderApiTest extends FeatureTestCase
             ->assertJsonStructure([
                 'data' => [
                     'data' => [
-                        '*' => ['id', 'production_order_number', 'product_id', 'quantity', 'status']
-                    ]
-                ]
+                        '*' => ['id', 'production_order_number', 'product_id', 'quantity', 'status'],
+                    ],
+                ],
             ]);
     }
 
     public function test_can_create_production_order(): void
     {
         $this->actingAsUser();
-        
+
         $product = Product::factory()->forTenant($this->tenant)->create();
         $bom = BillOfMaterial::factory()
             ->forTenant($this->tenant)
@@ -68,7 +67,7 @@ class ProductionOrderApiTest extends FeatureTestCase
     public function test_can_show_production_order(): void
     {
         $this->actingAsUser();
-        
+
         $po = ProductionOrder::factory()
             ->forTenant($this->tenant)
             ->create();
@@ -82,7 +81,7 @@ class ProductionOrderApiTest extends FeatureTestCase
     public function test_can_release_production_order(): void
     {
         $this->actingAsUser();
-        
+
         $po = ProductionOrder::factory()
             ->forTenant($this->tenant)
             ->draft()
@@ -97,7 +96,7 @@ class ProductionOrderApiTest extends FeatureTestCase
     public function test_can_cancel_production_order(): void
     {
         $this->actingAsUser();
-        
+
         $po = ProductionOrder::factory()
             ->forTenant($this->tenant)
             ->draft()
@@ -112,7 +111,7 @@ class ProductionOrderApiTest extends FeatureTestCase
     public function test_cannot_release_non_draft_production_order(): void
     {
         $this->actingAsUser();
-        
+
         $po = ProductionOrder::factory()
             ->forTenant($this->tenant)
             ->released()
@@ -126,7 +125,7 @@ class ProductionOrderApiTest extends FeatureTestCase
     public function test_can_get_in_progress_production_orders(): void
     {
         $this->actingAsUser();
-        
+
         ProductionOrder::factory()
             ->forTenant($this->tenant)
             ->inProgress()

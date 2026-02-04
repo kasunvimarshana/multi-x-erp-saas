@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 
 /**
  * Report Controller
- * 
+ *
  * Handles HTTP requests for report management.
  */
 class ReportController extends BaseController
@@ -25,13 +25,12 @@ class ReportController extends BaseController
 
     /**
      * Get all reports
-     *
-     * @return JsonResponse
      */
     public function index(): JsonResponse
     {
         try {
             $reports = $this->reportService->getAllReports();
+
             return $this->successResponse($reports, 'Reports retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -40,9 +39,6 @@ class ReportController extends BaseController
 
     /**
      * Get reports by module
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function getByModule(Request $request): JsonResponse
     {
@@ -52,6 +48,7 @@ class ReportController extends BaseController
             ]);
 
             $reports = $this->reportService->getReportsByModule($request->module);
+
             return $this->successResponse($reports, 'Reports retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -60,14 +57,12 @@ class ReportController extends BaseController
 
     /**
      * Get a specific report
-     *
-     * @param string|int $id
-     * @return JsonResponse
      */
     public function show(string|int $id): JsonResponse
     {
         try {
             $report = $this->reportService->getReport($id);
+
             return $this->successResponse($report, 'Report retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 404);
@@ -76,9 +71,6 @@ class ReportController extends BaseController
 
     /**
      * Create a new report
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function store(Request $request): JsonResponse
     {
@@ -95,8 +87,9 @@ class ReportController extends BaseController
 
             $validated['created_by_id'] = auth()->id();
             $dto = CreateReportDTO::fromArray($validated);
-            
+
             $report = $this->reportService->createReport($dto);
+
             return $this->createdResponse($report, 'Report created successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -105,10 +98,6 @@ class ReportController extends BaseController
 
     /**
      * Update a report
-     *
-     * @param Request $request
-     * @param string|int $id
-     * @return JsonResponse
      */
     public function update(Request $request, string|int $id): JsonResponse
     {
@@ -125,7 +114,7 @@ class ReportController extends BaseController
 
             $this->reportService->updateReport($id, $validated);
             $report = $this->reportService->getReport($id);
-            
+
             return $this->successResponse($report, 'Report updated successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -134,14 +123,12 @@ class ReportController extends BaseController
 
     /**
      * Delete a report
-     *
-     * @param string|int $id
-     * @return JsonResponse
      */
     public function destroy(string|int $id): JsonResponse
     {
         try {
             $this->reportService->deleteReport($id);
+
             return $this->successResponse(null, 'Report deleted successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -150,10 +137,6 @@ class ReportController extends BaseController
 
     /**
      * Execute a report
-     *
-     * @param Request $request
-     * @param string|int $id
-     * @return JsonResponse
      */
     public function execute(Request $request, string|int $id): JsonResponse
     {
@@ -168,10 +151,10 @@ class ReportController extends BaseController
 
             $validated['report_id'] = $id;
             $validated['executed_by_id'] = auth()->id();
-            
+
             $dto = ExecuteReportDTO::fromArray($validated);
             $result = $this->reportService->executeReport($dto);
-            
+
             return $this->successResponse($result, 'Report executed successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -181,8 +164,6 @@ class ReportController extends BaseController
     /**
      * Export a report
      *
-     * @param Request $request
-     * @param string|int $id
      * @return mixed
      */
     public function export(Request $request, string|int $id)
@@ -195,20 +176,21 @@ class ReportController extends BaseController
             ]);
 
             $validated['report_id'] = $id;
-            
+
             // First execute the report to get data
             $executeDto = ExecuteReportDTO::fromArray([
                 'report_id' => $id,
                 'parameters' => $validated['parameters'] ?? [],
                 'executed_by_id' => auth()->id(),
             ]);
-            
+
             $result = $this->reportService->executeReport($executeDto);
-            
+
             // Then export the results
             $exportDto = ExportReportDTO::fromArray($validated);
+
             return $this->exportService->export($exportDto, $result['results']);
-            
+
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
         }

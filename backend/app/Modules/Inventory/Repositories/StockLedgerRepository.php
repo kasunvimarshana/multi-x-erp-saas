@@ -8,15 +8,13 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * Stock Ledger Repository
- * 
+ *
  * Handles data access for stock ledger entries.
  */
 class StockLedgerRepository extends BaseRepository
 {
     /**
      * Specify Model class name
-     *
-     * @return string
      */
     protected function model(): string
     {
@@ -26,8 +24,6 @@ class StockLedgerRepository extends BaseRepository
     /**
      * Get stock ledger entries for a product
      *
-     * @param int $productId
-     * @param int|null $warehouseId
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getProductLedger(int $productId, ?int $warehouseId = null)
@@ -35,40 +31,33 @@ class StockLedgerRepository extends BaseRepository
         $query = $this->model
             ->where('product_id', $productId)
             ->with(['creator', 'reference']);
-        
+
         if ($warehouseId) {
             $query->where('warehouse_id', $warehouseId);
         }
-        
+
         return $query->orderBy('transaction_date', 'desc')
-                    ->orderBy('id', 'desc')
-                    ->get();
+            ->orderBy('id', 'desc')
+            ->get();
     }
 
     /**
      * Calculate current stock balance for a product
-     *
-     * @param int $productId
-     * @param int|null $warehouseId
-     * @return float
      */
     public function calculateStockBalance(int $productId, ?int $warehouseId = null): float
     {
         $query = $this->model->where('product_id', $productId);
-        
+
         if ($warehouseId) {
             $query->where('warehouse_id', $warehouseId);
         }
-        
+
         return $query->sum('quantity');
     }
 
     /**
      * Get stock by batch
      *
-     * @param int $productId
-     * @param string $batchNumber
-     * @param int|null $warehouseId
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getStockByBatch(int $productId, string $batchNumber, ?int $warehouseId = null)
@@ -76,25 +65,23 @@ class StockLedgerRepository extends BaseRepository
         $query = $this->model
             ->where('product_id', $productId)
             ->where('batch_number', $batchNumber);
-        
+
         if ($warehouseId) {
             $query->where('warehouse_id', $warehouseId);
         }
-        
+
         return $query->get();
     }
 
     /**
      * Get expiring stock
      *
-     * @param int $productId
-     * @param int $days
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getExpiringStock(int $productId, int $days = 30)
     {
         $expiryDate = now()->addDays($days);
-        
+
         return $this->model
             ->where('product_id', $productId)
             ->whereNotNull('expiry_date')
@@ -107,7 +94,6 @@ class StockLedgerRepository extends BaseRepository
     /**
      * Get expired stock
      *
-     * @param int $productId
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getExpiredStock(int $productId)
@@ -122,11 +108,6 @@ class StockLedgerRepository extends BaseRepository
 
     /**
      * Get stock movement summary
-     *
-     * @param int $productId
-     * @param string $startDate
-     * @param string $endDate
-     * @return array
      */
     public function getMovementSummary(int $productId, string $startDate, string $endDate): array
     {
@@ -146,21 +127,17 @@ class StockLedgerRepository extends BaseRepository
 
     /**
      * Get stock valuation
-     *
-     * @param int $productId
-     * @param int|null $warehouseId
-     * @return float
      */
     public function getStockValuation(int $productId, ?int $warehouseId = null): float
     {
         $query = $this->model
             ->where('product_id', $productId)
             ->whereNotNull('unit_cost');
-        
+
         if ($warehouseId) {
             $query->where('warehouse_id', $warehouseId);
         }
-        
+
         return $query->sum(DB::raw('quantity * unit_cost'));
     }
 }

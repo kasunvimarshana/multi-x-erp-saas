@@ -14,7 +14,7 @@ enum SalesOrderStatus: string
 
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::DRAFT => 'Draft',
             self::QUOTATION => 'Quotation',
             self::CONFIRMED => 'Confirmed',
@@ -27,7 +27,7 @@ enum SalesOrderStatus: string
 
     public function canTransitionTo(self $newStatus): bool
     {
-        return match($this) {
+        return match ($this) {
             self::DRAFT => in_array($newStatus, [self::QUOTATION, self::CONFIRMED, self::CANCELLED]),
             self::QUOTATION => in_array($newStatus, [self::CONFIRMED, self::CANCELLED]),
             self::CONFIRMED => in_array($newStatus, [self::IN_PROGRESS, self::CANCELLED]),
@@ -45,6 +45,6 @@ enum SalesOrderStatus: string
 
     public function isCancellable(): bool
     {
-        return !in_array($this, [self::INVOICED, self::CANCELLED]);
+        return ! in_array($this, [self::INVOICED, self::CANCELLED]);
     }
 }

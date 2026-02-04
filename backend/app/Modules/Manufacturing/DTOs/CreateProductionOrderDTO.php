@@ -7,7 +7,7 @@ use App\Modules\Manufacturing\Enums\ProductionOrderStatus;
 
 /**
  * Production Order Data Transfer Object
- * 
+ *
  * Encapsulates data for production order creation and updates.
  */
 class CreateProductionOrderDTO

@@ -4,7 +4,7 @@ namespace App\Modules\Manufacturing\DTOs;
 
 /**
  * Complete Work Order Data Transfer Object
- * 
+ *
  * Encapsulates data for completing a work order.
  */
 class CompleteWorkOrderDTO

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->timestamp('disabled_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            
+
             $table->unique(['tenant_id', 'name']);
             $table->index(['is_enabled']);
         });

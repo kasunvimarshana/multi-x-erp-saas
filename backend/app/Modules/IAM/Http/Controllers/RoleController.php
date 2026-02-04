@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 /**
  * Role API Controller
- * 
+ *
  * Handles HTTP requests for role management.
  */
 class RoleController extends BaseController
@@ -21,9 +21,6 @@ class RoleController extends BaseController
 
     /**
      * Display a listing of roles
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
     {
@@ -32,19 +29,17 @@ class RoleController extends BaseController
 
         if ($tenantId) {
             $roles = $this->roleService->getAllRoles($tenantId);
+
             return $this->successResponse($roles, 'Roles retrieved successfully');
         }
 
         $roles = $this->roleService->getPaginatedRoles($perPage);
-        
+
         return $this->successResponse($roles, 'Roles retrieved successfully');
     }
 
     /**
      * Store a newly created role
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function store(Request $request): JsonResponse
     {
@@ -59,7 +54,7 @@ class RoleController extends BaseController
         try {
             $dto = RoleDTO::fromArray($validated);
             $role = $this->roleService->createRole($dto);
-            
+
             return $this->createdResponse($role, 'Role created successfully');
         } catch (\InvalidArgumentException $e) {
             return $this->errorResponse($e->getMessage(), null, 422);
@@ -68,18 +63,15 @@ class RoleController extends BaseController
 
     /**
      * Display the specified role
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function show(int $id): JsonResponse
     {
         try {
             $role = $this->roleService->getRoleById($id);
-            
+
             // Load relationships
             $role->load(['permissions', 'tenant']);
-            
+
             return $this->successResponse($role, 'Role retrieved successfully');
         } catch (\Exception $e) {
             return $this->notFoundResponse('Role not found');
@@ -88,22 +80,18 @@ class RoleController extends BaseController
 
     /**
      * Update the specified role
-     *
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
      */
     public function update(Request $request, int $id): JsonResponse
     {
         $validated = $request->validate([
             'name' => 'string|max:255',
-            'slug' => 'string|max:255|unique:roles,slug,' . $id,
+            'slug' => 'string|max:255|unique:roles,slug,'.$id,
             'description' => 'nullable|string',
         ]);
 
         try {
             $role = $this->roleService->updateRole($id, $validated);
-            
+
             return $this->successResponse($role, 'Role updated successfully');
         } catch (\InvalidArgumentException $e) {
             return $this->errorResponse($e->getMessage(), null, 422);
@@ -114,15 +102,12 @@ class RoleController extends BaseController
 
     /**
      * Remove the specified role
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function destroy(int $id): JsonResponse
     {
         try {
             $this->roleService->deleteRole($id);
-            
+
             return $this->successResponse(null, 'Role deleted successfully');
         } catch (\InvalidArgumentException $e) {
             return $this->errorResponse($e->getMessage(), null, 422);
@@ -133,10 +118,6 @@ class RoleController extends BaseController
 
     /**
      * Assign permissions to role
-     *
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
      */
     public function assignPermissions(Request $request, int $id): JsonResponse
     {
@@ -147,7 +128,7 @@ class RoleController extends BaseController
 
         try {
             $role = $this->roleService->assignPermissions($id, $validated['permission_ids']);
-            
+
             return $this->successResponse($role, 'Permissions assigned successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 422);
@@ -156,10 +137,6 @@ class RoleController extends BaseController
 
     /**
      * Sync role permissions
-     *
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
      */
     public function syncPermissions(Request $request, int $id): JsonResponse
     {
@@ -170,7 +147,7 @@ class RoleController extends BaseController
 
         try {
             $role = $this->roleService->syncPermissions($id, $validated['permission_ids']);
-            
+
             return $this->successResponse($role, 'Role permissions synchronized successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 422);
@@ -179,15 +156,12 @@ class RoleController extends BaseController
 
     /**
      * Get role permissions
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function getPermissions(int $id): JsonResponse
     {
         try {
             $permissions = $this->roleService->getRolePermissions($id);
-            
+
             return $this->successResponse($permissions, 'Role permissions retrieved successfully');
         } catch (\Exception $e) {
             return $this->notFoundResponse('Role not found');
@@ -196,15 +170,12 @@ class RoleController extends BaseController
 
     /**
      * Get role users
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function getUsers(int $id): JsonResponse
     {
         try {
             $users = $this->roleService->getRoleUsers($id);
-            
+
             return $this->successResponse($users, 'Role users retrieved successfully');
         } catch (\Exception $e) {
             return $this->notFoundResponse('Role not found');
@@ -213,32 +184,27 @@ class RoleController extends BaseController
 
     /**
      * Get system roles
-     *
-     * @return JsonResponse
      */
     public function systemRoles(): JsonResponse
     {
         $roles = $this->roleService->getSystemRoles();
-        
+
         return $this->successResponse($roles, 'System roles retrieved successfully');
     }
 
     /**
      * Get custom roles for tenant
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function customRoles(Request $request): JsonResponse
     {
         $tenantId = $request->input('tenant_id');
-        
-        if (!$tenantId) {
+
+        if (! $tenantId) {
             return $this->errorResponse('tenant_id is required', null, 422);
         }
-        
+
         $roles = $this->roleService->getCustomRoles($tenantId);
-        
+
         return $this->successResponse($roles, 'Custom roles retrieved successfully');
     }
 }

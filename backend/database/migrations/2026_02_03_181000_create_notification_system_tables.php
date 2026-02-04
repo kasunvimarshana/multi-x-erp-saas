@@ -56,7 +56,7 @@ return new class extends Migration
         });
 
         // Add columns to existing notifications table if needed
-        if (Schema::hasTable('notifications') && !Schema::hasColumn('notifications', 'channel')) {
+        if (Schema::hasTable('notifications') && ! Schema::hasColumn('notifications', 'channel')) {
             Schema::table('notifications', function (Blueprint $table) {
                 $table->string('channel')->default('database')->after('type');
                 $table->string('priority')->default('normal')->after('channel'); // low, normal, high, urgent

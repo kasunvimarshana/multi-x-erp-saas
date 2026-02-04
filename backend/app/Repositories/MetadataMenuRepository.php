@@ -26,15 +26,15 @@ class MetadataMenuRepository extends BaseRepository
             ->get()
             ->filter(function ($menu) use ($user) {
                 // Filter by permissions
-                if ($menu->permission && !$user->hasPermission($menu->permission)) {
+                if ($menu->permission && ! $user->hasPermission($menu->permission)) {
                     return false;
                 }
-                
+
                 // Filter children by permissions
                 $menu->children = $menu->children->filter(function ($child) use ($user) {
-                    return !$child->permission || $user->hasPermission($child->permission);
+                    return ! $child->permission || $user->hasPermission($child->permission);
                 });
-                
+
                 return true;
             });
     }

@@ -26,12 +26,12 @@ class PurchaseOrderFactory extends Factory
         $discountAmount = $subtotal * fake()->randomFloat(2, 0, 0.1);
         $taxAmount = ($subtotal - $discountAmount) * 0.1;
         $totalAmount = $subtotal - $discountAmount + $taxAmount;
-        
+
         return [
             'tenant_id' => Tenant::factory(),
             'supplier_id' => Supplier::factory(),
             'warehouse_id' => null,
-            'po_number' => 'PO-' . fake()->unique()->numerify('######'),
+            'po_number' => 'PO-'.fake()->unique()->numerify('######'),
             'po_date' => now(),
             'expected_delivery_date' => now()->addDays(fake()->numberBetween(7, 30)),
             'status' => PurchaseOrderStatus::PENDING->value,

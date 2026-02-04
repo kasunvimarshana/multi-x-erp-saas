@@ -60,6 +60,7 @@ class InvoiceRepository extends BaseRepository
     {
         $lastInvoice = $this->model->orderBy('id', 'desc')->first();
         $lastNumber = $lastInvoice ? intval(substr($lastInvoice->invoice_number, 4)) : 0;
-        return 'INV-' . str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT);
+
+        return 'INV-'.str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT);
     }
 }

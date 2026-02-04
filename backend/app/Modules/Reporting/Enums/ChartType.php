@@ -12,7 +12,7 @@ enum ChartType: string
 
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::LINE => 'Line Chart',
             self::BAR => 'Bar Chart',
             self::PIE => 'Pie Chart',

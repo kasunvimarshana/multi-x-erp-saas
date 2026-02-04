@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Role Service
- * 
+ *
  * Handles business logic for role management including
  * permission assignments.
  */
@@ -24,23 +24,19 @@ class RoleService extends BaseService
 
     /**
      * Get all roles
-     *
-     * @param int|null $tenantId
-     * @return Collection
      */
     public function getAllRoles(?int $tenantId = null): Collection
     {
         if ($tenantId) {
             return $this->roleRepository->getByTenant($tenantId);
         }
-        
+
         return $this->roleRepository->all();
     }
 
     /**
      * Get paginated roles
      *
-     * @param int $perPage
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function getPaginatedRoles(int $perPage = 15)
@@ -50,9 +46,6 @@ class RoleService extends BaseService
 
     /**
      * Get role by ID
-     *
-     * @param int $id
-     * @return Role
      */
     public function getRoleById(int $id): Role
     {
@@ -61,9 +54,6 @@ class RoleService extends BaseService
 
     /**
      * Get role by slug
-     *
-     * @param string $slug
-     * @return Role|null
      */
     public function getRoleBySlug(string $slug): ?Role
     {
@@ -73,8 +63,6 @@ class RoleService extends BaseService
     /**
      * Create a new role
      *
-     * @param RoleDTO $dto
-     * @return Role
      * @throws \Throwable
      */
     public function createRole(RoleDTO $dto): Role
@@ -99,9 +87,6 @@ class RoleService extends BaseService
     /**
      * Update role
      *
-     * @param int $id
-     * @param array $data
-     * @return Role
      * @throws \Throwable
      */
     public function updateRole(int $id, array $data): Role
@@ -136,8 +121,6 @@ class RoleService extends BaseService
     /**
      * Delete role
      *
-     * @param int $id
-     * @return bool
      * @throws \Throwable
      */
     public function deleteRole(int $id): bool
@@ -163,9 +146,6 @@ class RoleService extends BaseService
     /**
      * Assign permissions to role
      *
-     * @param int $roleId
-     * @param array $permissionIds
-     * @return Role
      * @throws \Throwable
      */
     public function assignPermissions(int $roleId, array $permissionIds): Role
@@ -196,9 +176,6 @@ class RoleService extends BaseService
     /**
      * Sync role permissions (replace all existing permissions)
      *
-     * @param int $roleId
-     * @param array $permissionIds
-     * @return Role
      * @throws \Throwable
      */
     public function syncPermissions(int $roleId, array $permissionIds): Role
@@ -224,9 +201,6 @@ class RoleService extends BaseService
 
     /**
      * Get role permissions
-     *
-     * @param int $roleId
-     * @return Collection
      */
     public function getRolePermissions(int $roleId): Collection
     {
@@ -235,9 +209,6 @@ class RoleService extends BaseService
 
     /**
      * Get role users
-     *
-     * @param int $roleId
-     * @return Collection
      */
     public function getRoleUsers(int $roleId): Collection
     {
@@ -246,8 +217,6 @@ class RoleService extends BaseService
 
     /**
      * Get system roles
-     *
-     * @return Collection
      */
     public function getSystemRoles(): Collection
     {
@@ -256,9 +225,6 @@ class RoleService extends BaseService
 
     /**
      * Get custom roles for tenant
-     *
-     * @param int $tenantId
-     * @return Collection
      */
     public function getCustomRoles(int $tenantId): Collection
     {

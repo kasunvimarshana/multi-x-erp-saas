@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 
 /**
  * Work Order Repository
- * 
+ *
  * Handles data access for work orders.
  */
 class WorkOrderRepository extends BaseRepository
@@ -86,7 +86,7 @@ class WorkOrderRepository extends BaseRepository
             ->where('assigned_to', $userId)
             ->whereIn('status', [
                 WorkOrderStatus::PENDING->value,
-                WorkOrderStatus::IN_PROGRESS->value
+                WorkOrderStatus::IN_PROGRESS->value,
             ])
             ->with(['productionOrder.product'])
             ->orderBy('scheduled_start', 'asc')
@@ -104,7 +104,7 @@ class WorkOrderRepository extends BaseRepository
                 'productionOrder.billOfMaterial',
                 'assignedUser',
                 'starter',
-                'completer'
+                'completer',
             ])
             ->findOrFail($id);
     }
@@ -148,7 +148,7 @@ class WorkOrderRepository extends BaseRepository
             ->where('scheduled_end', '<', now())
             ->whereIn('status', [
                 WorkOrderStatus::PENDING->value,
-                WorkOrderStatus::IN_PROGRESS->value
+                WorkOrderStatus::IN_PROGRESS->value,
             ])
             ->with(['productionOrder.product', 'assignedUser'])
             ->orderBy('scheduled_end', 'asc')

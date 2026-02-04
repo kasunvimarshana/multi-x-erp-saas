@@ -60,6 +60,7 @@ class SalesOrderRepository extends BaseRepository
     {
         $lastOrder = $this->model->orderBy('id', 'desc')->first();
         $lastNumber = $lastOrder ? intval(substr($lastOrder->order_number, 3)) : 0;
-        return 'SO-' . str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT);
+
+        return 'SO-'.str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT);
     }
 }

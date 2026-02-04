@@ -10,9 +10,7 @@ use Illuminate\Http\Request;
 
 class SalesOrderController extends BaseController
 {
-    public function __construct(private readonly SalesOrderService $service)
-    {
-    }
+    public function __construct(private readonly SalesOrderService $service) {}
 
     public function index(Request $request): JsonResponse
     {
@@ -52,6 +50,7 @@ class SalesOrderController extends BaseController
     public function show(int $id): JsonResponse
     {
         $salesOrder = $this->service->findOrFail($id, ['items.product', 'customer']);
+
         return $this->success($salesOrder);
     }
 
@@ -85,18 +84,21 @@ class SalesOrderController extends BaseController
     public function destroy(int $id): JsonResponse
     {
         $this->service->delete($id);
+
         return $this->success(null, 'Sales order deleted successfully');
     }
 
     public function confirm(int $id): JsonResponse
     {
         $salesOrder = $this->service->confirm($id);
+
         return $this->success($salesOrder, 'Sales order confirmed successfully');
     }
 
     public function cancel(int $id): JsonResponse
     {
         $salesOrder = $this->service->cancel($id);
+
         return $this->success($salesOrder, 'Sales order cancelled successfully');
     }
 
@@ -104,6 +106,7 @@ class SalesOrderController extends BaseController
     {
         $search = $request->get('q', '');
         $salesOrders = $this->service->search($search);
+
         return $this->success($salesOrders);
     }
 
@@ -111,12 +114,14 @@ class SalesOrderController extends BaseController
     {
         $filters = $request->only(['status', 'from_date', 'to_date']);
         $salesOrders = $this->service->findByCustomer($customerId, $filters);
+
         return $this->success($salesOrders);
     }
 
     public function byStatus(string $status): JsonResponse
     {
         $salesOrders = $this->service->findByStatus($status);
+
         return $this->success($salesOrders);
     }
 }

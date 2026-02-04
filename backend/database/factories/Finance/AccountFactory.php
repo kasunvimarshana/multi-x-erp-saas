@@ -2,7 +2,6 @@
 
 namespace Database\Factories\Finance;
 
-use App\Models\Currency;
 use App\Models\Tenant;
 use App\Modules\Finance\Enums\AccountType;
 use App\Modules\Finance\Models\Account;

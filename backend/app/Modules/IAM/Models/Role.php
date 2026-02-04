@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Role Model
- * 
+ *
  * Represents a role in the RBAC system.
  */
 class Role extends Model
@@ -50,8 +50,6 @@ class Role extends Model
 
     /**
      * Get the tenant that owns the role
-     *
-     * @return BelongsTo
      */
     public function tenant(): BelongsTo
     {
@@ -60,31 +58,24 @@ class Role extends Model
 
     /**
      * The permissions that belong to the role
-     *
-     * @return BelongsToMany
      */
     public function permissions(): BelongsToMany
     {
         return $this->belongsToMany(Permission::class, 'permission_role')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 
     /**
      * The users that have this role
-     *
-     * @return BelongsToMany
      */
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'role_user')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 
     /**
      * Check if role has a specific permission
-     *
-     * @param string $permissionSlug
-     * @return bool
      */
     public function hasPermission(string $permissionSlug): bool
     {
@@ -93,9 +84,6 @@ class Role extends Model
 
     /**
      * Grant permission to role
-     *
-     * @param Permission $permission
-     * @return void
      */
     public function grantPermission(Permission $permission): void
     {
@@ -104,9 +92,6 @@ class Role extends Model
 
     /**
      * Revoke permission from role
-     *
-     * @param Permission $permission
-     * @return void
      */
     public function revokePermission(Permission $permission): void
     {

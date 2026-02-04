@@ -21,29 +21,29 @@ return new class extends Migration
             $table->string('mobile', 50)->nullable();
             $table->string('company_name')->nullable();
             $table->string('tax_number', 100)->nullable();
-            
+
             // Billing address
             $table->text('billing_address')->nullable();
             $table->string('billing_city')->nullable();
             $table->string('billing_state')->nullable();
             $table->string('billing_country')->nullable();
             $table->string('billing_postal_code', 20)->nullable();
-            
+
             // Shipping address
             $table->text('shipping_address')->nullable();
             $table->string('shipping_city')->nullable();
             $table->string('shipping_state')->nullable();
             $table->string('shipping_country')->nullable();
             $table->string('shipping_postal_code', 20)->nullable();
-            
+
             // Business terms
             $table->decimal('credit_limit', 15, 2)->default(0);
             $table->integer('payment_terms_days')->default(0);
             $table->decimal('discount_percentage', 5, 2)->default(0);
-            
+
             $table->boolean('is_active')->default(true);
             $table->text('notes')->nullable();
-            
+
             $table->timestamps();
             $table->softDeletes();
 

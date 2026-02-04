@@ -14,7 +14,9 @@ class DashboardApiTest extends TestCase
     use RefreshDatabase;
 
     private string $baseUri = '/api/v1/reports/dashboards';
+
     private Tenant $tenant;
+
     private User $user;
 
     protected function setUp(): void

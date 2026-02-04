@@ -24,7 +24,7 @@ class ProductionOrderFactory extends Factory
     {
         return [
             'tenant_id' => Tenant::factory(),
-            'production_order_number' => 'MO-' . fake()->unique()->numerify('######'),
+            'production_order_number' => 'MO-'.fake()->unique()->numerify('######'),
             'product_id' => Product::factory(),
             'bill_of_material_id' => BillOfMaterial::factory(),
             'quantity' => fake()->randomFloat(4, 1, 1000),

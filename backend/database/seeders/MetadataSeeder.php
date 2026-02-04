@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class MetadataSeeder extends Seeder
 {
@@ -14,7 +14,7 @@ class MetadataSeeder extends Seeder
     public function run(): void
     {
         $now = Carbon::now();
-        
+
         // Insert metadata entities for existing modules
         $entities = [
             // IAM Module
@@ -66,7 +66,7 @@ class MetadataSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
-            
+
             // Inventory Module
             [
                 'name' => 'product',
@@ -100,7 +100,7 @@ class MetadataSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
-            
+
             // CRM Module
             [
                 'name' => 'customer',
@@ -118,7 +118,7 @@ class MetadataSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
-            
+
             // Procurement Module
             [
                 'name' => 'supplier',
@@ -152,7 +152,7 @@ class MetadataSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
-            
+
             // POS Module
             [
                 'name' => 'quotation',
@@ -218,7 +218,7 @@ class MetadataSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
-            
+
             // Manufacturing Module
             [
                 'name' => 'bom',
@@ -268,7 +268,7 @@ class MetadataSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
-            
+
             // Finance Module
             [
                 'name' => 'account',
@@ -302,7 +302,7 @@ class MetadataSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
-            
+
             // Reporting Module
             [
                 'name' => 'report',

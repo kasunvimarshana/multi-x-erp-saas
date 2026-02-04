@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Permission Model
- * 
+ *
  * Represents a permission in the RBAC system.
  */
 class Permission extends Model
@@ -37,20 +37,15 @@ class Permission extends Model
 
     /**
      * The roles that have this permission
-     *
-     * @return BelongsToMany
      */
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'permission_role')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 
     /**
      * Grant this permission to a role
-     *
-     * @param Role $role
-     * @return void
      */
     public function assignToRole(Role $role): void
     {
@@ -59,9 +54,6 @@ class Permission extends Model
 
     /**
      * Revoke this permission from a role
-     *
-     * @param Role $role
-     * @return void
      */
     public function removeFromRole(Role $role): void
     {

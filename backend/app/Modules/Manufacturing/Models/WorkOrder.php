@@ -98,7 +98,7 @@ class WorkOrder extends Model
      */
     public function getActualDurationMinutes(): ?int
     {
-        if (!$this->actual_start || !$this->actual_end) {
+        if (! $this->actual_start || ! $this->actual_end) {
             return null;
         }
 

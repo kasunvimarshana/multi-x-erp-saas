@@ -15,7 +15,9 @@ class ReportApiTest extends TestCase
     use RefreshDatabase;
 
     private string $baseUri = '/api/v1/reports';
+
     private Tenant $tenant;
+
     private User $user;
 
     protected function setUp(): void

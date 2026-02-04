@@ -9,15 +9,13 @@ use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Role Repository
- * 
+ *
  * Handles data access for roles.
  */
 class RoleRepository extends BaseRepository
 {
     /**
      * Specify Model class name
-     *
-     * @return string
      */
     protected function model(): string
     {
@@ -26,9 +24,6 @@ class RoleRepository extends BaseRepository
 
     /**
      * Find role by slug
-     *
-     * @param string $slug
-     * @return Role|null
      */
     public function findBySlug(string $slug): ?Role
     {
@@ -37,9 +32,6 @@ class RoleRepository extends BaseRepository
 
     /**
      * Get roles by tenant
-     *
-     * @param int $tenantId
-     * @return Collection
      */
     public function getByTenant(int $tenantId): Collection
     {
@@ -48,8 +40,6 @@ class RoleRepository extends BaseRepository
 
     /**
      * Get system roles
-     *
-     * @return Collection
      */
     public function getSystemRoles(): Collection
     {
@@ -58,9 +48,6 @@ class RoleRepository extends BaseRepository
 
     /**
      * Get custom roles for tenant
-     *
-     * @param int $tenantId
-     * @return Collection
      */
     public function getCustomRoles(int $tenantId): Collection
     {
@@ -72,22 +59,16 @@ class RoleRepository extends BaseRepository
 
     /**
      * Get role permissions
-     *
-     * @param int $roleId
-     * @return Collection
      */
     public function getRolePermissions(int $roleId): Collection
     {
         $role = $this->findOrFail($roleId);
+
         return $role->permissions;
     }
 
     /**
      * Assign permission to role
-     *
-     * @param Role $role
-     * @param Permission $permission
-     * @return void
      */
     public function assignPermission(Role $role, Permission $permission): void
     {
@@ -96,10 +77,6 @@ class RoleRepository extends BaseRepository
 
     /**
      * Remove permission from role
-     *
-     * @param Role $role
-     * @param Permission $permission
-     * @return void
      */
     public function removePermission(Role $role, Permission $permission): void
     {
@@ -108,10 +85,6 @@ class RoleRepository extends BaseRepository
 
     /**
      * Sync role permissions
-     *
-     * @param Role $role
-     * @param array $permissionIds
-     * @return void
      */
     public function syncPermissions(Role $role, array $permissionIds): void
     {
@@ -120,13 +93,11 @@ class RoleRepository extends BaseRepository
 
     /**
      * Get role users
-     *
-     * @param int $roleId
-     * @return Collection
      */
     public function getRoleUsers(int $roleId): Collection
     {
         $role = $this->findOrFail($roleId);
+
         return $role->users;
     }
 }

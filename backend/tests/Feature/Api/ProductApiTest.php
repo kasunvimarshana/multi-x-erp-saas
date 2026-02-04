@@ -4,13 +4,12 @@ namespace Tests\Feature\Api;
 
 use App\Models\Tenant;
 use App\Modules\Inventory\Models\Product;
-use Database\Factories\Inventory\ProductFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Feature\FeatureTestCase;
 
 /**
  * Product API Test
- * 
+ *
  * Tests the Product API endpoints.
  */
 class ProductApiTest extends FeatureTestCase
@@ -25,7 +24,7 @@ class ProductApiTest extends FeatureTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Ensure authenticated user for all tests
         $this->actingAsUserWithPermissions([
             'view-products',
@@ -74,7 +73,7 @@ class ProductApiTest extends FeatureTestCase
                     'total',
                 ],
             ]);
-            
+
         // Verify only products from this tenant are returned
         $products = $response->json('data.data');
         foreach ($products as $product) {
@@ -240,7 +239,7 @@ class ProductApiTest extends FeatureTestCase
 
         // Should fail with 404 due to tenant scoping
         $response->assertStatus(404);
-        
+
         // Verify the product was not updated
         $this->assertDatabaseMissing('products', [
             'id' => $product->id,
@@ -279,7 +278,7 @@ class ProductApiTest extends FeatureTestCase
 
         // Should fail with 404 due to tenant scoping
         $response->assertStatus(404);
-        
+
         // Verify the product still exists and is not deleted
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
@@ -307,7 +306,7 @@ class ProductApiTest extends FeatureTestCase
         $response = $this->getJson($this->baseUri);
 
         $response->assertStatus(200);
-        
+
         // Verify we have products of both types
         $products = $response->json('data.data');
         $this->assertGreaterThanOrEqual(5, count($products));
@@ -332,7 +331,7 @@ class ProductApiTest extends FeatureTestCase
         $response = $this->getJson($this->baseUri);
 
         $response->assertStatus(200);
-        
+
         // Verify we have products
         $products = $response->json('data.data');
         $this->assertGreaterThanOrEqual(5, count($products));
@@ -356,7 +355,7 @@ class ProductApiTest extends FeatureTestCase
         $response = $this->getJson('/api/v1/products/search?q=computer');
 
         $response->assertStatus(200);
-        
+
         // The search should return products matching 'computer'
         $products = $response->json('data');
         $this->assertGreaterThanOrEqual(2, count($products));

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 /**
  * Work Order Service
- * 
+ *
  * Handles business logic for work order scheduling and completion.
  */
 class WorkOrderService extends BaseService
@@ -37,7 +37,7 @@ class WorkOrderService extends BaseService
     {
         return $this->transaction(function () use ($data) {
             $this->logInfo('Creating new work order', ['wo_number' => $data['work_order_number']]);
-            
+
             // Create work order
             $workOrder = $this->workOrderRepository->create([
                 'work_order_number' => $data['work_order_number'],
@@ -50,12 +50,12 @@ class WorkOrderService extends BaseService
                 'notes' => $data['notes'] ?? null,
                 'assigned_to' => $data['assigned_to'] ?? null,
             ]);
-            
+
             // Load relationships
             $workOrder->load(['productionOrder.product', 'assignedUser']);
-            
+
             $this->logInfo('Work order created successfully', ['id' => $workOrder->id]);
-            
+
             return $workOrder;
         });
     }
@@ -67,7 +67,7 @@ class WorkOrderService extends BaseService
     {
         return $this->transaction(function () use ($id, $data) {
             $this->logInfo('Updating work order', ['id' => $id]);
-            
+
             // Update work order
             $this->workOrderRepository->update($id, [
                 'work_order_number' => $data['work_order_number'],
@@ -79,12 +79,12 @@ class WorkOrderService extends BaseService
                 'notes' => $data['notes'] ?? null,
                 'assigned_to' => $data['assigned_to'] ?? null,
             ]);
-            
+
             $workOrder = $this->workOrderRepository->findOrFail($id);
             $workOrder->load(['productionOrder.product', 'assignedUser']);
-            
+
             $this->logInfo('Work order updated successfully', ['id' => $id]);
-            
+
             return $workOrder;
         });
     }
@@ -95,13 +95,13 @@ class WorkOrderService extends BaseService
     public function deleteWorkOrder(int $id): bool
     {
         $this->logInfo('Deleting work order', ['id' => $id]);
-        
+
         $result = $this->workOrderRepository->delete($id);
-        
+
         if ($result) {
             $this->logInfo('Work order deleted successfully', ['id' => $id]);
         }
-        
+
         return $result;
     }
 
@@ -120,31 +120,31 @@ class WorkOrderService extends BaseService
     {
         return $this->transaction(function () use ($id) {
             $workOrder = $this->workOrderRepository->findOrFail($id);
-            
+
             // Check if can be started
-            if (!$workOrder->status->canStart()) {
+            if (! $workOrder->status->canStart()) {
                 throw new \InvalidArgumentException(
                     "Work order with status '{$workOrder->status->label()}' cannot be started"
                 );
             }
-            
+
             $this->logInfo('Starting work order', ['id' => $id]);
-            
+
             // Update status
             $this->workOrderRepository->update($id, [
                 'status' => WorkOrderStatus::IN_PROGRESS->value,
                 'actual_start' => now(),
                 'started_by' => Auth::id(),
             ]);
-            
+
             $workOrder->refresh();
             $workOrder->load(['productionOrder.product', 'assignedUser']);
-            
+
             // Dispatch event
             event(new WorkOrderStarted($workOrder));
-            
+
             $this->logInfo('Work order started successfully', ['id' => $id]);
-            
+
             return $workOrder;
         });
     }
@@ -156,36 +156,36 @@ class WorkOrderService extends BaseService
     {
         return $this->transaction(function () use ($id, $dto) {
             $workOrder = $this->workOrderRepository->findOrFail($id);
-            
+
             // Check if can be completed
-            if (!$workOrder->status->canComplete()) {
+            if (! $workOrder->status->canComplete()) {
                 throw new \InvalidArgumentException(
                     "Work order with status '{$workOrder->status->label()}' cannot be completed"
                 );
             }
-            
+
             $this->logInfo('Completing work order', ['id' => $id]);
-            
+
             $updateData = [
                 'status' => WorkOrderStatus::COMPLETED->value,
                 'actual_end' => $dto?->actualEnd ?? now(),
                 'completed_by' => $dto?->completedBy ?? Auth::id(),
             ];
-            
+
             if ($dto?->notes) {
                 $updateData['notes'] = $dto->notes;
             }
-            
+
             $this->workOrderRepository->update($id, $updateData);
-            
+
             $workOrder->refresh();
             $workOrder->load(['productionOrder.product', 'assignedUser']);
-            
+
             // Dispatch event
             event(new WorkOrderCompleted($workOrder));
-            
+
             $this->logInfo('Work order completed successfully', ['id' => $id]);
-            
+
             return $workOrder;
         });
     }
@@ -197,25 +197,25 @@ class WorkOrderService extends BaseService
     {
         return $this->transaction(function () use ($id) {
             $workOrder = $this->workOrderRepository->findOrFail($id);
-            
+
             // Check if can be cancelled
-            if (!$workOrder->status->canCancel()) {
+            if (! $workOrder->status->canCancel()) {
                 throw new \InvalidArgumentException(
                     "Work order with status '{$workOrder->status->label()}' cannot be cancelled"
                 );
             }
-            
+
             $this->logInfo('Cancelling work order', ['id' => $id]);
-            
+
             $this->workOrderRepository->update($id, [
                 'status' => WorkOrderStatus::CANCELLED->value,
             ]);
-            
+
             $workOrder->refresh();
             $workOrder->load(['productionOrder.product', 'assignedUser']);
-            
+
             $this->logInfo('Work order cancelled successfully', ['id' => $id]);
-            
+
             return $workOrder;
         });
     }

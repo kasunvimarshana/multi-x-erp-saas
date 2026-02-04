@@ -10,15 +10,13 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * GoodsReceiptNoteRepository
- * 
+ *
  * Repository for managing goods receipt note data access.
  */
 class GoodsReceiptNoteRepository extends BaseRepository
 {
     /**
      * Specify Model class name
-     *
-     * @return string
      */
     protected function model(): string
     {
@@ -27,9 +25,6 @@ class GoodsReceiptNoteRepository extends BaseRepository
 
     /**
      * Get GRNs with related data
-     *
-     * @param int $perPage
-     * @return LengthAwarePaginator
      */
     public function getPaginatedWithRelations(int $perPage = 15): LengthAwarePaginator
     {
@@ -41,9 +36,6 @@ class GoodsReceiptNoteRepository extends BaseRepository
 
     /**
      * Find GRN by GRN number
-     *
-     * @param string $grnNumber
-     * @return GoodsReceiptNote|null
      */
     public function findByGrnNumber(string $grnNumber): ?GoodsReceiptNote
     {
@@ -54,9 +46,6 @@ class GoodsReceiptNoteRepository extends BaseRepository
 
     /**
      * Get GRNs by purchase order
-     *
-     * @param int $purchaseOrderId
-     * @return Collection
      */
     public function getByPurchaseOrder(int $purchaseOrderId): Collection
     {
@@ -68,9 +57,6 @@ class GoodsReceiptNoteRepository extends BaseRepository
 
     /**
      * Get GRNs by supplier
-     *
-     * @param int $supplierId
-     * @return Collection
      */
     public function getBySupplier(int $supplierId): Collection
     {
@@ -83,9 +69,6 @@ class GoodsReceiptNoteRepository extends BaseRepository
 
     /**
      * Get GRNs by status
-     *
-     * @param GoodsReceiptStatus $status
-     * @return Collection
      */
     public function getByStatus(GoodsReceiptStatus $status): Collection
     {
@@ -98,8 +81,6 @@ class GoodsReceiptNoteRepository extends BaseRepository
 
     /**
      * Get pending GRNs
-     *
-     * @return Collection
      */
     public function getPending(): Collection
     {
@@ -108,8 +89,6 @@ class GoodsReceiptNoteRepository extends BaseRepository
 
     /**
      * Get completed GRNs
-     *
-     * @return Collection
      */
     public function getCompleted(): Collection
     {
@@ -118,8 +97,6 @@ class GoodsReceiptNoteRepository extends BaseRepository
 
     /**
      * Get GRNs with discrepancies
-     *
-     * @return Collection
      */
     public function getWithDiscrepancies(): Collection
     {
@@ -134,9 +111,6 @@ class GoodsReceiptNoteRepository extends BaseRepository
 
     /**
      * Search GRNs by keyword
-     *
-     * @param string $keyword
-     * @return Collection
      */
     public function search(string $keyword): Collection
     {
@@ -158,10 +132,6 @@ class GoodsReceiptNoteRepository extends BaseRepository
 
     /**
      * Get GRNs by date range
-     *
-     * @param string $startDate
-     * @param string $endDate
-     * @return Collection
      */
     public function getByDateRange(string $startDate, string $endDate): Collection
     {

@@ -33,6 +33,7 @@ return new class extends Migration
         // Bill of Material Items table
         Schema::create('bill_of_material_items', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tenant_id')->constrained()->onDelete('cascade');
             $table->foreignId('bill_of_material_id')->constrained()->onDelete('cascade');
             $table->foreignId('component_product_id')->constrained('products')->onDelete('restrict');
             $table->decimal('quantity', 15, 4);
@@ -41,6 +42,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
 
+            $table->index('tenant_id');
             $table->index('bill_of_material_id');
             $table->index('component_product_id');
         });
@@ -80,6 +82,7 @@ return new class extends Migration
         // Production Order Items (Material consumption tracking)
         Schema::create('production_order_items', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tenant_id')->constrained()->onDelete('cascade');
             $table->foreignId('production_order_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_id')->constrained()->onDelete('restrict');
             $table->decimal('planned_quantity', 15, 4);
@@ -88,6 +91,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
 
+            $table->index('tenant_id');
             $table->index('production_order_id');
             $table->index('product_id');
         });

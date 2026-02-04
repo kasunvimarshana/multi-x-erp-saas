@@ -25,7 +25,7 @@ class CreateJournalEntryDTO
             description: $data['description'] ?? null,
             referenceType: $data['reference_type'] ?? null,
             referenceId: $data['reference_id'] ?? null,
-            status: isset($data['status']) 
+            status: isset($data['status'])
                 ? ($data['status'] instanceof JournalEntryStatus ? $data['status'] : JournalEntryStatus::from($data['status']))
                 : null,
         );

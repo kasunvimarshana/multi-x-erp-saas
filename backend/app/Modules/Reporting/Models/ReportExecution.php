@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * ReportExecution Model
- * 
+ *
  * Represents a report execution history.
  */
 class ReportExecution extends Model
@@ -56,8 +56,6 @@ class ReportExecution extends Model
 
     /**
      * Get the report
-     *
-     * @return BelongsTo
      */
     public function report(): BelongsTo
     {
@@ -66,8 +64,6 @@ class ReportExecution extends Model
 
     /**
      * Get the user who executed the report
-     *
-     * @return BelongsTo
      */
     public function executedBy(): BelongsTo
     {
@@ -76,8 +72,6 @@ class ReportExecution extends Model
 
     /**
      * Check if execution is completed
-     *
-     * @return bool
      */
     public function isCompleted(): bool
     {
@@ -86,8 +80,6 @@ class ReportExecution extends Model
 
     /**
      * Check if execution failed
-     *
-     * @return bool
      */
     public function isFailed(): bool
     {
@@ -96,8 +88,6 @@ class ReportExecution extends Model
 
     /**
      * Check if execution is running
-     *
-     * @return bool
      */
     public function isRunning(): bool
     {

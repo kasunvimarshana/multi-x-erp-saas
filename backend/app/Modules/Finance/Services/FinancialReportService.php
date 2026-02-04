@@ -9,7 +9,7 @@ use App\Services\BaseService;
 
 /**
  * Financial Report Service
- * 
+ *
  * Generates financial reports including P&L, Balance Sheet, and Trial Balance.
  */
 class FinancialReportService extends BaseService
@@ -32,11 +32,11 @@ class FinancialReportService extends BaseService
 
         foreach ($accounts as $account) {
             $openingBalance = $account->opening_balance;
-            
+
             $transactions = $account->journalEntryLines()
                 ->whereHas('journalEntry', function ($q) use ($startDate, $endDate) {
                     $q->posted()
-                      ->whereBetween('entry_date', [$startDate, $endDate]);
+                        ->whereBetween('entry_date', [$startDate, $endDate]);
                 })
                 ->get();
 

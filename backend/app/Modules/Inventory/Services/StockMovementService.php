@@ -21,8 +21,6 @@ class StockMovementService extends BaseService
     /**
      * Record a stock movement (purchase, sale, adjustment, transfer)
      *
-     * @param StockMovementDTO $dto
-     * @return StockLedger
      * @throws \Exception
      */
     public function recordMovement(StockMovementDTO $dto): StockLedger
@@ -30,14 +28,14 @@ class StockMovementService extends BaseService
         return DB::transaction(function () use ($dto) {
             // Validate product exists
             $product = $this->productRepository->find($dto->productId);
-            if (!$product) {
+            if (! $product) {
                 throw new \Exception('Product not found');
             }
 
             // Validate warehouse exists if provided
             if ($dto->warehouseId) {
                 $warehouse = DB::table('warehouses')->find($dto->warehouseId);
-                if (!$warehouse) {
+                if (! $warehouse) {
                     throw new \Exception('Warehouse not found');
                 }
             }
@@ -53,7 +51,7 @@ class StockMovementService extends BaseService
 
             // Validate stock availability for outbound movements
             if ($quantity < 0 && abs($quantity) > $currentBalance) {
-                throw new \Exception('Insufficient stock. Available: ' . $currentBalance);
+                throw new \Exception('Insufficient stock. Available: '.$currentBalance);
             }
 
             // Calculate new balance
@@ -85,12 +83,6 @@ class StockMovementService extends BaseService
 
     /**
      * Record a stock adjustment
-     *
-     * @param int $productId
-     * @param int $warehouseId
-     * @param float $adjustmentQuantity
-     * @param string|null $reason
-     * @return StockLedger
      */
     public function adjustStock(
         int $productId,
@@ -115,13 +107,6 @@ class StockMovementService extends BaseService
 
     /**
      * Transfer stock between warehouses
-     *
-     * @param int $productId
-     * @param int $fromWarehouseId
-     * @param int $toWarehouseId
-     * @param float $quantity
-     * @param string|null $notes
-     * @return array
      */
     public function transferStock(
         int $productId,
@@ -162,10 +147,6 @@ class StockMovementService extends BaseService
 
     /**
      * Calculate quantity based on movement type
-     *
-     * @param StockMovementType $movementType
-     * @param float $quantity
-     * @return float
      */
     protected function calculateQuantity(StockMovementType $movementType, float $quantity): float
     {
@@ -174,7 +155,7 @@ class StockMovementService extends BaseService
             StockMovementType::ADJUSTMENT_IN,
             StockMovementType::TRANSFER_IN,
             StockMovementType::RETURN_IN => abs($quantity),
-            
+
             StockMovementType::SALE,
             StockMovementType::ADJUSTMENT_OUT,
             StockMovementType::TRANSFER_OUT,
@@ -184,15 +165,11 @@ class StockMovementService extends BaseService
 
     /**
      * Update product's current stock
-     *
-     * @param int $productId
-     * @param int|null $warehouseId
-     * @return void
      */
     protected function updateProductStock(int $productId, ?int $warehouseId = null): void
     {
         $currentStock = $this->stockLedgerRepository->getCurrentBalance($productId, $warehouseId);
-        
+
         // Update product's stock level
         // This is for quick access, the ledger remains the source of truth
         DB::table('products')

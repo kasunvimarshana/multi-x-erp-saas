@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 /**
  * Permission API Controller
- * 
+ *
  * Handles HTTP requests for permission management.
  * Note: Permissions are system-defined and read-only via API.
  */
@@ -21,9 +21,6 @@ class PermissionController extends BaseController
 
     /**
      * Display a listing of permissions
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
     {
@@ -32,33 +29,32 @@ class PermissionController extends BaseController
 
         if ($module) {
             $permissions = $this->permissionService->getPermissionsByModule($module);
+
             return $this->successResponse($permissions, 'Permissions retrieved successfully');
         }
 
         if ($request->has('grouped')) {
             $permissions = $this->permissionService->getPermissionsGroupedByModule();
+
             return $this->successResponse($permissions, 'Permissions grouped by module retrieved successfully');
         }
 
         $permissions = $this->permissionService->getPaginatedPermissions($perPage);
-        
+
         return $this->successResponse($permissions, 'Permissions retrieved successfully');
     }
 
     /**
      * Display the specified permission
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function show(int $id): JsonResponse
     {
         try {
             $permission = $this->permissionService->getPermissionById($id);
-            
+
             // Load relationships
             $permission->load(['roles']);
-            
+
             return $this->successResponse($permission, 'Permission retrieved successfully');
         } catch (\Exception $e) {
             return $this->notFoundResponse('Permission not found');
@@ -67,15 +63,12 @@ class PermissionController extends BaseController
 
     /**
      * Get permission roles
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function getRoles(int $id): JsonResponse
     {
         try {
             $roles = $this->permissionService->getPermissionRoles($id);
-            
+
             return $this->successResponse($roles, 'Permission roles retrieved successfully');
         } catch (\Exception $e) {
             return $this->notFoundResponse('Permission not found');
@@ -84,13 +77,11 @@ class PermissionController extends BaseController
 
     /**
      * Get permissions grouped by module
-     *
-     * @return JsonResponse
      */
     public function grouped(): JsonResponse
     {
         $permissions = $this->permissionService->getPermissionsGroupedByModule();
-        
+
         return $this->successResponse($permissions, 'Permissions grouped by module retrieved successfully');
     }
 }

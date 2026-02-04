@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Work Order Completed Event
- * 
+ *
  * Dispatched when a work order is completed.
  */
 class WorkOrderCompleted

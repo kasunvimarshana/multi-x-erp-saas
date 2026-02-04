@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 
 /**
  * Production Order API Controller
- * 
+ *
  * Handles HTTP requests for production order management.
  */
 class ProductionOrderController extends BaseController
@@ -28,7 +28,7 @@ class ProductionOrderController extends BaseController
     {
         $perPage = $request->input('per_page', 15);
         $productionOrders = $this->productionOrderService->getAllProductionOrders($perPage);
-        
+
         return $this->successResponse($productionOrders, 'Production orders retrieved successfully');
     }
 
@@ -49,10 +49,10 @@ class ProductionOrderController extends BaseController
             'priority' => 'nullable|in:low,normal,high,urgent',
             'notes' => 'nullable|string',
         ]);
-        
+
         $dto = CreateProductionOrderDTO::fromArray($validated);
         $productionOrder = $this->productionOrderService->createProductionOrder($dto);
-        
+
         return $this->createdResponse($productionOrder, 'Production order created successfully');
     }
 
@@ -62,7 +62,7 @@ class ProductionOrderController extends BaseController
     public function show(int $id): JsonResponse
     {
         $productionOrder = $this->productionOrderService->getProductionOrderById($id);
-        
+
         return $this->successResponse($productionOrder, 'Production order retrieved successfully');
     }
 
@@ -72,7 +72,7 @@ class ProductionOrderController extends BaseController
     public function update(Request $request, int $id): JsonResponse
     {
         $validated = $request->validate([
-            'production_order_number' => 'required|string|unique:production_orders,production_order_number,' . $id,
+            'production_order_number' => 'required|string|unique:production_orders,production_order_number,'.$id,
             'product_id' => 'required|integer|exists:products,id',
             'quantity' => 'required|numeric|min:0.0001',
             'bill_of_material_id' => 'nullable|integer|exists:bill_of_materials,id',
@@ -82,10 +82,10 @@ class ProductionOrderController extends BaseController
             'priority' => 'nullable|in:low,normal,high,urgent',
             'notes' => 'nullable|string',
         ]);
-        
+
         $dto = CreateProductionOrderDTO::fromArray($validated);
         $productionOrder = $this->productionOrderService->updateProductionOrder($id, $dto);
-        
+
         return $this->successResponse($productionOrder, 'Production order updated successfully');
     }
 
@@ -95,7 +95,7 @@ class ProductionOrderController extends BaseController
     public function destroy(int $id): JsonResponse
     {
         $this->productionOrderService->deleteProductionOrder($id);
-        
+
         return $this->successResponse(null, 'Production order deleted successfully');
     }
 
@@ -105,7 +105,7 @@ class ProductionOrderController extends BaseController
     public function release(int $id): JsonResponse
     {
         $productionOrder = $this->productionOrderService->release($id);
-        
+
         return $this->successResponse($productionOrder, 'Production order released successfully');
     }
 
@@ -115,7 +115,7 @@ class ProductionOrderController extends BaseController
     public function start(int $id): JsonResponse
     {
         $productionOrder = $this->productionOrderService->startProduction($id);
-        
+
         return $this->successResponse($productionOrder, 'Production started successfully');
     }
 
@@ -135,11 +135,11 @@ class ProductionOrderController extends BaseController
             'consumed_at' => 'nullable|date',
             'notes' => 'nullable|string',
         ]);
-        
+
         $validated['production_order_id'] = $id;
         $dto = MaterialConsumptionDTO::fromArray($validated);
         $productionOrder = $this->productionOrderService->consumeMaterials($dto);
-        
+
         return $this->successResponse($productionOrder, 'Materials consumed successfully');
     }
 
@@ -149,7 +149,7 @@ class ProductionOrderController extends BaseController
     public function complete(int $id): JsonResponse
     {
         $productionOrder = $this->productionOrderService->complete($id);
-        
+
         return $this->successResponse($productionOrder, 'Production order completed successfully');
     }
 
@@ -159,7 +159,7 @@ class ProductionOrderController extends BaseController
     public function cancel(int $id): JsonResponse
     {
         $productionOrder = $this->productionOrderService->cancel($id);
-        
+
         return $this->successResponse($productionOrder, 'Production order cancelled successfully');
     }
 
@@ -171,10 +171,10 @@ class ProductionOrderController extends BaseController
         $validated = $request->validate([
             'status' => 'required|in:draft,released,in_progress,completed,cancelled',
         ]);
-        
+
         $status = ProductionOrderStatus::from($validated['status']);
         $productionOrders = $this->productionOrderService->getByStatus($status);
-        
+
         return $this->successResponse($productionOrders, 'Production orders retrieved successfully');
     }
 
@@ -184,7 +184,7 @@ class ProductionOrderController extends BaseController
     public function inProgress(): JsonResponse
     {
         $productionOrders = $this->productionOrderService->getInProgress();
-        
+
         return $this->successResponse($productionOrders, 'In-progress production orders retrieved successfully');
     }
 
@@ -194,7 +194,7 @@ class ProductionOrderController extends BaseController
     public function overdue(): JsonResponse
     {
         $productionOrders = $this->productionOrderService->getOverdue();
-        
+
         return $this->successResponse($productionOrders, 'Overdue production orders retrieved successfully');
     }
 
@@ -206,9 +206,9 @@ class ProductionOrderController extends BaseController
         $validated = $request->validate([
             'query' => 'required|string|min:1',
         ]);
-        
+
         $productionOrders = $this->productionOrderService->searchProductionOrders($validated['query']);
-        
+
         return $this->successResponse($productionOrders, 'Search results retrieved successfully');
     }
 }

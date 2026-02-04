@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 /**
  * Financial Report API Controller
- * 
+ *
  * Handles HTTP requests for financial report generation.
  */
 class FinancialReportController extends BaseController
@@ -26,12 +26,12 @@ class FinancialReportController extends BaseController
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
-        
+
         $report = $this->financialReportService->generateTrialBalance(
             $validated['start_date'],
             $validated['end_date']
         );
-        
+
         return $this->successResponse($report, 'Trial balance generated successfully');
     }
 
@@ -41,12 +41,12 @@ class FinancialReportController extends BaseController
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
-        
+
         $report = $this->financialReportService->generateProfitAndLoss(
             $validated['start_date'],
             $validated['end_date']
         );
-        
+
         return $this->successResponse($report, 'Profit and loss statement generated successfully');
     }
 
@@ -55,11 +55,11 @@ class FinancialReportController extends BaseController
         $validated = $request->validate([
             'as_of_date' => 'required|date',
         ]);
-        
+
         $report = $this->financialReportService->generateBalanceSheet(
             $validated['as_of_date']
         );
-        
+
         return $this->successResponse($report, 'Balance sheet generated successfully');
     }
 
@@ -69,13 +69,13 @@ class FinancialReportController extends BaseController
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
-        
+
         $ledger = $this->generalLedgerService->getAccountLedger(
             $accountId,
             $validated['start_date'],
             $validated['end_date']
         );
-        
+
         return $this->successResponse($ledger, 'Account ledger generated successfully');
     }
 
@@ -85,12 +85,12 @@ class FinancialReportController extends BaseController
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
-        
+
         $ledger = $this->generalLedgerService->getGeneralLedger(
             $validated['start_date'],
             $validated['end_date']
         );
-        
+
         return $this->successResponse($ledger, 'General ledger generated successfully');
     }
 }

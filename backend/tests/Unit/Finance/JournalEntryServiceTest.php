@@ -4,7 +4,6 @@ namespace Tests\Unit\Finance;
 
 use App\Models\Tenant;
 use App\Modules\Finance\DTOs\CreateJournalEntryDTO;
-use App\Modules\Finance\Enums\AccountType;
 use App\Modules\Finance\Enums\JournalEntryStatus;
 use App\Modules\Finance\Models\Account;
 use App\Modules\Finance\Models\FiscalYear;
@@ -22,7 +21,9 @@ class JournalEntryServiceTest extends TestCase
     use RefreshDatabase;
 
     protected JournalEntryService $service;
+
     protected AccountService $accountService;
+
     protected Tenant $tenant;
 
     protected function setUp(): void
@@ -30,12 +31,12 @@ class JournalEntryServiceTest extends TestCase
         parent::setUp();
 
         $this->tenant = Tenant::factory()->create();
-        
-        $this->accountService = new AccountService(new AccountRepository());
+
+        $this->accountService = new AccountService(new AccountRepository);
         $this->service = new JournalEntryService(
-            new JournalEntryRepository(),
-            new AccountRepository(),
-            new FiscalYearRepository(),
+            new JournalEntryRepository,
+            new AccountRepository,
+            new FiscalYearRepository,
             $this->accountService
         );
 
@@ -49,7 +50,7 @@ class JournalEntryServiceTest extends TestCase
 
         $debitAccount = Account::factory()->forTenant($this->tenant)->asset()->create();
         $creditAccount = Account::factory()->forTenant($this->tenant)->revenue()->create();
-        
+
         FiscalYear::factory()->forTenant($this->tenant)->create([
             'start_date' => now()->startOfYear(),
             'end_date' => now()->endOfYear(),
@@ -80,7 +81,7 @@ class JournalEntryServiceTest extends TestCase
     {
         $debitAccount = Account::factory()->forTenant($this->tenant)->asset()->create();
         $creditAccount = Account::factory()->forTenant($this->tenant)->revenue()->create();
-        
+
         FiscalYear::factory()->forTenant($this->tenant)->create([
             'start_date' => now()->startOfYear(),
             'end_date' => now()->endOfYear(),
@@ -116,7 +117,7 @@ class JournalEntryServiceTest extends TestCase
     {
         $debitAccount = Account::factory()->forTenant($this->tenant)->asset()->create();
         $creditAccount = Account::factory()->forTenant($this->tenant)->revenue()->create();
-        
+
         FiscalYear::factory()->forTenant($this->tenant)->create([
             'start_date' => now()->startOfYear(),
             'end_date' => now()->endOfYear(),
@@ -153,7 +154,7 @@ class JournalEntryServiceTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         $debitAccount = Account::factory()->forTenant($this->tenant)->asset()->create();
-        
+
         FiscalYear::factory()->forTenant($this->tenant)->create([
             'start_date' => now()->startOfYear(),
             'end_date' => now()->endOfYear(),
@@ -179,7 +180,7 @@ class JournalEntryServiceTest extends TestCase
     {
         $debitAccount = Account::factory()->forTenant($this->tenant)->asset()->create();
         $creditAccount = Account::factory()->forTenant($this->tenant)->revenue()->create();
-        
+
         FiscalYear::factory()->forTenant($this->tenant)->create([
             'start_date' => now()->startOfYear(),
             'end_date' => now()->endOfYear(),

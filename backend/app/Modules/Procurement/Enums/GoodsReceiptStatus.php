@@ -4,7 +4,7 @@ namespace App\Modules\Procurement\Enums;
 
 /**
  * Goods Receipt Status Enum
- * 
+ *
  * Represents the various states of a goods receipt note
  */
 enum GoodsReceiptStatus: string
@@ -20,7 +20,7 @@ enum GoodsReceiptStatus: string
      */
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::DRAFT => 'Draft',
             self::RECEIVED => 'Received',
             self::PARTIALLY_RECEIVED => 'Partially Received',

@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Work Order Started Event
- * 
+ *
  * Dispatched when a work order is started.
  */
 class WorkOrderStarted

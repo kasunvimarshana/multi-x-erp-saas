@@ -9,15 +9,12 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Base Repository Implementation
- * 
+ *
  * Abstract base class providing common repository functionality
  * for all concrete repository implementations.
  */
 abstract class BaseRepository implements RepositoryInterface
 {
-    /**
-     * @var Model
-     */
     protected Model $model;
 
     /**
@@ -30,21 +27,17 @@ abstract class BaseRepository implements RepositoryInterface
 
     /**
      * Specify Model class name
-     *
-     * @return string
      */
     abstract protected function model(): string;
 
     /**
      * Make Model instance
-     *
-     * @return Model
      */
     protected function makeModel(): Model
     {
         $model = app($this->model());
 
-        if (!$model instanceof Model) {
+        if (! $model instanceof Model) {
             throw new \RuntimeException(
                 "Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model"
             );
@@ -141,6 +134,7 @@ abstract class BaseRepository implements RepositoryInterface
     public function update(int $id, array $data): bool
     {
         $model = $this->findOrFail($id);
+
         return $model->update($data);
     }
 
@@ -150,6 +144,7 @@ abstract class BaseRepository implements RepositoryInterface
     public function delete(int $id): bool
     {
         $model = $this->findOrFail($id);
+
         return $model->delete();
     }
 

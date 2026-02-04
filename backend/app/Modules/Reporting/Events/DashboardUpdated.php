@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Dashboard Updated Event
- * 
+ *
  * Fired when a dashboard is updated.
  */
 class DashboardUpdated

@@ -27,7 +27,7 @@ class SupplierFactory extends Factory
             'phone' => fake()->phoneNumber(),
             'mobile' => fake()->phoneNumber(),
             'company_name' => fake()->company(),
-            'tax_number' => 'TAX-' . fake()->numerify('########'),
+            'tax_number' => 'TAX-'.fake()->numerify('########'),
             'address' => fake()->streetAddress(),
             'city' => fake()->city(),
             'state' => fake()->state(),

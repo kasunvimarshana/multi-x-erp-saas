@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\MetadataEntity;
 use App\Models\MetadataField;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class ComprehensiveMetadataSeeder extends Seeder
 {

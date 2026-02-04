@@ -6,18 +6,13 @@ use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 
 class AuthController extends BaseController
 {
     /**
      * Register a new user
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function register(Request $request): JsonResponse
     {
@@ -42,7 +37,7 @@ class AuthController extends BaseController
                                 $fail('The email has already been registered for this tenant.');
                             }
                         }
-                    }
+                    },
                 ],
                 'password' => 'required|string|min:8|confirmed',
                 'tenant_slug' => 'required|string|exists:tenants,slug',
@@ -53,11 +48,11 @@ class AuthController extends BaseController
             }
 
             // Get tenant
-            if (!$tenant) {
+            if (! $tenant) {
                 $tenant = Tenant::where('slug', $request->tenant_slug)->first();
             }
 
-            if (!$tenant || !$tenant->is_active) {
+            if (! $tenant || ! $tenant->is_active) {
                 return $this->errorResponse('Invalid or inactive tenant', 400);
             }
 
@@ -79,15 +74,12 @@ class AuthController extends BaseController
             ], 'User registered successfully', 201);
 
         } catch (\Exception $e) {
-            return $this->errorResponse('Registration failed: ' . $e->getMessage(), null, 500);
+            return $this->errorResponse('Registration failed: '.$e->getMessage(), null, 500);
         }
     }
 
     /**
      * Login user
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function login(Request $request): JsonResponse
     {
@@ -105,7 +97,7 @@ class AuthController extends BaseController
             // Get tenant
             $tenant = Tenant::where('slug', $request->tenant_slug)->first();
 
-            if (!$tenant || !$tenant->is_active) {
+            if (! $tenant || ! $tenant->is_active) {
                 return $this->errorResponse('Invalid or inactive tenant', null, 400);
             }
 
@@ -114,16 +106,16 @@ class AuthController extends BaseController
                 ->where('tenant_id', $tenant->id)
                 ->first();
 
-            if (!$user) {
+            if (! $user) {
                 return $this->errorResponse('Invalid credentials', null, 401);
             }
 
-            if (!$user->is_active) {
+            if (! $user->is_active) {
                 return $this->errorResponse('User account is inactive', null, 403);
             }
 
             // Check password
-            if (!Hash::check($request->password, $user->password)) {
+            if (! Hash::check($request->password, $user->password)) {
                 return $this->errorResponse('Invalid credentials', null, 401);
             }
 
@@ -136,15 +128,12 @@ class AuthController extends BaseController
             ], 'Login successful');
 
         } catch (\Exception $e) {
-            return $this->errorResponse('Login failed: ' . $e->getMessage(), null, 500);
+            return $this->errorResponse('Login failed: '.$e->getMessage(), null, 500);
         }
     }
 
     /**
      * Logout user
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function logout(Request $request): JsonResponse
     {
@@ -158,15 +147,12 @@ class AuthController extends BaseController
             return $this->successResponse(null, 'Logged out successfully');
 
         } catch (\Exception $e) {
-            return $this->errorResponse('Logout failed: ' . $e->getMessage(), null, 500);
+            return $this->errorResponse('Logout failed: '.$e->getMessage(), null, 500);
         }
     }
 
     /**
      * Get current authenticated user
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function user(Request $request): JsonResponse
     {
@@ -176,15 +162,12 @@ class AuthController extends BaseController
             return $this->successResponse($user);
 
         } catch (\Exception $e) {
-            return $this->errorResponse('Failed to fetch user: ' . $e->getMessage(), null, 500);
+            return $this->errorResponse('Failed to fetch user: '.$e->getMessage(), null, 500);
         }
     }
 
     /**
      * Refresh token
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function refresh(Request $request): JsonResponse
     {
@@ -200,15 +183,12 @@ class AuthController extends BaseController
             ], 'Token refreshed successfully');
 
         } catch (\Exception $e) {
-            return $this->errorResponse('Token refresh failed: ' . $e->getMessage(), null, 500);
+            return $this->errorResponse('Token refresh failed: '.$e->getMessage(), null, 500);
         }
     }
 
     /**
      * Get current authenticated user profile (alias for user)
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function me(Request $request): JsonResponse
     {
@@ -217,9 +197,6 @@ class AuthController extends BaseController
 
     /**
      * Update user profile
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function profile(Request $request): JsonResponse
     {
@@ -258,15 +235,12 @@ class AuthController extends BaseController
             return $this->successResponse($user->load(['roles.permissions', 'tenant']), 'Profile updated successfully');
 
         } catch (\Exception $e) {
-            return $this->errorResponse('Failed to update profile: ' . $e->getMessage(), null, 500);
+            return $this->errorResponse('Failed to update profile: '.$e->getMessage(), null, 500);
         }
     }
 
     /**
      * Change user password
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function changePassword(Request $request): JsonResponse
     {
@@ -283,7 +257,7 @@ class AuthController extends BaseController
             $user = $request->user();
 
             // Check current password
-            if (!Hash::check($request->current_password, $user->password)) {
+            if (! Hash::check($request->current_password, $user->password)) {
                 return $this->errorResponse('Current password is incorrect', null, 422);
             }
 
@@ -294,7 +268,7 @@ class AuthController extends BaseController
             return $this->successResponse(null, 'Password changed successfully');
 
         } catch (\Exception $e) {
-            return $this->errorResponse('Failed to change password: ' . $e->getMessage(), null, 500);
+            return $this->errorResponse('Failed to change password: '.$e->getMessage(), null, 500);
         }
     }
 }

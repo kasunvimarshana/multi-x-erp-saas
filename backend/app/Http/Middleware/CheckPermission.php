@@ -8,15 +8,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Permission-Based Authorization Middleware
- * 
+ *
  * Checks if the authenticated user has the required permission
  * to access the route. Permissions are defined in the route
  * configuration using the 'permission' key.
- * 
+ *
  * Usage in routes:
  * Route::get('/products', [ProductController::class, 'index'])
  *     ->middleware('permission:products.view');
- * 
+ *
  * Route::post('/products', [ProductController::class, 'store'])
  *     ->middleware('permission:products.create');
  */
@@ -30,7 +30,7 @@ class CheckPermission
      */
     public function handle(Request $request, Closure $next, string ...$permissions): Response
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthenticated.',
@@ -53,7 +53,7 @@ class CheckPermission
             }
         }
 
-        if (!$hasPermission) {
+        if (! $hasPermission) {
             return response()->json([
                 'success' => false,
                 'message' => 'You do not have permission to perform this action.',

@@ -26,7 +26,7 @@ class PurchaseOrderItemFactory extends Factory
         $discountAmount = $quantity * $unitPrice * fake()->randomFloat(2, 0, 0.1);
         $taxAmount = ($quantity * $unitPrice - $discountAmount) * 0.1;
         $totalAmount = $quantity * $unitPrice - $discountAmount + $taxAmount;
-        
+
         return [
             'purchase_order_id' => PurchaseOrder::factory(),
             'product_id' => Product::factory(),
@@ -47,6 +47,7 @@ class PurchaseOrderItemFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             $receivedQty = $attributes['quantity'] * fake()->randomFloat(2, 0.1, 0.9);
+
             return [
                 'received_quantity' => $receivedQty,
             ];

@@ -4,7 +4,7 @@ namespace App\Modules\Manufacturing\DTOs;
 
 /**
  * Bill of Material Data Transfer Object
- * 
+ *
  * Encapsulates data for BOM creation and updates.
  */
 class CreateBillOfMaterialDTO

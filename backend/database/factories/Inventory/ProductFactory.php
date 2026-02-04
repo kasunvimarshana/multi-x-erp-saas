@@ -23,10 +23,10 @@ class ProductFactory extends Factory
     {
         $buyingPrice = fake()->randomFloat(2, 10, 1000);
         $sellingPrice = $buyingPrice * fake()->randomFloat(2, 1.2, 2.0);
-        
+
         return [
             'tenant_id' => Tenant::factory(),
-            'sku' => 'SKU-' . fake()->unique()->numerify('######'),
+            'sku' => 'SKU-'.fake()->unique()->numerify('######'),
             'name' => fake()->words(3, true),
             'type' => fake()->randomElement(ProductType::cases())->value,
             'description' => fake()->sentence(),

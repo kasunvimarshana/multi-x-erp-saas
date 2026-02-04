@@ -17,9 +17,13 @@ class JournalEntryApiTest extends TestCase
     use RefreshDatabase;
 
     private string $baseUri = '/api/v1/finance/journal-entries';
+
     private Tenant $tenant;
+
     private User $user;
+
     private Account $debitAccount;
+
     private Account $creditAccount;
 
     protected function setUp(): void

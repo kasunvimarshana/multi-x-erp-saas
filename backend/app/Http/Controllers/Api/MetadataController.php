@@ -23,7 +23,7 @@ class MetadataController extends BaseController
     {
         try {
             $catalog = $this->metadataService->getMetadataCatalog();
-            
+
             return $this->successResponse($catalog, 'Metadata catalog retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to retrieve metadata catalog', $e->getMessage(), 500);
@@ -37,11 +37,11 @@ class MetadataController extends BaseController
     {
         try {
             $entity = $this->metadataService->getEntityMetadata($name);
-            
-            if (!$entity) {
+
+            if (! $entity) {
                 return $this->errorResponse('Entity not found', null, 404);
             }
-            
+
             return $this->successResponse($entity, 'Entity metadata retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to retrieve entity metadata', $e->getMessage(), 500);
@@ -55,7 +55,7 @@ class MetadataController extends BaseController
     {
         try {
             $entities = $this->metadataService->getModuleEntities($module);
-            
+
             return $this->successResponse($entities, 'Module entities retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to retrieve module entities', $e->getMessage(), 500);
@@ -70,7 +70,7 @@ class MetadataController extends BaseController
         try {
             $context = $request->query('context', 'form'); // form, list, detail
             $config = $this->metadataService->getFieldConfig($entityName, $context);
-            
+
             return $this->successResponse($config, 'Field configuration retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to retrieve field configuration', $e->getMessage(), 500);
@@ -84,7 +84,7 @@ class MetadataController extends BaseController
     {
         try {
             $rules = $this->metadataService->getValidationRules($entityName);
-            
+
             return $this->successResponse($rules, 'Validation rules retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to retrieve validation rules', $e->getMessage(), 500);
@@ -98,7 +98,7 @@ class MetadataController extends BaseController
     {
         try {
             $this->metadataService->clearCache();
-            
+
             return $this->successResponse(null, 'Metadata cache cleared successfully');
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to clear metadata cache', $e->getMessage(), 500);
@@ -129,7 +129,7 @@ class MetadataController extends BaseController
             ]);
 
             $entity = $this->metadataService->createEntity($validated);
-            
+
             return $this->successResponse($entity, 'Entity created successfully', 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return $this->errorResponse('Validation failed', $e->errors(), 422);
@@ -158,11 +158,11 @@ class MetadataController extends BaseController
             ]);
 
             $result = $this->metadataService->updateEntity($id, $validated);
-            
-            if (!$result) {
+
+            if (! $result) {
                 return $this->errorResponse('Entity not found or cannot be updated', null, 404);
             }
-            
+
             return $this->successResponse(null, 'Entity updated successfully');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return $this->errorResponse('Validation failed', $e->errors(), 422);
