@@ -22,11 +22,11 @@ class PermissionFactory extends Factory
     {
         $action = fake()->randomElement(['create', 'read', 'update', 'delete']);
         $resource = fake()->randomElement(['products', 'customers', 'orders', 'invoices', 'users']);
-        $name = ucfirst($action) . ' ' . ucfirst($resource);
-        $slug = Str::slug($name) . '-' . Str::random(8); // Add random suffix to ensure uniqueness
-        
+        $name = ucfirst($action).' '.ucfirst($resource);
+        $slug = Str::slug($name).'-'.Str::random(8); // Add random suffix to ensure uniqueness
+
         return [
-            'name' => $name . ' ' . Str::random(4), // Add random suffix to name as well
+            'name' => $name.' '.Str::random(4), // Add random suffix to name as well
             'slug' => $slug,
             'module' => fake()->randomElement(['inventory', 'crm', 'pos', 'procurement', 'iam']),
             'description' => fake()->sentence(),

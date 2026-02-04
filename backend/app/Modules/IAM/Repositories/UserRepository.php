@@ -9,15 +9,13 @@ use Illuminate\Database\Eloquent\Collection;
 
 /**
  * User Repository
- * 
+ *
  * Handles data access for users.
  */
 class UserRepository extends BaseRepository
 {
     /**
      * Specify Model class name
-     *
-     * @return string
      */
     protected function model(): string
     {
@@ -26,9 +24,6 @@ class UserRepository extends BaseRepository
 
     /**
      * Find user by email
-     *
-     * @param string $email
-     * @return User|null
      */
     public function findByEmail(string $email): ?User
     {
@@ -37,8 +32,6 @@ class UserRepository extends BaseRepository
 
     /**
      * Get active users
-     *
-     * @return Collection
      */
     public function getActiveUsers(): Collection
     {
@@ -47,9 +40,6 @@ class UserRepository extends BaseRepository
 
     /**
      * Get users by tenant
-     *
-     * @param int $tenantId
-     * @return Collection
      */
     public function getByTenant(int $tenantId): Collection
     {
@@ -58,9 +48,6 @@ class UserRepository extends BaseRepository
 
     /**
      * Get users by role
-     *
-     * @param int $roleId
-     * @return Collection
      */
     public function getUsersByRole(int $roleId): Collection
     {
@@ -73,10 +60,6 @@ class UserRepository extends BaseRepository
 
     /**
      * Assign role to user
-     *
-     * @param User $user
-     * @param Role $role
-     * @return void
      */
     public function assignRole(User $user, Role $role): void
     {
@@ -85,10 +68,6 @@ class UserRepository extends BaseRepository
 
     /**
      * Remove role from user
-     *
-     * @param User $user
-     * @param Role $role
-     * @return void
      */
     public function removeRole(User $user, Role $role): void
     {
@@ -97,10 +76,6 @@ class UserRepository extends BaseRepository
 
     /**
      * Sync user roles
-     *
-     * @param User $user
-     * @param array $roleIds
-     * @return void
      */
     public function syncRoles(User $user, array $roleIds): void
     {
@@ -109,9 +84,6 @@ class UserRepository extends BaseRepository
 
     /**
      * Search users
-     *
-     * @param string $search
-     * @return Collection
      */
     public function search(string $search): Collection
     {

@@ -6,7 +6,7 @@ use App\Modules\Procurement\Enums\PurchaseOrderStatus;
 
 /**
  * Purchase Order Data Transfer Object
- * 
+ *
  * Encapsulates data for purchase order creation and updates.
  */
 class PurchaseOrderDTO
@@ -28,9 +28,6 @@ class PurchaseOrderDTO
 
     /**
      * Create DTO from array
-     *
-     * @param array $data
-     * @return self
      */
     public static function fromArray(array $data): self
     {
@@ -52,8 +49,6 @@ class PurchaseOrderDTO
 
     /**
      * Convert DTO to array
-     *
-     * @return array
      */
     public function toArray(): array
     {

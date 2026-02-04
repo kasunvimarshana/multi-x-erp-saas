@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 /**
  * Analytics Controller
- * 
+ *
  * Handles HTTP requests for analytics and KPIs.
  */
 class AnalyticsController extends BaseController
@@ -20,9 +20,6 @@ class AnalyticsController extends BaseController
 
     /**
      * Get all KPIs for a period
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function getKPIs(Request $request): JsonResponse
     {
@@ -36,7 +33,7 @@ class AnalyticsController extends BaseController
                 $validated['start_date'],
                 $validated['end_date']
             );
-            
+
             return $this->successResponse($kpis, 'KPIs retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -45,9 +42,6 @@ class AnalyticsController extends BaseController
 
     /**
      * Get total revenue
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function getTotalRevenue(Request $request): JsonResponse
     {
@@ -61,7 +55,7 @@ class AnalyticsController extends BaseController
                 $validated['start_date'],
                 $validated['end_date']
             );
-            
+
             return $this->successResponse(['total_revenue' => $revenue], 'Revenue retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -70,9 +64,6 @@ class AnalyticsController extends BaseController
 
     /**
      * Get total expenses
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function getTotalExpenses(Request $request): JsonResponse
     {
@@ -86,7 +77,7 @@ class AnalyticsController extends BaseController
                 $validated['start_date'],
                 $validated['end_date']
             );
-            
+
             return $this->successResponse(['total_expenses' => $expenses], 'Expenses retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -95,9 +86,6 @@ class AnalyticsController extends BaseController
 
     /**
      * Get gross profit margin
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function getGrossProfitMargin(Request $request): JsonResponse
     {
@@ -111,7 +99,7 @@ class AnalyticsController extends BaseController
                 $validated['start_date'],
                 $validated['end_date']
             );
-            
+
             return $this->successResponse(['gross_profit_margin' => $margin], 'Gross profit margin retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -120,9 +108,6 @@ class AnalyticsController extends BaseController
 
     /**
      * Get net profit margin
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function getNetProfitMargin(Request $request): JsonResponse
     {
@@ -136,7 +121,7 @@ class AnalyticsController extends BaseController
                 $validated['start_date'],
                 $validated['end_date']
             );
-            
+
             return $this->successResponse(['net_profit_margin' => $margin], 'Net profit margin retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -145,9 +130,6 @@ class AnalyticsController extends BaseController
 
     /**
      * Get inventory turnover ratio
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function getInventoryTurnoverRatio(Request $request): JsonResponse
     {
@@ -161,7 +143,7 @@ class AnalyticsController extends BaseController
                 $validated['start_date'],
                 $validated['end_date']
             );
-            
+
             return $this->successResponse(['inventory_turnover_ratio' => $ratio], 'Inventory turnover ratio retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -170,9 +152,6 @@ class AnalyticsController extends BaseController
 
     /**
      * Get days sales outstanding
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function getDaysSalesOutstanding(Request $request): JsonResponse
     {
@@ -186,7 +165,7 @@ class AnalyticsController extends BaseController
                 $validated['start_date'],
                 $validated['end_date']
             );
-            
+
             return $this->successResponse(['days_sales_outstanding' => $dso], 'DSO retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -195,9 +174,6 @@ class AnalyticsController extends BaseController
 
     /**
      * Get order fulfillment rate
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function getOrderFulfillmentRate(Request $request): JsonResponse
     {
@@ -211,7 +187,7 @@ class AnalyticsController extends BaseController
                 $validated['start_date'],
                 $validated['end_date']
             );
-            
+
             return $this->successResponse(['order_fulfillment_rate' => $rate], 'Order fulfillment rate retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -220,9 +196,6 @@ class AnalyticsController extends BaseController
 
     /**
      * Get production efficiency
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function getProductionEfficiency(Request $request): JsonResponse
     {
@@ -236,7 +209,7 @@ class AnalyticsController extends BaseController
                 $validated['start_date'],
                 $validated['end_date']
             );
-            
+
             return $this->successResponse(['production_efficiency' => $efficiency], 'Production efficiency retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -245,9 +218,6 @@ class AnalyticsController extends BaseController
 
     /**
      * Get customer acquisition cost
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function getCustomerAcquisitionCost(Request $request): JsonResponse
     {
@@ -261,7 +231,7 @@ class AnalyticsController extends BaseController
                 $validated['start_date'],
                 $validated['end_date']
             );
-            
+
             return $this->successResponse(['customer_acquisition_cost' => $cac], 'CAC retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -270,9 +240,6 @@ class AnalyticsController extends BaseController
 
     /**
      * Get average order value
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function getAverageOrderValue(Request $request): JsonResponse
     {
@@ -286,7 +253,7 @@ class AnalyticsController extends BaseController
                 $validated['start_date'],
                 $validated['end_date']
             );
-            
+
             return $this->successResponse(['average_order_value' => $aov], 'AOV retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);

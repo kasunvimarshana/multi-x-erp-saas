@@ -8,15 +8,13 @@ use App\Repositories\BaseRepository;
 
 /**
  * Purchase Order Repository
- * 
+ *
  * Handles data access for purchase orders.
  */
 class PurchaseOrderRepository extends BaseRepository
 {
     /**
      * Specify Model class name
-     *
-     * @return string
      */
     protected function model(): string
     {
@@ -25,9 +23,6 @@ class PurchaseOrderRepository extends BaseRepository
 
     /**
      * Find purchase order by PO number
-     *
-     * @param string $poNumber
-     * @return PurchaseOrder|null
      */
     public function findByPoNumber(string $poNumber): ?PurchaseOrder
     {
@@ -37,7 +32,6 @@ class PurchaseOrderRepository extends BaseRepository
     /**
      * Get purchase orders by status
      *
-     * @param PurchaseOrderStatus $status
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getByStatus(PurchaseOrderStatus $status)
@@ -58,7 +52,6 @@ class PurchaseOrderRepository extends BaseRepository
     /**
      * Get purchase orders by supplier
      *
-     * @param int $supplierId
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getBySupplier(int $supplierId)
@@ -72,7 +65,6 @@ class PurchaseOrderRepository extends BaseRepository
     /**
      * Search purchase orders
      *
-     * @param string $search
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function search(string $search)
@@ -83,7 +75,7 @@ class PurchaseOrderRepository extends BaseRepository
                     ->orWhere('notes', 'like', "%{$search}%")
                     ->orWhereHas('supplier', function ($q) use ($search) {
                         $q->where('name', 'like', "%{$search}%")
-                          ->orWhere('company_name', 'like', "%{$search}%");
+                            ->orWhere('company_name', 'like', "%{$search}%");
                     });
             })
             ->with(['supplier', 'items.product'])
@@ -92,9 +84,6 @@ class PurchaseOrderRepository extends BaseRepository
 
     /**
      * Find with items loaded
-     *
-     * @param int $id
-     * @return PurchaseOrder
      */
     public function findWithItems(int $id): PurchaseOrder
     {

@@ -9,7 +9,7 @@ use App\Services\BaseService;
 
 /**
  * Bill of Material Service
- * 
+ *
  * Handles business logic for BOM management including CRUD and version control.
  */
 class BillOfMaterialService extends BaseService
@@ -33,7 +33,7 @@ class BillOfMaterialService extends BaseService
     {
         return $this->transaction(function () use ($dto) {
             $this->logInfo('Creating new BOM', ['bom_number' => $dto->bomNumber]);
-            
+
             // Create BOM
             $bom = $this->bomRepository->create([
                 'product_id' => $dto->productId,
@@ -43,7 +43,7 @@ class BillOfMaterialService extends BaseService
                 'effective_date' => $dto->effectiveDate,
                 'notes' => $dto->notes,
             ]);
-            
+
             // Create BOM items
             if ($dto->items) {
                 foreach ($dto->items as $item) {
@@ -56,12 +56,12 @@ class BillOfMaterialService extends BaseService
                     ]);
                 }
             }
-            
+
             // Load relationships
             $bom->load(['product', 'items.componentProduct', 'items.uom']);
-            
+
             $this->logInfo('BOM created successfully', ['id' => $bom->id]);
-            
+
             return $bom;
         });
     }
@@ -73,9 +73,9 @@ class BillOfMaterialService extends BaseService
     {
         return $this->transaction(function () use ($id, $dto) {
             $bom = $this->bomRepository->findOrFail($id);
-            
+
             $this->logInfo('Updating BOM', ['id' => $id]);
-            
+
             // Update BOM
             $this->bomRepository->update($id, [
                 'product_id' => $dto->productId,
@@ -85,12 +85,12 @@ class BillOfMaterialService extends BaseService
                 'effective_date' => $dto->effectiveDate,
                 'notes' => $dto->notes,
             ]);
-            
+
             // Update items if provided
             if ($dto->items) {
                 // Delete existing items
                 $bom->items()->delete();
-                
+
                 // Create new items
                 foreach ($dto->items as $item) {
                     $bom->items()->create([
@@ -102,12 +102,12 @@ class BillOfMaterialService extends BaseService
                     ]);
                 }
             }
-            
+
             $bom->refresh();
             $bom->load(['product', 'items.componentProduct', 'items.uom']);
-            
+
             $this->logInfo('BOM updated successfully', ['id' => $id]);
-            
+
             return $bom;
         });
     }
@@ -118,13 +118,13 @@ class BillOfMaterialService extends BaseService
     public function deleteBOM(int $id): bool
     {
         $this->logInfo('Deleting BOM', ['id' => $id]);
-        
+
         $result = $this->bomRepository->delete($id);
-        
+
         if ($result) {
             $this->logInfo('BOM deleted successfully', ['id' => $id]);
         }
-        
+
         return $result;
     }
 
@@ -159,12 +159,12 @@ class BillOfMaterialService extends BaseService
     {
         return $this->transaction(function () use ($bomId) {
             $originalBom = $this->bomRepository->findWithItems($bomId);
-            
+
             $this->logInfo('Creating new BOM version', ['original_id' => $bomId]);
-            
+
             // Deactivate old version
             $this->bomRepository->update($bomId, ['is_active' => false]);
-            
+
             // Create new version
             $newVersion = $originalBom->version + 1;
             $newBom = $this->bomRepository->create([
@@ -175,7 +175,7 @@ class BillOfMaterialService extends BaseService
                 'effective_date' => now()->toDateString(),
                 'notes' => "Version {$newVersion} - Copied from version {$originalBom->version}",
             ]);
-            
+
             // Copy items
             foreach ($originalBom->items as $item) {
                 $newBom->items()->create([
@@ -186,11 +186,11 @@ class BillOfMaterialService extends BaseService
                     'notes' => $item->notes,
                 ]);
             }
-            
+
             $newBom->load(['product', 'items.componentProduct', 'items.uom']);
-            
+
             $this->logInfo('New BOM version created', ['id' => $newBom->id, 'version' => $newVersion]);
-            
+
             return $newBom;
         });
     }

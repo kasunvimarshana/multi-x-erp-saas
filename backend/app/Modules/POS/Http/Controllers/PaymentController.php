@@ -10,9 +10,7 @@ use Illuminate\Http\Request;
 
 class PaymentController extends BaseController
 {
-    public function __construct(private readonly PaymentService $service)
-    {
-    }
+    public function __construct(private readonly PaymentService $service) {}
 
     public function index(Request $request): JsonResponse
     {
@@ -43,12 +41,14 @@ class PaymentController extends BaseController
     public function show(int $id): JsonResponse
     {
         $payment = $this->service->findOrFail($id, ['invoice', 'customer']);
+
         return $this->success($payment);
     }
 
     public function destroy(int $id): JsonResponse
     {
         $this->service->delete($id);
+
         return $this->success(null, 'Payment deleted successfully');
     }
 
@@ -59,12 +59,14 @@ class PaymentController extends BaseController
         ]);
 
         $payment = $this->service->void($id, $validated['reason']);
+
         return $this->success($payment, 'Payment voided successfully');
     }
 
     public function byInvoice(int $invoiceId): JsonResponse
     {
         $payments = $this->service->findByInvoice($invoiceId);
+
         return $this->success($payments);
     }
 
@@ -72,6 +74,7 @@ class PaymentController extends BaseController
     {
         $filters = $request->only(['from_date', 'to_date', 'payment_method']);
         $payments = $this->service->findByCustomer($customerId, $filters);
+
         return $this->success($payments);
     }
 }

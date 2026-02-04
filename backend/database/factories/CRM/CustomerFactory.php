@@ -65,7 +65,7 @@ class CustomerFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'customer_type' => 'business',
             'company_name' => fake()->company(),
-            'tax_number' => 'TAX-' . fake()->numerify('########'),
+            'tax_number' => 'TAX-'.fake()->numerify('########'),
         ]);
     }
 

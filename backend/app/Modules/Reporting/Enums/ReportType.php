@@ -11,7 +11,7 @@ enum ReportType: string
 
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::TABLE => 'Table Report',
             self::CHART => 'Chart Report',
             self::KPI => 'KPI Report',

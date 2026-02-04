@@ -4,7 +4,7 @@ namespace App\Modules\IAM\DTOs;
 
 /**
  * Role Assignment Data Transfer Object
- * 
+ *
  * Encapsulates data for user-role assignment operations.
  */
 class RoleAssignmentDTO
@@ -16,9 +16,6 @@ class RoleAssignmentDTO
 
     /**
      * Create DTO from array
-     *
-     * @param array $data
-     * @return self
      */
     public static function fromArray(array $data): self
     {
@@ -30,8 +27,6 @@ class RoleAssignmentDTO
 
     /**
      * Convert DTO to array
-     *
-     * @return array
      */
     public function toArray(): array
     {

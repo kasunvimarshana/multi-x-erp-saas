@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Auth;
 
 /**
  * Purchase Order Service
- * 
+ *
  * Handles business logic for purchase order management including
  * creation, approval, receiving, and cancellation.
  */
@@ -31,7 +31,6 @@ class PurchaseOrderService extends BaseService
     /**
      * Get all purchase orders
      *
-     * @param int $perPage
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function getAllPurchaseOrders(int $perPage = 15)
@@ -42,15 +41,13 @@ class PurchaseOrderService extends BaseService
     /**
      * Create a new purchase order
      *
-     * @param PurchaseOrderDTO $dto
-     * @return PurchaseOrder
      * @throws \Throwable
      */
     public function createPurchaseOrder(PurchaseOrderDTO $dto): PurchaseOrder
     {
         return $this->transaction(function () use ($dto) {
             $this->logInfo('Creating new purchase order', ['po_number' => $dto->poNumber]);
-            
+
             // Create purchase order
             $purchaseOrder = $this->purchaseOrderRepository->create([
                 'supplier_id' => $dto->supplierId,
@@ -65,7 +62,7 @@ class PurchaseOrderService extends BaseService
                 'total_amount' => $dto->totalAmount,
                 'notes' => $dto->notes,
             ]);
-            
+
             // Create purchase order items
             if ($dto->items) {
                 foreach ($dto->items as $item) {
@@ -81,15 +78,15 @@ class PurchaseOrderService extends BaseService
                     ]);
                 }
             }
-            
+
             // Load relationships
             $purchaseOrder->load(['supplier', 'items.product']);
-            
+
             // Dispatch event
             event(new PurchaseOrderCreated($purchaseOrder));
-            
+
             $this->logInfo('Purchase order created successfully', ['id' => $purchaseOrder->id]);
-            
+
             return $purchaseOrder;
         });
     }
@@ -97,25 +94,22 @@ class PurchaseOrderService extends BaseService
     /**
      * Update a purchase order
      *
-     * @param int $id
-     * @param PurchaseOrderDTO $dto
-     * @return PurchaseOrder
      * @throws \Throwable
      */
     public function updatePurchaseOrder(int $id, PurchaseOrderDTO $dto): PurchaseOrder
     {
         return $this->transaction(function () use ($id, $dto) {
             $purchaseOrder = $this->purchaseOrderRepository->findOrFail($id);
-            
+
             // Check if PO can be edited
-            if (!$purchaseOrder->status->canEdit()) {
+            if (! $purchaseOrder->status->canEdit()) {
                 throw new \InvalidArgumentException(
                     "Purchase order with status '{$purchaseOrder->status->label()}' cannot be edited"
                 );
             }
-            
+
             $this->logInfo('Updating purchase order', ['id' => $id]);
-            
+
             // Update purchase order
             $this->purchaseOrderRepository->update($id, [
                 'supplier_id' => $dto->supplierId,
@@ -129,12 +123,12 @@ class PurchaseOrderService extends BaseService
                 'total_amount' => $dto->totalAmount,
                 'notes' => $dto->notes,
             ]);
-            
+
             // Update items if provided
             if ($dto->items) {
                 // Delete existing items
                 $purchaseOrder->items()->delete();
-                
+
                 // Create new items
                 foreach ($dto->items as $item) {
                     $purchaseOrder->items()->create([
@@ -149,49 +143,43 @@ class PurchaseOrderService extends BaseService
                     ]);
                 }
             }
-            
+
             $purchaseOrder->refresh();
             $purchaseOrder->load(['supplier', 'items.product']);
-            
+
             $this->logInfo('Purchase order updated successfully', ['id' => $id]);
-            
+
             return $purchaseOrder;
         });
     }
 
     /**
      * Delete a purchase order
-     *
-     * @param int $id
-     * @return bool
      */
     public function deletePurchaseOrder(int $id): bool
     {
         $purchaseOrder = $this->purchaseOrderRepository->findOrFail($id);
-        
+
         // Check if PO can be edited
-        if (!$purchaseOrder->status->canEdit()) {
+        if (! $purchaseOrder->status->canEdit()) {
             throw new \InvalidArgumentException(
                 "Purchase order with status '{$purchaseOrder->status->label()}' cannot be deleted"
             );
         }
-        
+
         $this->logInfo('Deleting purchase order', ['id' => $id]);
-        
+
         $result = $this->purchaseOrderRepository->delete($id);
-        
+
         if ($result) {
             $this->logInfo('Purchase order deleted successfully', ['id' => $id]);
         }
-        
+
         return $result;
     }
 
     /**
      * Get a purchase order by ID
-     *
-     * @param int $id
-     * @return PurchaseOrder
      */
     public function getPurchaseOrderById(int $id): PurchaseOrder
     {
@@ -201,39 +189,37 @@ class PurchaseOrderService extends BaseService
     /**
      * Approve a purchase order
      *
-     * @param int $id
-     * @return PurchaseOrder
      * @throws \Throwable
      */
     public function approve(int $id): PurchaseOrder
     {
         return $this->transaction(function () use ($id) {
             $purchaseOrder = $this->purchaseOrderRepository->findOrFail($id);
-            
+
             // Check if PO can be approved
-            if (!$purchaseOrder->status->canApprove()) {
+            if (! $purchaseOrder->status->canApprove()) {
                 throw new \InvalidArgumentException(
                     "Purchase order with status '{$purchaseOrder->status->label()}' cannot be approved"
                 );
             }
-            
+
             $this->logInfo('Approving purchase order', ['id' => $id]);
-            
+
             // Update status and approval details
             $this->purchaseOrderRepository->update($id, [
                 'status' => PurchaseOrderStatus::APPROVED->value,
                 'approved_by' => Auth::id(),
                 'approved_at' => now(),
             ]);
-            
+
             $purchaseOrder->refresh();
             $purchaseOrder->load(['supplier', 'items.product']);
-            
+
             // Dispatch event
             event(new PurchaseOrderApproved($purchaseOrder));
-            
+
             $this->logInfo('Purchase order approved successfully', ['id' => $id]);
-            
+
             return $purchaseOrder;
         });
     }
@@ -241,56 +227,53 @@ class PurchaseOrderService extends BaseService
     /**
      * Receive goods from a purchase order
      *
-     * @param int $id
-     * @param PurchaseOrderReceiptDTO $dto
-     * @return PurchaseOrder
      * @throws \Throwable
      */
     public function receive(int $id, PurchaseOrderReceiptDTO $dto): PurchaseOrder
     {
         return $this->transaction(function () use ($id, $dto) {
             $purchaseOrder = $this->purchaseOrderRepository->findWithItems($id);
-            
+
             // Check if PO can receive goods
-            if (!$purchaseOrder->status->canReceive()) {
+            if (! $purchaseOrder->status->canReceive()) {
                 throw new \InvalidArgumentException(
                     "Purchase order with status '{$purchaseOrder->status->label()}' cannot receive goods"
                 );
             }
-            
+
             $this->logInfo('Receiving goods for purchase order', ['id' => $id]);
-            
+
             $allItemsFullyReceived = true;
-            
+
             // Process each received item
             foreach ($dto->receivedItems as $receivedItem) {
                 $poItem = $purchaseOrder->items()
                     ->where('id', $receivedItem['purchase_order_item_id'])
                     ->first();
-                
-                if (!$poItem) {
+
+                if (! $poItem) {
                     throw new \InvalidArgumentException(
                         "Purchase order item {$receivedItem['purchase_order_item_id']} not found"
                     );
                 }
-                
+
                 $receivedQty = $receivedItem['received_quantity'];
-                
+
                 // Validate received quantity
                 if ($receivedQty <= 0) {
                     throw new \InvalidArgumentException('Received quantity must be greater than 0');
                 }
-                
+
                 if (($poItem->received_quantity + $receivedQty) > $poItem->quantity) {
                     throw new \InvalidArgumentException(
                         "Received quantity exceeds ordered quantity for item {$poItem->id}"
                     );
                 }
-                
+
                 // Update received quantity
                 $poItem->received_quantity += $receivedQty;
                 $poItem->save();
-                
+
                 // Record stock movement
                 $stockMovementDto = new StockMovementDTO(
                     productId: $poItem->product_id,
@@ -306,38 +289,38 @@ class PurchaseOrderService extends BaseService
                     serialNumber: $receivedItem['serial_number'] ?? null,
                     expiryDate: $receivedItem['expiry_date'] ?? null,
                 );
-                
+
                 $this->inventoryService->recordStockMovement($stockMovementDto);
-                
+
                 // Check if item is fully received
-                if (!$poItem->isFullyReceived()) {
+                if (! $poItem->isFullyReceived()) {
                     $allItemsFullyReceived = false;
                 }
             }
-            
+
             // Update purchase order status
-            $newStatus = $allItemsFullyReceived 
-                ? PurchaseOrderStatus::RECEIVED 
+            $newStatus = $allItemsFullyReceived
+                ? PurchaseOrderStatus::RECEIVED
                 : PurchaseOrderStatus::PARTIALLY_RECEIVED;
-            
+
             $updateData = ['status' => $newStatus->value];
-            
+
             // If fully received, update received_by and received_at
             if ($allItemsFullyReceived) {
                 $updateData['received_by'] = $dto->receivedBy ?? Auth::id();
                 $updateData['received_at'] = $dto->receivedAt ?? now();
             }
-            
+
             $this->purchaseOrderRepository->update($id, $updateData);
-            
+
             $purchaseOrder->refresh();
             $purchaseOrder->load(['supplier', 'items.product']);
-            
+
             $this->logInfo('Goods received successfully', [
                 'id' => $id,
-                'status' => $newStatus->value
+                'status' => $newStatus->value,
             ]);
-            
+
             return $purchaseOrder;
         });
     }
@@ -345,35 +328,33 @@ class PurchaseOrderService extends BaseService
     /**
      * Cancel a purchase order
      *
-     * @param int $id
-     * @return PurchaseOrder
      * @throws \Throwable
      */
     public function cancel(int $id): PurchaseOrder
     {
         return $this->transaction(function () use ($id) {
             $purchaseOrder = $this->purchaseOrderRepository->findOrFail($id);
-            
+
             // Check if PO can be cancelled
             if ($purchaseOrder->status === PurchaseOrderStatus::CANCELLED) {
                 throw new \InvalidArgumentException('Purchase order is already cancelled');
             }
-            
+
             if ($purchaseOrder->status === PurchaseOrderStatus::RECEIVED) {
                 throw new \InvalidArgumentException('Cannot cancel a fully received purchase order');
             }
-            
+
             $this->logInfo('Cancelling purchase order', ['id' => $id]);
-            
+
             $this->purchaseOrderRepository->update($id, [
                 'status' => PurchaseOrderStatus::CANCELLED->value,
             ]);
-            
+
             $purchaseOrder->refresh();
             $purchaseOrder->load(['supplier', 'items.product']);
-            
+
             $this->logInfo('Purchase order cancelled successfully', ['id' => $id]);
-            
+
             return $purchaseOrder;
         });
     }
@@ -381,7 +362,6 @@ class PurchaseOrderService extends BaseService
     /**
      * Search purchase orders
      *
-     * @param string $search
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function searchPurchaseOrders(string $search)
@@ -392,7 +372,6 @@ class PurchaseOrderService extends BaseService
     /**
      * Get purchase orders by status
      *
-     * @param PurchaseOrderStatus $status
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getByStatus(PurchaseOrderStatus $status)

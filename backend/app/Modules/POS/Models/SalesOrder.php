@@ -5,7 +5,6 @@ namespace App\Modules\POS\Models;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Modules\CRM\Models\Customer;
-use App\Modules\Inventory\Models\Product;
 use App\Modules\POS\Enums\SalesOrderStatus;
 use App\Traits\TenantScoped;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -74,7 +73,7 @@ class SalesOrder extends Model
 
     public function calculateTotals(): void
     {
-        $this->subtotal = $this->items->sum(fn($item) => $item->quantity * $item->unit_price);
+        $this->subtotal = $this->items->sum(fn ($item) => $item->quantity * $item->unit_price);
         $this->discount_amount = $this->items->sum('discount_amount');
         $this->tax_amount = $this->items->sum('tax_amount');
         $this->total_amount = $this->subtotal - $this->discount_amount + $this->tax_amount;

@@ -10,9 +10,7 @@ use Illuminate\Http\Request;
 
 class InvoiceController extends BaseController
 {
-    public function __construct(private readonly InvoiceService $service)
-    {
-    }
+    public function __construct(private readonly InvoiceService $service) {}
 
     public function index(Request $request): JsonResponse
     {
@@ -50,6 +48,7 @@ class InvoiceController extends BaseController
     public function show(int $id): JsonResponse
     {
         $invoice = $this->service->findOrFail($id, ['items.product', 'customer', 'payments']);
+
         return $this->success($invoice);
     }
 
@@ -81,12 +80,14 @@ class InvoiceController extends BaseController
     public function destroy(int $id): JsonResponse
     {
         $this->service->delete($id);
+
         return $this->success(null, 'Invoice deleted successfully');
     }
 
     public function createFromSalesOrder(int $salesOrderId): JsonResponse
     {
         $invoice = $this->service->createFromSalesOrder($salesOrderId);
+
         return $this->success($invoice, 'Invoice created from sales order successfully', 201);
     }
 
@@ -94,18 +95,21 @@ class InvoiceController extends BaseController
     {
         $filters = $request->only(['status', 'from_date', 'to_date']);
         $invoices = $this->service->findByCustomer($customerId, $filters);
+
         return $this->success($invoices);
     }
 
     public function byStatus(string $status): JsonResponse
     {
         $invoices = $this->service->findByStatus($status);
+
         return $this->success($invoices);
     }
 
     public function overdue(): JsonResponse
     {
         $invoices = $this->service->findOverdueInvoices();
+
         return $this->success($invoices);
     }
 }

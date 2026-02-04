@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 /**
  * Product API Controller
- * 
+ *
  * Handles HTTP requests for product management.
  */
 class ProductController extends BaseController
@@ -22,23 +22,17 @@ class ProductController extends BaseController
 
     /**
      * Display a listing of products
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
     {
         $perPage = $request->input('per_page', 15);
         $products = $this->productRepository->paginate($perPage);
-        
+
         return $this->successResponse($products, 'Products retrieved successfully');
     }
 
     /**
      * Store a newly created product
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function store(Request $request): JsonResponse
     {
@@ -60,43 +54,36 @@ class ProductController extends BaseController
             'max_stock_level' => 'nullable|numeric|min:0',
             'is_active' => 'boolean',
         ]);
-        
+
         $product = $this->productRepository->create($validated);
-        
+
         return $this->createdResponse($product, 'Product created successfully');
     }
 
     /**
      * Display the specified product
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function show(int $id): JsonResponse
     {
         $product = $this->productRepository->findOrFail($id);
-        
+
         // Include current stock information
         $product->current_stock = $this->inventoryService->getCurrentStock($id);
-        
+
         return $this->successResponse($product, 'Product retrieved successfully');
     }
 
     /**
      * Update the specified product
-     *
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
      */
     public function update(Request $request, int $id): JsonResponse
     {
         $validated = $request->validate([
-            'sku' => 'string|unique:products,sku,' . $id,
+            'sku' => 'string|unique:products,sku,'.$id,
             'name' => 'string|max:255',
             'type' => 'in:inventory,service,combo,bundle',
             'description' => 'nullable|string',
-            'barcode' => 'nullable|string|unique:products,barcode,' . $id,
+            'barcode' => 'nullable|string|unique:products,barcode,'.$id,
             'buying_price' => 'numeric|min:0',
             'selling_price' => 'numeric|min:0',
             'mrp' => 'nullable|numeric|min:0',
@@ -109,62 +96,51 @@ class ProductController extends BaseController
             'max_stock_level' => 'nullable|numeric|min:0',
             'is_active' => 'boolean',
         ]);
-        
+
         $this->productRepository->update($id, $validated);
         $product = $this->productRepository->findOrFail($id);
-        
+
         return $this->successResponse($product, 'Product updated successfully');
     }
 
     /**
      * Remove the specified product
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function destroy(int $id): JsonResponse
     {
         $this->productRepository->delete($id);
-        
+
         return $this->successResponse(null, 'Product deleted successfully');
     }
 
     /**
      * Search products
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function search(Request $request): JsonResponse
     {
         $search = $request->input('q', '');
         $products = $this->productRepository->search($search);
-        
+
         return $this->successResponse($products, 'Search results retrieved successfully');
     }
 
     /**
      * Get products below reorder level
-     *
-     * @return JsonResponse
      */
     public function belowReorderLevel(): JsonResponse
     {
         $products = $this->inventoryService->getProductsBelowReorderLevel();
-        
+
         return $this->successResponse($products, 'Products below reorder level retrieved successfully');
     }
 
     /**
      * Get stock history for a product
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function stockHistory(int $id): JsonResponse
     {
         $history = $this->inventoryService->getStockHistory($id);
-        
+
         return $this->successResponse($history, 'Stock history retrieved successfully');
     }
 }

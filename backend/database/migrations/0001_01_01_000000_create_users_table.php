@@ -22,7 +22,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
-            
+
             // Unique constraint on email per tenant
             $table->unique(['tenant_id', 'email']);
         });

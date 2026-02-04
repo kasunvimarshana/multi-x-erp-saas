@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 /**
  * Stock Movement Controller
- * 
+ *
  * Handles stock adjustments and transfers
  */
 class StockMovementController extends BaseController
@@ -22,9 +22,6 @@ class StockMovementController extends BaseController
 
     /**
      * Record a stock adjustment (in or out)
-     * 
-     * @param Request $request
-     * @return JsonResponse
      */
     public function adjustment(Request $request): JsonResponse
     {
@@ -65,9 +62,6 @@ class StockMovementController extends BaseController
 
     /**
      * Record a stock transfer between warehouses
-     * 
-     * @param Request $request
-     * @return JsonResponse
      */
     public function transfer(Request $request): JsonResponse
     {
@@ -102,9 +96,6 @@ class StockMovementController extends BaseController
 
     /**
      * Get stock movement history
-     * 
-     * @param Request $request
-     * @return JsonResponse
      */
     public function history(Request $request): JsonResponse
     {
@@ -122,23 +113,23 @@ class StockMovementController extends BaseController
                 ->with(['product', 'warehouse']);
 
             // Apply filters
-            if (!empty($validated['product_id'])) {
+            if (! empty($validated['product_id'])) {
                 $query->where('product_id', $validated['product_id']);
             }
 
-            if (!empty($validated['warehouse_id'])) {
+            if (! empty($validated['warehouse_id'])) {
                 $query->where('warehouse_id', $validated['warehouse_id']);
             }
 
-            if (!empty($validated['movement_type'])) {
+            if (! empty($validated['movement_type'])) {
                 $query->where('movement_type', $validated['movement_type']);
             }
 
-            if (!empty($validated['from_date'])) {
+            if (! empty($validated['from_date'])) {
                 $query->whereDate('created_at', '>=', $validated['from_date']);
             }
 
-            if (!empty($validated['to_date'])) {
+            if (! empty($validated['to_date'])) {
                 $query->whereDate('created_at', '<=', $validated['to_date']);
             }
 
@@ -155,8 +146,6 @@ class StockMovementController extends BaseController
 
     /**
      * Get available stock movement types
-     * 
-     * @return JsonResponse
      */
     public function types(): JsonResponse
     {

@@ -16,6 +16,7 @@ class AccountServiceTest extends TestCase
     use RefreshDatabase;
 
     protected AccountService $service;
+
     protected Tenant $tenant;
 
     protected function setUp(): void
@@ -23,7 +24,7 @@ class AccountServiceTest extends TestCase
         parent::setUp();
 
         $this->tenant = Tenant::factory()->create();
-        $this->service = new AccountService(new AccountRepository());
+        $this->service = new AccountService(new AccountRepository);
         $this->actingAs($this->createUser($this->tenant));
     }
 

@@ -18,8 +18,9 @@ class ReportSeeder extends Seeder
         $tenant = Tenant::first();
         $user = User::first();
 
-        if (!$tenant || !$user) {
+        if (! $tenant || ! $user) {
             $this->command->warn('No tenant or user found. Please seed tenants and users first.');
+
             return;
         }
 
@@ -80,7 +81,7 @@ class ReportSeeder extends Seeder
                 ],
                 'is_public' => true,
             ],
-            
+
             // Sales Reports
             [
                 'name' => 'Sales Summary Report',
@@ -137,7 +138,7 @@ class ReportSeeder extends Seeder
                 ],
                 'is_public' => true,
             ],
-            
+
             // Purchase Reports
             [
                 'name' => 'Purchase Summary Report',
@@ -172,7 +173,7 @@ class ReportSeeder extends Seeder
                 ],
                 'is_public' => true,
             ],
-            
+
             // Manufacturing Reports
             [
                 'name' => 'Production Summary Report',
@@ -218,7 +219,7 @@ class ReportSeeder extends Seeder
                 ],
                 'is_public' => true,
             ],
-            
+
             // Financial Reports
             [
                 'name' => 'Cash Flow Report',

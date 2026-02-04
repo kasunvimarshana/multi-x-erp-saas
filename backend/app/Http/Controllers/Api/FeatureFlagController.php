@@ -23,7 +23,7 @@ class FeatureFlagController extends BaseController
     {
         try {
             $features = $this->featureFlagService->getEnabledFeatures();
-            
+
             return $this->successResponse($features, 'Enabled features retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to retrieve features', $e->getMessage(), 500);
@@ -37,10 +37,10 @@ class FeatureFlagController extends BaseController
     {
         try {
             $isEnabled = $this->featureFlagService->isEnabled($name);
-            
+
             return $this->successResponse([
                 'name' => $name,
-                'enabled' => $isEnabled
+                'enabled' => $isEnabled,
             ], 'Feature status retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to check feature', $e->getMessage(), 500);
@@ -59,7 +59,7 @@ class FeatureFlagController extends BaseController
             ]);
 
             $result = $this->featureFlagService->checkFeatures($validated['features']);
-            
+
             return $this->successResponse($result, 'Features checked successfully');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return $this->errorResponse('Validation failed', $e->errors(), 422);
@@ -75,7 +75,7 @@ class FeatureFlagController extends BaseController
     {
         try {
             $features = $this->featureFlagService->getModuleFeatures($module);
-            
+
             return $this->successResponse($features, 'Module features retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to retrieve module features', $e->getMessage(), 500);
@@ -89,11 +89,11 @@ class FeatureFlagController extends BaseController
     {
         try {
             $result = $this->featureFlagService->enable($name);
-            
-            if (!$result) {
+
+            if (! $result) {
                 return $this->errorResponse('Feature not found', null, 404);
             }
-            
+
             return $this->successResponse(null, 'Feature enabled successfully');
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to enable feature', $e->getMessage(), 500);
@@ -107,11 +107,11 @@ class FeatureFlagController extends BaseController
     {
         try {
             $result = $this->featureFlagService->disable($name);
-            
-            if (!$result) {
+
+            if (! $result) {
                 return $this->errorResponse('Feature not found', null, 404);
             }
-            
+
             return $this->successResponse(null, 'Feature disabled successfully');
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to disable feature', $e->getMessage(), 500);
@@ -134,7 +134,7 @@ class FeatureFlagController extends BaseController
             ]);
 
             $flag = $this->featureFlagService->create($validated);
-            
+
             return $this->successResponse($flag, 'Feature flag created successfully', 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return $this->errorResponse('Validation failed', $e->errors(), 422);
@@ -158,11 +158,11 @@ class FeatureFlagController extends BaseController
             ]);
 
             $result = $this->featureFlagService->update($id, $validated);
-            
-            if (!$result) {
+
+            if (! $result) {
                 return $this->errorResponse('Feature flag not found', null, 404);
             }
-            
+
             return $this->successResponse(null, 'Feature flag updated successfully');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return $this->errorResponse('Validation failed', $e->errors(), 422);

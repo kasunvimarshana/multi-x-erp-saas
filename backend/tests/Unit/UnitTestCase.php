@@ -7,7 +7,7 @@ use Tests\TestCase;
 
 /**
  * Base Unit Test Case
- * 
+ *
  * Provides common functionality for unit tests including
  * mocking helpers and assertions.
  */

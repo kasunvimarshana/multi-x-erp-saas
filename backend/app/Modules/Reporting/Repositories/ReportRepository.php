@@ -7,15 +7,13 @@ use App\Repositories\BaseRepository;
 
 /**
  * Report Repository
- * 
+ *
  * Handles data access for reports.
  */
 class ReportRepository extends BaseRepository
 {
     /**
      * Specify Model class name
-     *
-     * @return string
      */
     protected function model(): string
     {
@@ -25,7 +23,6 @@ class ReportRepository extends BaseRepository
     /**
      * Get reports by module
      *
-     * @param string $module
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getByModule(string $module)
@@ -46,7 +43,6 @@ class ReportRepository extends BaseRepository
     /**
      * Get reports created by user
      *
-     * @param int $userId
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getByCreator(int $userId)
@@ -57,7 +53,6 @@ class ReportRepository extends BaseRepository
     /**
      * Search reports by name
      *
-     * @param string $search
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function search(string $search)

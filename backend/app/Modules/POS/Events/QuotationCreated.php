@@ -11,7 +11,5 @@ class QuotationCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public Quotation $quotation)
-    {
-    }
+    public function __construct(public Quotation $quotation) {}
 }

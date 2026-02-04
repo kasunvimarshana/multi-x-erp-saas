@@ -22,7 +22,7 @@ class BillOfMaterialFactory extends Factory
         return [
             'tenant_id' => Tenant::factory(),
             'product_id' => Product::factory(),
-            'bom_number' => 'BOM-' . fake()->unique()->numerify('######'),
+            'bom_number' => 'BOM-'.fake()->unique()->numerify('######'),
             'version' => 1,
             'is_active' => true,
             'effective_date' => now()->toDateString(),

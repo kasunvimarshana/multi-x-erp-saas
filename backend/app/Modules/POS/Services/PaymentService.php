@@ -53,7 +53,7 @@ class PaymentService extends BaseService
 
             // Soft delete the payment
             $payment->update([
-                'notes' => ($payment->notes ?? '') . "\n\nVOIDED: {$reason}",
+                'notes' => ($payment->notes ?? '')."\n\nVOIDED: {$reason}",
             ]);
             $payment->delete();
 

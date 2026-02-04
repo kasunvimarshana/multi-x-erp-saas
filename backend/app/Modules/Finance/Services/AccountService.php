@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 /**
  * Account Service
- * 
+ *
  * Handles business logic for chart of accounts management.
  */
 class AccountService extends BaseService
@@ -38,11 +38,11 @@ class AccountService extends BaseService
             // Validate parent account if provided
             if ($dto->parentId) {
                 $parent = $this->accountRepository->findOrFail($dto->parentId);
-                
+
                 // Validate parent has same account type
                 if ($parent->type !== $dto->type) {
                     throw new \InvalidArgumentException(
-                        "Parent account must have the same type as the child account"
+                        'Parent account must have the same type as the child account'
                     );
                 }
             }
@@ -73,21 +73,21 @@ class AccountService extends BaseService
             // Validate parent account if provided
             if ($dto->parentId) {
                 if ($dto->parentId === $id) {
-                    throw new \InvalidArgumentException("An account cannot be its own parent");
+                    throw new \InvalidArgumentException('An account cannot be its own parent');
                 }
 
                 $parent = $this->accountRepository->findOrFail($dto->parentId);
-                
+
                 if ($parent->type !== $dto->type) {
                     throw new \InvalidArgumentException(
-                        "Parent account must have the same type as the child account"
+                        'Parent account must have the same type as the child account'
                     );
                 }
 
                 // Check if parent is a descendant of this account
                 if ($this->isDescendant($parent, $id)) {
                     throw new \InvalidArgumentException(
-                        "Cannot set a descendant account as parent"
+                        'Cannot set a descendant account as parent'
                     );
                 }
             }
@@ -109,12 +109,12 @@ class AccountService extends BaseService
 
         // Check if account has children
         if ($account->children()->count() > 0) {
-            throw new \InvalidArgumentException("Cannot delete account with child accounts");
+            throw new \InvalidArgumentException('Cannot delete account with child accounts');
         }
 
         // Check if account has journal entries
         if ($account->journalEntryLines()->count() > 0) {
-            throw new \InvalidArgumentException("Cannot delete account with journal entries");
+            throw new \InvalidArgumentException('Cannot delete account with journal entries');
         }
 
         $this->logInfo('Deleting account', ['id' => $id]);
@@ -197,6 +197,7 @@ class AccountService extends BaseService
 
         if ($parent->parent_id) {
             $grandParent = $this->accountRepository->find($parent->parent_id);
+
             return $this->isDescendant($grandParent, $accountId);
         }
 

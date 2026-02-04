@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 /**
  * Dashboard Controller
- * 
+ *
  * Handles HTTP requests for dashboard management.
  */
 class DashboardController extends BaseController
@@ -22,16 +22,13 @@ class DashboardController extends BaseController
 
     /**
      * Get user dashboards
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
     {
         try {
             $userId = $request->user_id ?? auth()->id();
             $dashboards = $this->dashboardService->getUserDashboards($userId);
-            
+
             return $this->successResponse($dashboards, 'Dashboards retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -40,18 +37,16 @@ class DashboardController extends BaseController
 
     /**
      * Get default dashboard
-     *
-     * @return JsonResponse
      */
     public function getDefault(): JsonResponse
     {
         try {
             $dashboard = $this->dashboardService->getDefaultDashboard(auth()->id());
-            
-            if (!$dashboard) {
+
+            if (! $dashboard) {
                 return $this->notFoundResponse('No default dashboard found');
             }
-            
+
             return $this->successResponse($dashboard, 'Default dashboard retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -60,14 +55,12 @@ class DashboardController extends BaseController
 
     /**
      * Get a specific dashboard with widgets
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function show(int $id): JsonResponse
     {
         try {
             $dashboard = $this->dashboardService->getDashboardWithWidgets($id);
+
             return $this->successResponse($dashboard, 'Dashboard retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 404);
@@ -76,9 +69,6 @@ class DashboardController extends BaseController
 
     /**
      * Create a new dashboard
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function store(Request $request): JsonResponse
     {
@@ -92,7 +82,7 @@ class DashboardController extends BaseController
 
             $dto = CreateDashboardDTO::fromArray($validated);
             $dashboard = $this->dashboardService->createDashboard($dto);
-            
+
             return $this->createdResponse($dashboard, 'Dashboard created successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -101,10 +91,6 @@ class DashboardController extends BaseController
 
     /**
      * Update a dashboard
-     *
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
      */
     public function update(Request $request, int $id): JsonResponse
     {
@@ -118,7 +104,7 @@ class DashboardController extends BaseController
 
             $this->dashboardService->updateDashboard($id, $validated);
             $dashboard = $this->dashboardService->getDashboardWithWidgets($id);
-            
+
             return $this->successResponse($dashboard, 'Dashboard updated successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -127,14 +113,12 @@ class DashboardController extends BaseController
 
     /**
      * Delete a dashboard
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function destroy(int $id): JsonResponse
     {
         try {
             $this->dashboardService->deleteDashboard($id);
+
             return $this->successResponse(null, 'Dashboard deleted successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -143,14 +127,12 @@ class DashboardController extends BaseController
 
     /**
      * Set dashboard as default
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function setAsDefault(int $id): JsonResponse
     {
         try {
             $this->dashboardService->setAsDefault($id, auth()->id());
+
             return $this->successResponse(null, 'Dashboard set as default successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -159,9 +141,6 @@ class DashboardController extends BaseController
 
     /**
      * Add widget to dashboard
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function addWidget(Request $request): JsonResponse
     {
@@ -179,7 +158,7 @@ class DashboardController extends BaseController
 
             $dto = AddWidgetDTO::fromArray($validated);
             $widget = $this->dashboardService->addWidget($dto);
-            
+
             return $this->createdResponse($widget, 'Widget added successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -188,10 +167,6 @@ class DashboardController extends BaseController
 
     /**
      * Update widget
-     *
-     * @param Request $request
-     * @param int $widgetId
-     * @return JsonResponse
      */
     public function updateWidget(Request $request, int $widgetId): JsonResponse
     {
@@ -206,7 +181,7 @@ class DashboardController extends BaseController
             ]);
 
             $this->dashboardService->updateWidget($widgetId, $validated);
-            
+
             return $this->successResponse(null, 'Widget updated successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -215,14 +190,12 @@ class DashboardController extends BaseController
 
     /**
      * Remove widget from dashboard
-     *
-     * @param int $widgetId
-     * @return JsonResponse
      */
     public function removeWidget(int $widgetId): JsonResponse
     {
         try {
             $this->dashboardService->removeWidget($widgetId);
+
             return $this->successResponse(null, 'Widget removed successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);
@@ -231,10 +204,6 @@ class DashboardController extends BaseController
 
     /**
      * Reorder widgets
-     *
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
      */
     public function reorderWidgets(Request $request, int $id): JsonResponse
     {
@@ -247,7 +216,7 @@ class DashboardController extends BaseController
             ]);
 
             $this->dashboardService->reorderWidgets($id, $validated['widgets']);
-            
+
             return $this->successResponse(null, 'Widgets reordered successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 500);

@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 /**
  * User API Controller
- * 
+ *
  * Handles HTTP requests for user management.
  */
 class UserController extends BaseController
@@ -21,9 +21,6 @@ class UserController extends BaseController
 
     /**
      * Display a listing of users
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
     {
@@ -32,19 +29,17 @@ class UserController extends BaseController
 
         if ($tenantId) {
             $users = $this->userService->getAllUsers($tenantId);
+
             return $this->successResponse($users, 'Users retrieved successfully');
         }
 
         $users = $this->userService->getPaginatedUsers($perPage);
-        
+
         return $this->successResponse($users, 'Users retrieved successfully');
     }
 
     /**
      * Store a newly created user
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function store(Request $request): JsonResponse
     {
@@ -59,7 +54,7 @@ class UserController extends BaseController
         try {
             $dto = UserDTO::fromArray($validated);
             $user = $this->userService->createUser($dto);
-            
+
             return $this->createdResponse($user, 'User created successfully');
         } catch (\InvalidArgumentException $e) {
             return $this->errorResponse($e->getMessage(), null, 422);
@@ -68,18 +63,15 @@ class UserController extends BaseController
 
     /**
      * Display the specified user
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function show(int $id): JsonResponse
     {
         try {
             $user = $this->userService->getUserById($id);
-            
+
             // Load relationships
             $user->load(['roles', 'tenant']);
-            
+
             return $this->successResponse($user, 'User retrieved successfully');
         } catch (\Exception $e) {
             return $this->notFoundResponse('User not found');
@@ -88,23 +80,19 @@ class UserController extends BaseController
 
     /**
      * Update the specified user
-     *
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
      */
     public function update(Request $request, int $id): JsonResponse
     {
         $validated = $request->validate([
             'name' => 'string|max:255',
-            'email' => 'string|email|max:255|unique:users,email,' . $id,
+            'email' => 'string|email|max:255|unique:users,email,'.$id,
             'password' => 'nullable|string|min:8',
             'is_active' => 'boolean',
         ]);
 
         try {
             $user = $this->userService->updateUser($id, $validated);
-            
+
             return $this->successResponse($user, 'User updated successfully');
         } catch (\InvalidArgumentException $e) {
             return $this->errorResponse($e->getMessage(), null, 422);
@@ -115,15 +103,12 @@ class UserController extends BaseController
 
     /**
      * Remove the specified user
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function destroy(int $id): JsonResponse
     {
         try {
             $this->userService->deleteUser($id);
-            
+
             return $this->successResponse(null, 'User deleted successfully');
         } catch (\Exception $e) {
             return $this->notFoundResponse('User not found');
@@ -132,10 +117,6 @@ class UserController extends BaseController
 
     /**
      * Assign roles to user
-     *
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
      */
     public function assignRoles(Request $request, int $id): JsonResponse
     {
@@ -146,7 +127,7 @@ class UserController extends BaseController
 
         try {
             $user = $this->userService->assignRoles($id, $validated['role_ids']);
-            
+
             return $this->successResponse($user, 'Roles assigned successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 422);
@@ -155,10 +136,6 @@ class UserController extends BaseController
 
     /**
      * Sync user roles
-     *
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
      */
     public function syncRoles(Request $request, int $id): JsonResponse
     {
@@ -169,7 +146,7 @@ class UserController extends BaseController
 
         try {
             $user = $this->userService->syncRoles($id, $validated['role_ids']);
-            
+
             return $this->successResponse($user, 'User roles synchronized successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), null, 422);
@@ -178,15 +155,12 @@ class UserController extends BaseController
 
     /**
      * Get user roles
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function getRoles(int $id): JsonResponse
     {
         try {
             $roles = $this->userService->getUserRoles($id);
-            
+
             return $this->successResponse($roles, 'User roles retrieved successfully');
         } catch (\Exception $e) {
             return $this->notFoundResponse('User not found');
@@ -195,15 +169,12 @@ class UserController extends BaseController
 
     /**
      * Get user permissions
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function getPermissions(int $id): JsonResponse
     {
         try {
             $permissions = $this->userService->getUserPermissions($id);
-            
+
             return $this->successResponse($permissions, 'User permissions retrieved successfully');
         } catch (\Exception $e) {
             return $this->notFoundResponse('User not found');
@@ -212,27 +183,22 @@ class UserController extends BaseController
 
     /**
      * Search users
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function search(Request $request): JsonResponse
     {
         $search = $request->input('q', '');
         $users = $this->userService->searchUsers($search);
-        
+
         return $this->successResponse($users, 'Search results retrieved successfully');
     }
 
     /**
      * Get active users
-     *
-     * @return JsonResponse
      */
     public function active(): JsonResponse
     {
         $users = $this->userService->getActiveUsers();
-        
+
         return $this->successResponse($users, 'Active users retrieved successfully');
     }
 }

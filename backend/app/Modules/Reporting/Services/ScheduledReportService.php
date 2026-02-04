@@ -10,7 +10,7 @@ use Cron\CronExpression;
 
 /**
  * Scheduled Report Service
- * 
+ *
  * Handles scheduling and sending of reports.
  */
 class ScheduledReportService extends BaseService
@@ -22,20 +22,17 @@ class ScheduledReportService extends BaseService
 
     /**
      * Create a scheduled report
-     *
-     * @param ScheduleReportDTO $dto
-     * @return ScheduledReport
      */
     public function scheduleReport(ScheduleReportDTO $dto): ScheduledReport
     {
         // Validate cron expression
-        if (!CronExpression::isValidExpression($dto->scheduleCron)) {
+        if (! CronExpression::isValidExpression($dto->scheduleCron)) {
             throw new \InvalidArgumentException('Invalid cron expression');
         }
 
         $data = $dto->toArray();
         $data['tenant_id'] = auth()->user()->tenant_id;
-        
+
         // Calculate next run time
         $cron = new CronExpression($dto->scheduleCron);
         $data['next_run_at'] = $cron->getNextRunDate()->format('Y-m-d H:i:s');
@@ -55,21 +52,17 @@ class ScheduledReportService extends BaseService
 
     /**
      * Update a scheduled report
-     *
-     * @param int $scheduleId
-     * @param array $data
-     * @return bool
      */
     public function updateSchedule(int $scheduleId, array $data): bool
     {
         $scheduledReport = ScheduledReport::findOrFail($scheduleId);
-        
+
         // If cron changed, validate and recalculate next run
         if (isset($data['schedule_cron']) && $data['schedule_cron'] !== $scheduledReport->schedule_cron) {
-            if (!CronExpression::isValidExpression($data['schedule_cron'])) {
+            if (! CronExpression::isValidExpression($data['schedule_cron'])) {
                 throw new \InvalidArgumentException('Invalid cron expression');
             }
-            
+
             $cron = new CronExpression($data['schedule_cron']);
             $data['next_run_at'] = $cron->getNextRunDate()->format('Y-m-d H:i:s');
         }
@@ -79,13 +72,11 @@ class ScheduledReportService extends BaseService
 
     /**
      * Delete a scheduled report
-     *
-     * @param int $scheduleId
-     * @return bool
      */
     public function deleteSchedule(int $scheduleId): bool
     {
         $scheduledReport = ScheduledReport::findOrFail($scheduleId);
+
         return $scheduledReport->delete();
     }
 
@@ -104,9 +95,6 @@ class ScheduledReportService extends BaseService
 
     /**
      * Run scheduled report
-     *
-     * @param ScheduledReport $scheduledReport
-     * @return void
      */
     public function runScheduledReport(ScheduledReport $scheduledReport): void
     {
@@ -116,7 +104,7 @@ class ScheduledReportService extends BaseService
                 reportId: $scheduledReport->report_id,
                 parameters: [],
             );
-            
+
             $result = $this->reportService->executeReport($executeDto);
 
             // Export the report
@@ -124,7 +112,7 @@ class ScheduledReportService extends BaseService
                 reportId: $scheduledReport->report_id,
                 format: $scheduledReport->format,
                 parameters: [],
-                filename: $scheduledReport->report->name . '_' . date('Y-m-d_His'),
+                filename: $scheduledReport->report->name.'_'.date('Y-m-d_His'),
             );
 
             // Note: In production, generate the export and send via email
@@ -147,15 +135,13 @@ class ScheduledReportService extends BaseService
                 'schedule_id' => $scheduledReport->id,
                 'error' => $e->getMessage(),
             ]);
-            
+
             throw $e;
         }
     }
 
     /**
      * Process all due reports
-     *
-     * @return array
      */
     public function processDueReports(): array
     {
@@ -190,7 +176,6 @@ class ScheduledReportService extends BaseService
     /**
      * Get scheduled reports for a report
      *
-     * @param int $reportId
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getSchedulesForReport(int $reportId)

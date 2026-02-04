@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MetadataField extends Model
 {
@@ -68,7 +68,7 @@ class MetadataField extends Model
      */
     public function isRelationship(): bool
     {
-        return !empty($this->relationship_entity) && !empty($this->relationship_type);
+        return ! empty($this->relationship_entity) && ! empty($this->relationship_type);
     }
 
     /**
@@ -77,18 +77,18 @@ class MetadataField extends Model
     public function getValidationRulesAttribute($value): array
     {
         $rules = json_decode($value, true) ?? [];
-        
+
         // Add standard rules based on field properties
         $standardRules = [];
-        
+
         if ($this->is_required) {
             $standardRules[] = 'required';
         }
-        
+
         if ($this->is_unique && $this->column_name) {
-            $standardRules[] = 'unique:' . $this->entity->table_name . ',' . $this->column_name;
+            $standardRules[] = 'unique:'.$this->entity->table_name.','.$this->column_name;
         }
-        
+
         return array_merge($standardRules, $rules);
     }
 
@@ -98,6 +98,7 @@ class MetadataField extends Model
     public function scopeVisible($query, string $context = 'list')
     {
         $field = "is_visible_{$context}";
+
         return $query->where($field, true)->orderBy('order');
     }
 

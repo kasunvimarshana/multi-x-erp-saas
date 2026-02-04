@@ -26,14 +26,14 @@ class StockLedgerFactory extends Factory
         $movementType = fake()->randomElement(StockMovementType::cases());
         $quantity = fake()->randomFloat(2, 1, 100);
         $unitCost = fake()->randomFloat(2, 10, 500);
-        
+
         // Apply sign based on movement type
         if ($movementType->isDecrease()) {
             $quantity = -abs($quantity);
         } else {
             $quantity = abs($quantity);
         }
-        
+
         return [
             'tenant_id' => Tenant::factory(),
             'product_id' => Product::factory(),
@@ -108,8 +108,8 @@ class StockLedgerFactory extends Factory
     public function withBatch(?string $batchNumber = null): static
     {
         return $this->state(fn (array $attributes) => [
-            'batch_number' => $batchNumber ?? 'BATCH-' . fake()->numerify('######'),
-            'lot_number' => 'LOT-' . fake()->numerify('####'),
+            'batch_number' => $batchNumber ?? 'BATCH-'.fake()->numerify('######'),
+            'lot_number' => 'LOT-'.fake()->numerify('####'),
         ]);
     }
 
@@ -130,7 +130,7 @@ class StockLedgerFactory extends Factory
     public function withSerial(?string $serialNumber = null): static
     {
         return $this->state(fn (array $attributes) => [
-            'serial_number' => $serialNumber ?? 'SN-' . fake()->unique()->numerify('##########'),
+            'serial_number' => $serialNumber ?? 'SN-'.fake()->unique()->numerify('##########'),
         ]);
     }
 

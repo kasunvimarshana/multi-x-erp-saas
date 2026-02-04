@@ -7,7 +7,7 @@ use App\Repositories\BaseRepository;
 
 /**
  * Bill of Material Repository
- * 
+ *
  * Handles data access for bill of materials.
  */
 class BillOfMaterialRepository extends BaseRepository
@@ -85,7 +85,7 @@ class BillOfMaterialRepository extends BaseRepository
                     ->orWhere('notes', 'like', "%{$search}%")
                     ->orWhereHas('product', function ($q) use ($search) {
                         $q->where('name', 'like', "%{$search}%")
-                          ->orWhere('sku', 'like', "%{$search}%");
+                            ->orWhere('sku', 'like', "%{$search}%");
                     });
             })
             ->with(['product', 'items.componentProduct'])

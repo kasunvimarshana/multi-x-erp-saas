@@ -6,7 +6,7 @@ use App\Enums\StockMovementType;
 
 /**
  * Stock Movement Data Transfer Object
- * 
+ *
  * Encapsulates data for stock movement operations.
  */
 class StockMovementDTO
@@ -32,9 +32,6 @@ class StockMovementDTO
 
     /**
      * Create DTO from array
-     *
-     * @param array $data
-     * @return self
      */
     public static function fromArray(array $data): self
     {
@@ -54,16 +51,14 @@ class StockMovementDTO
             referenceId: $data['reference_id'] ?? null,
             notes: $data['notes'] ?? null,
             metadata: $data['metadata'] ?? null,
-            transactionDate: isset($data['transaction_date']) 
-                ? new \DateTime($data['transaction_date']) 
+            transactionDate: isset($data['transaction_date'])
+                ? new \DateTime($data['transaction_date'])
                 : null,
         );
     }
 
     /**
      * Convert DTO to array
-     *
-     * @return array
      */
     public function toArray(): array
     {

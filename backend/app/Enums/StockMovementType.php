@@ -4,7 +4,7 @@ namespace App\Enums;
 
 /**
  * Stock Movement Type Enum
- * 
+ *
  * Defines the types of stock movements for the append-only stock ledger.
  */
 enum StockMovementType: string
@@ -24,8 +24,6 @@ enum StockMovementType: string
 
     /**
      * Check if movement increases stock
-     *
-     * @return bool
      */
     public function isIncrease(): bool
     {
@@ -40,8 +38,6 @@ enum StockMovementType: string
 
     /**
      * Check if movement decreases stock
-     *
-     * @return bool
      */
     public function isDecrease(): bool
     {
@@ -58,8 +54,6 @@ enum StockMovementType: string
 
     /**
      * Get the sign for quantity calculation
-     *
-     * @return int
      */
     public function getSign(): int
     {
@@ -68,12 +62,10 @@ enum StockMovementType: string
 
     /**
      * Get display label
-     *
-     * @return string
      */
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::PURCHASE => 'Purchase',
             self::SALE => 'Sale',
             self::ADJUSTMENT_IN => 'Adjustment In',
@@ -91,8 +83,6 @@ enum StockMovementType: string
 
     /**
      * Get all values as array
-     *
-     * @return array
      */
     public static function values(): array
     {

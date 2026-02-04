@@ -21,10 +21,10 @@ class TenantFactory extends Factory
     public function definition(): array
     {
         $name = fake()->company();
-        
+
         return [
             'name' => $name,
-            'slug' => Str::slug($name) . '-' . fake()->unique()->numberBetween(1000, 9999),
+            'slug' => Str::slug($name).'-'.fake()->unique()->numberBetween(1000, 9999),
             'domain' => fake()->unique()->domainName(),
             'email' => fake()->unique()->companyEmail(),
             'phone' => fake()->phoneNumber(),

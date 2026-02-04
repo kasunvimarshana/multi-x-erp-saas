@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Dashboard Model
- * 
+ *
  * Represents a user dashboard with widget configurations.
  */
 class Dashboard extends Model
@@ -54,8 +54,6 @@ class Dashboard extends Model
 
     /**
      * Get the tenant that owns the dashboard
-     *
-     * @return BelongsTo
      */
     public function tenant(): BelongsTo
     {
@@ -64,8 +62,6 @@ class Dashboard extends Model
 
     /**
      * Get the user who owns the dashboard
-     *
-     * @return BelongsTo
      */
     public function user(): BelongsTo
     {
@@ -74,8 +70,6 @@ class Dashboard extends Model
 
     /**
      * Get the widgets for the dashboard
-     *
-     * @return HasMany
      */
     public function widgets(): HasMany
     {
@@ -84,8 +78,6 @@ class Dashboard extends Model
 
     /**
      * Check if dashboard is default
-     *
-     * @return bool
      */
     public function isDefault(): bool
     {

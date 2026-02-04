@@ -10,7 +10,7 @@ enum ReportExecutionStatus: string
 
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::RUNNING => 'Running',
             self::COMPLETED => 'Completed',
             self::FAILED => 'Failed',

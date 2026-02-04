@@ -47,7 +47,7 @@ class SalesOrderService extends BaseService
         return DB::transaction(function () use ($id, $dto) {
             $salesOrder = $this->repository->findOrFail($id);
 
-            if (!$salesOrder->canEdit()) {
+            if (! $salesOrder->canEdit()) {
                 throw new \Exception('Sales order cannot be edited in current status');
             }
 
@@ -68,7 +68,7 @@ class SalesOrderService extends BaseService
         return DB::transaction(function () use ($id) {
             $salesOrder = $this->repository->findOrFail($id);
 
-            if (!$salesOrder->status->canTransitionTo(SalesOrderStatus::CONFIRMED)) {
+            if (! $salesOrder->status->canTransitionTo(SalesOrderStatus::CONFIRMED)) {
                 throw new \Exception('Cannot confirm sales order in current status');
             }
 
@@ -99,7 +99,7 @@ class SalesOrderService extends BaseService
         return DB::transaction(function () use ($id) {
             $salesOrder = $this->repository->findOrFail($id);
 
-            if (!$salesOrder->canCancel()) {
+            if (! $salesOrder->canCancel()) {
                 throw new \Exception('Cannot cancel sales order in current status');
             }
 

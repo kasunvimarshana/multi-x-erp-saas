@@ -8,15 +8,13 @@ use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Permission Repository
- * 
+ *
  * Handles data access for permissions.
  */
 class PermissionRepository extends BaseRepository
 {
     /**
      * Specify Model class name
-     *
-     * @return string
      */
     protected function model(): string
     {
@@ -25,9 +23,6 @@ class PermissionRepository extends BaseRepository
 
     /**
      * Find permission by slug
-     *
-     * @param string $slug
-     * @return Permission|null
      */
     public function findBySlug(string $slug): ?Permission
     {
@@ -36,9 +31,6 @@ class PermissionRepository extends BaseRepository
 
     /**
      * Get permissions by module
-     *
-     * @param string $module
-     * @return Collection
      */
     public function getByModule(string $module): Collection
     {
@@ -47,20 +39,16 @@ class PermissionRepository extends BaseRepository
 
     /**
      * Get permission roles
-     *
-     * @param int $permissionId
-     * @return Collection
      */
     public function getPermissionRoles(int $permissionId): Collection
     {
         $permission = $this->findOrFail($permissionId);
+
         return $permission->roles;
     }
 
     /**
      * Get all permissions grouped by module
-     *
-     * @return Collection
      */
     public function getAllGroupedByModule(): Collection
     {

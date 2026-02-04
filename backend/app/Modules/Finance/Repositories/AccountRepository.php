@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 
 /**
  * Account Repository
- * 
+ *
  * Handles data access for accounts.
  */
 class AccountRepository extends BaseRepository
@@ -84,9 +84,9 @@ class AccountRepository extends BaseRepository
                 'journalEntryLines' => function ($query) use ($startDate, $endDate) {
                     $query->whereHas('journalEntry', function ($q) use ($startDate, $endDate) {
                         $q->posted()
-                          ->whereBetween('entry_date', [$startDate, $endDate]);
+                            ->whereBetween('entry_date', [$startDate, $endDate]);
                     });
-                }
+                },
             ])
             ->orderBy('code', 'asc')
             ->get();

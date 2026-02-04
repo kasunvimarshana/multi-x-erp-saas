@@ -10,9 +10,7 @@ use Illuminate\Http\Request;
 
 class QuotationController extends BaseController
 {
-    public function __construct(private readonly QuotationService $service)
-    {
-    }
+    public function __construct(private readonly QuotationService $service) {}
 
     public function index(Request $request): JsonResponse
     {
@@ -50,6 +48,7 @@ class QuotationController extends BaseController
     public function show(int $id): JsonResponse
     {
         $quotation = $this->service->findOrFail($id, ['items.product', 'customer']);
+
         return $this->success($quotation);
     }
 
@@ -81,6 +80,7 @@ class QuotationController extends BaseController
     public function destroy(int $id): JsonResponse
     {
         $this->service->delete($id);
+
         return $this->success(null, 'Quotation deleted successfully');
     }
 
@@ -91,6 +91,7 @@ class QuotationController extends BaseController
         ]);
 
         $salesOrder = $this->service->convertToSalesOrder($id, $validated['warehouse_id']);
+
         return $this->success($salesOrder, 'Quotation converted to sales order successfully', 201);
     }
 
@@ -98,12 +99,14 @@ class QuotationController extends BaseController
     {
         $filters = $request->only(['status', 'valid_only']);
         $quotations = $this->service->findByCustomer($customerId, $filters);
+
         return $this->success($quotations);
     }
 
     public function expired(): JsonResponse
     {
         $quotations = $this->service->findExpiredQuotations();
+
         return $this->success($quotations);
     }
 }

@@ -15,7 +15,7 @@ class NotifySupplierOfPurchaseOrder implements ShouldQueue
     {
         $purchaseOrder = $event->purchaseOrder->load('supplier', 'items.product');
 
-        Log::info("Purchase order approved - notify supplier", [
+        Log::info('Purchase order approved - notify supplier', [
             'po_number' => $purchaseOrder->po_number,
             'supplier' => $purchaseOrder->supplier->name,
             'total_amount' => $purchaseOrder->total_amount,

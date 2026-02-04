@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MetadataMenu extends Model
 {
@@ -81,7 +81,7 @@ class MetadataMenu extends Model
      */
     public function userHasAccess($user): bool
     {
-        if (!$this->permission) {
+        if (! $this->permission) {
             return true;
         }
 

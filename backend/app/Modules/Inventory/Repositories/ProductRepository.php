@@ -7,15 +7,13 @@ use App\Repositories\BaseRepository;
 
 /**
  * Product Repository
- * 
+ *
  * Handles data access for products.
  */
 class ProductRepository extends BaseRepository
 {
     /**
      * Specify Model class name
-     *
-     * @return string
      */
     protected function model(): string
     {
@@ -24,9 +22,6 @@ class ProductRepository extends BaseRepository
 
     /**
      * Find product by SKU
-     *
-     * @param string $sku
-     * @return Product|null
      */
     public function findBySku(string $sku): ?Product
     {
@@ -35,9 +30,6 @@ class ProductRepository extends BaseRepository
 
     /**
      * Find product by barcode
-     *
-     * @param string $barcode
-     * @return Product|null
      */
     public function findByBarcode(string $barcode): ?Product
     {
@@ -57,7 +49,6 @@ class ProductRepository extends BaseRepository
     /**
      * Get products by type
      *
-     * @param string $type
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getByType(string $type)
@@ -84,7 +75,6 @@ class ProductRepository extends BaseRepository
     /**
      * Search products
      *
-     * @param string $search
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function search(string $search)

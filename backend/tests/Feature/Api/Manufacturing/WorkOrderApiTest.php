@@ -17,7 +17,7 @@ class WorkOrderApiTest extends FeatureTestCase
     public function test_can_list_work_orders(): void
     {
         $this->actingAsUser();
-        
+
         WorkOrder::factory()
             ->forTenant($this->tenant)
             ->count(3)
@@ -29,16 +29,16 @@ class WorkOrderApiTest extends FeatureTestCase
             ->assertJsonStructure([
                 'data' => [
                     'data' => [
-                        '*' => ['id', 'work_order_number', 'production_order_id', 'status']
-                    ]
-                ]
+                        '*' => ['id', 'work_order_number', 'production_order_id', 'status'],
+                    ],
+                ],
             ]);
     }
 
     public function test_can_create_work_order(): void
     {
         $this->actingAsUser();
-        
+
         $po = ProductionOrder::factory()
             ->forTenant($this->tenant)
             ->create();
@@ -62,7 +62,7 @@ class WorkOrderApiTest extends FeatureTestCase
     public function test_can_show_work_order(): void
     {
         $this->actingAsUser();
-        
+
         $wo = WorkOrder::factory()
             ->forTenant($this->tenant)
             ->create();
@@ -76,7 +76,7 @@ class WorkOrderApiTest extends FeatureTestCase
     public function test_can_start_work_order(): void
     {
         $this->actingAsUser();
-        
+
         $wo = WorkOrder::factory()
             ->forTenant($this->tenant)
             ->pending()
@@ -91,7 +91,7 @@ class WorkOrderApiTest extends FeatureTestCase
     public function test_can_complete_work_order(): void
     {
         $this->actingAsUser();
-        
+
         $wo = WorkOrder::factory()
             ->forTenant($this->tenant)
             ->inProgress()
@@ -111,7 +111,7 @@ class WorkOrderApiTest extends FeatureTestCase
     public function test_can_cancel_work_order(): void
     {
         $this->actingAsUser();
-        
+
         $wo = WorkOrder::factory()
             ->forTenant($this->tenant)
             ->pending()
@@ -126,7 +126,7 @@ class WorkOrderApiTest extends FeatureTestCase
     public function test_can_get_my_work_orders(): void
     {
         $user = $this->actingAsUser();
-        
+
         WorkOrder::factory()
             ->forTenant($this->tenant)
             ->create(['assigned_to' => $user->id]);
@@ -139,7 +139,7 @@ class WorkOrderApiTest extends FeatureTestCase
     public function test_can_get_pending_work_orders(): void
     {
         $this->actingAsUser();
-        
+
         WorkOrder::factory()
             ->forTenant($this->tenant)
             ->pending()

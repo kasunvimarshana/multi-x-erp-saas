@@ -13,7 +13,9 @@ class AnalyticsServiceTest extends TestCase
     use RefreshDatabase;
 
     private AnalyticsService $analyticsService;
+
     private Tenant $tenant;
+
     private User $user;
 
     protected function setUp(): void
@@ -22,7 +24,7 @@ class AnalyticsServiceTest extends TestCase
 
         $this->tenant = Tenant::factory()->create();
         $this->user = User::factory()->create(['tenant_id' => $this->tenant->id]);
-        $this->analyticsService = new AnalyticsService();
+        $this->analyticsService = new AnalyticsService;
     }
 
     public function test_can_get_all_kpis(): void

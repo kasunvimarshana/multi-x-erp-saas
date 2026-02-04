@@ -14,7 +14,7 @@ use Tests\Unit\UnitTestCase;
 
 /**
  * Inventory Service Test
- * 
+ *
  * Tests the business logic in the InventoryService.
  */
 class InventoryServiceTest extends UnitTestCase
@@ -22,8 +22,11 @@ class InventoryServiceTest extends UnitTestCase
     use RefreshDatabase;
 
     private InventoryService $service;
+
     private ProductRepository $productRepository;
+
     private StockLedgerRepository $stockLedgerRepository;
+
     private Tenant $tenant;
 
     /**

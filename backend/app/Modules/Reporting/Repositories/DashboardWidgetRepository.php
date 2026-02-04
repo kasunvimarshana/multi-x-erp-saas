@@ -8,15 +8,13 @@ use Illuminate\Database\Eloquent\Collection;
 
 /**
  * DashboardWidgetRepository
- * 
+ *
  * Repository for managing dashboard widget data access.
  */
 class DashboardWidgetRepository extends BaseRepository
 {
     /**
      * Specify Model class name
-     *
-     * @return string
      */
     protected function model(): string
     {
@@ -25,9 +23,6 @@ class DashboardWidgetRepository extends BaseRepository
 
     /**
      * Get widgets by dashboard ID
-     *
-     * @param int $dashboardId
-     * @return Collection
      */
     public function getByDashboard(int $dashboardId): Collection
     {
@@ -40,11 +35,6 @@ class DashboardWidgetRepository extends BaseRepository
 
     /**
      * Get widget by dashboard and position
-     *
-     * @param int $dashboardId
-     * @param int $positionX
-     * @param int $positionY
-     * @return DashboardWidget|null
      */
     public function getByPosition(int $dashboardId, int $positionX, int $positionY): ?DashboardWidget
     {
@@ -58,9 +48,7 @@ class DashboardWidgetRepository extends BaseRepository
     /**
      * Reorder widgets for a dashboard
      *
-     * @param int $dashboardId
-     * @param array $widgetPositions [['id' => 1, 'position_x' => 0, 'position_y' => 0], ...]
-     * @return bool
+     * @param  array  $widgetPositions  [['id' => 1, 'position_x' => 0, 'position_y' => 0], ...]
      */
     public function reorderWidgets(int $dashboardId, array $widgetPositions): bool
     {
@@ -75,6 +63,7 @@ class DashboardWidgetRepository extends BaseRepository
             }
 
             $this->commit();
+
             return true;
         } catch (\Exception $e) {
             $this->rollback();
@@ -84,15 +73,11 @@ class DashboardWidgetRepository extends BaseRepository
 
     /**
      * Duplicate widget to another dashboard
-     *
-     * @param int $widgetId
-     * @param int $targetDashboardId
-     * @return DashboardWidget
      */
     public function duplicateWidget(int $widgetId, int $targetDashboardId): DashboardWidget
     {
         $widget = $this->findOrFail($widgetId);
-        
+
         return $this->create([
             'dashboard_id' => $targetDashboardId,
             'widget_type' => $widget->widget_type,

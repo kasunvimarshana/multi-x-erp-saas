@@ -3,7 +3,6 @@
 namespace Database\Factories\Finance;
 
 use App\Models\Tenant;
-use App\Models\User;
 use App\Modules\Finance\Enums\JournalEntryStatus;
 use App\Modules\Finance\Models\JournalEntry;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -19,7 +18,7 @@ class JournalEntryFactory extends Factory
     {
         return [
             'tenant_id' => Tenant::factory(),
-            'entry_number' => 'JE-' . fake()->unique()->numerify('######'),
+            'entry_number' => 'JE-'.fake()->unique()->numerify('######'),
             'entry_date' => fake()->dateTimeBetween('-1 year', 'now'),
             'reference_type' => null,
             'reference_id' => null,

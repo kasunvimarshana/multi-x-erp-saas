@@ -9,7 +9,7 @@ use App\Repositories\BaseRepository;
 
 /**
  * Production Order Repository
- * 
+ *
  * Handles data access for production orders.
  */
 class ProductionOrderRepository extends BaseRepository
@@ -82,7 +82,7 @@ class ProductionOrderRepository extends BaseRepository
                 'workOrders',
                 'creator',
                 'releaser',
-                'completer'
+                'completer',
             ])
             ->findOrFail($id);
     }
@@ -98,7 +98,7 @@ class ProductionOrderRepository extends BaseRepository
                     ->orWhere('notes', 'like', "%{$search}%")
                     ->orWhereHas('product', function ($q) use ($search) {
                         $q->where('name', 'like', "%{$search}%")
-                          ->orWhere('sku', 'like', "%{$search}%");
+                            ->orWhere('sku', 'like', "%{$search}%");
                     });
             })
             ->with(['product', 'billOfMaterial', 'warehouse'])
@@ -126,7 +126,7 @@ class ProductionOrderRepository extends BaseRepository
             ->where('scheduled_end_date', '<', now())
             ->whereIn('status', [
                 ProductionOrderStatus::RELEASED->value,
-                ProductionOrderStatus::IN_PROGRESS->value
+                ProductionOrderStatus::IN_PROGRESS->value,
             ])
             ->with(['product', 'billOfMaterial', 'warehouse'])
             ->orderBy('scheduled_end_date', 'asc')

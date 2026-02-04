@@ -20,7 +20,7 @@ class FiscalYearFactory extends Factory
 
         return [
             'tenant_id' => Tenant::factory(),
-            'name' => 'FY ' . $startDate->format('Y'),
+            'name' => 'FY '.$startDate->format('Y'),
             'start_date' => $startDate,
             'end_date' => $endDate,
             'is_closed' => false,

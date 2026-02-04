@@ -39,7 +39,7 @@ return new class extends Migration
             $table->string('relationship_type')->nullable(); // belongsTo, hasMany, belongsToMany
             $table->timestamps();
             $table->softDeletes();
-            
+
             $table->index(['entity_id', 'is_visible_list']);
             $table->index(['entity_id', 'is_searchable']);
         });

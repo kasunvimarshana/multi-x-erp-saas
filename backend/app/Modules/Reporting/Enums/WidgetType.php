@@ -12,7 +12,7 @@ enum WidgetType: string
 
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::KPI => 'KPI Widget',
             self::CHART => 'Chart Widget',
             self::TABLE => 'Table Widget',

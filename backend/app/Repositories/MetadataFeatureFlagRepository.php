@@ -21,7 +21,7 @@ class MetadataFeatureFlagRepository extends BaseRepository
             ->where('name', $name)
             ->where('is_enabled', true)
             ->first();
-            
+
         return $flag !== null;
     }
 
@@ -51,12 +51,13 @@ class MetadataFeatureFlagRepository extends BaseRepository
     public function enable(string $name): bool
     {
         $flag = $this->model->where('name', $name)->first();
-        
+
         if ($flag) {
             $flag->enable();
+
             return true;
         }
-        
+
         return false;
     }
 
@@ -66,12 +67,13 @@ class MetadataFeatureFlagRepository extends BaseRepository
     public function disable(string $name): bool
     {
         $flag = $this->model->where('name', $name)->first();
-        
+
         if ($flag) {
             $flag->disable();
+
             return true;
         }
-        
+
         return false;
     }
 }

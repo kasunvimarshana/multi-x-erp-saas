@@ -58,6 +58,7 @@ class BillOfMaterialItem extends Model
     {
         $baseQuantity = $this->quantity * $productionQuantity;
         $scrapAmount = $baseQuantity * ($this->scrap_factor / 100);
+
         return $baseQuantity + $scrapAmount;
     }
 }

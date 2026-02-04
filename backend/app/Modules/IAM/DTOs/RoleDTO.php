@@ -4,7 +4,7 @@ namespace App\Modules\IAM\DTOs;
 
 /**
  * Role Data Transfer Object
- * 
+ *
  * Encapsulates data for role operations.
  */
 class RoleDTO
@@ -19,9 +19,6 @@ class RoleDTO
 
     /**
      * Create DTO from array
-     *
-     * @param array $data
-     * @return self
      */
     public static function fromArray(array $data): self
     {
@@ -36,8 +33,6 @@ class RoleDTO
 
     /**
      * Convert DTO to array
-     *
-     * @return array
      */
     public function toArray(): array
     {

@@ -10,13 +10,14 @@ use Tests\TestCase;
 
 /**
  * Base Feature Test Case
- * 
+ *
  * Provides common functionality for feature tests including
  * tenant setup, authentication helpers, and API testing utilities.
  */
 abstract class FeatureTestCase extends TestCase
 {
     protected ?Tenant $tenant = null;
+
     protected ?User $user = null;
 
     /**
@@ -44,7 +45,7 @@ abstract class FeatureTestCase extends TestCase
     protected function actingAsUser(array $userAttributes = [], ?Tenant $tenant = null): User
     {
         $tenant = $tenant ?? $this->tenant;
-        
+
         $this->user = User::factory()
             ->forTenant($tenant)
             ->create($userAttributes);
@@ -60,7 +61,7 @@ abstract class FeatureTestCase extends TestCase
     protected function actingAsUserWithRole(string $roleSlug, array $userAttributes = [], ?Tenant $tenant = null): User
     {
         $tenant = $tenant ?? $this->tenant;
-        
+
         $role = Role::factory()
             ->forTenant($tenant)
             ->create(['slug' => $roleSlug]);
@@ -77,7 +78,7 @@ abstract class FeatureTestCase extends TestCase
     protected function actingAsUserWithPermissions(array $permissions, array $userAttributes = [], ?Tenant $tenant = null): User
     {
         $tenant = $tenant ?? $this->tenant;
-        
+
         $role = Role::factory()
             ->forTenant($tenant)
             ->create();

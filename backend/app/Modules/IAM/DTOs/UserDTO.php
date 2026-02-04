@@ -4,7 +4,7 @@ namespace App\Modules\IAM\DTOs;
 
 /**
  * User Data Transfer Object
- * 
+ *
  * Encapsulates data for user operations.
  */
 class UserDTO
@@ -19,9 +19,6 @@ class UserDTO
 
     /**
      * Create DTO from array
-     *
-     * @param array $data
-     * @return self
      */
     public static function fromArray(array $data): self
     {
@@ -36,8 +33,6 @@ class UserDTO
 
     /**
      * Convert DTO to array
-     *
-     * @return array
      */
     public function toArray(): array
     {

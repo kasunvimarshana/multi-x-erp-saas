@@ -22,7 +22,7 @@ class WorkOrderFactory extends Factory
     {
         return [
             'tenant_id' => Tenant::factory(),
-            'work_order_number' => 'WO-' . fake()->unique()->numerify('######'),
+            'work_order_number' => 'WO-'.fake()->unique()->numerify('######'),
             'production_order_id' => ProductionOrder::factory(),
             'workstation' => fake()->randomElement(['Assembly Line 1', 'Assembly Line 2', 'Packaging', 'Quality Control']),
             'description' => fake()->optional()->sentence(),

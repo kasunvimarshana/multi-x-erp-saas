@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Tenant Scoped Trait
- * 
+ *
  * Automatically scopes all queries to the current tenant
  * ensuring complete tenant isolation.
  */
@@ -20,7 +20,7 @@ trait TenantScoped
     {
         static::addGlobalScope('tenant', function (Builder $builder) {
             if (auth()->check() && auth()->user()->tenant_id) {
-                $builder->where($builder->getModel()->getTable() . '.tenant_id', auth()->user()->tenant_id);
+                $builder->where($builder->getModel()->getTable().'.tenant_id', auth()->user()->tenant_id);
             }
         });
 
@@ -33,8 +33,6 @@ trait TenantScoped
 
     /**
      * Get the tenant ID column name
-     *
-     * @return string
      */
     public function getTenantIdColumn(): string
     {

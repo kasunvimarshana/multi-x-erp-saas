@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Auth;
 
 /**
  * Production Order Service
- * 
+ *
  * Handles business logic for production order lifecycle including
  * creation, releasing, material consumption, and completion.
  */
@@ -45,16 +45,16 @@ class ProductionOrderService extends BaseService
     {
         return $this->transaction(function () use ($dto) {
             $this->logInfo('Creating new production order', ['po_number' => $dto->productionOrderNumber]);
-            
+
             // Get BOM if not provided
             $bomId = $dto->billOfMaterialId;
-            if (!$bomId) {
+            if (! $bomId) {
                 $bom = $this->bomRepository->getLatestActiveForProduct($dto->productId);
                 if ($bom) {
                     $bomId = $bom->id;
                 }
             }
-            
+
             // Create production order
             $productionOrder = $this->productionOrderRepository->create([
                 'production_order_number' => $dto->productionOrderNumber,
@@ -69,13 +69,13 @@ class ProductionOrderService extends BaseService
                 'notes' => $dto->notes,
                 'created_by' => Auth::id(),
             ]);
-            
+
             // Create production order items from BOM
             if ($bomId) {
                 $bom = $this->bomRepository->findWithItems($bomId);
                 foreach ($bom->items as $bomItem) {
                     $plannedQuantity = $bomItem->getActualQuantityNeeded($dto->quantity);
-                    
+
                     $productionOrder->items()->create([
                         'product_id' => $bomItem->component_product_id,
                         'planned_quantity' => $plannedQuantity,
@@ -84,20 +84,20 @@ class ProductionOrderService extends BaseService
                     ]);
                 }
             }
-            
+
             // Load relationships
             $productionOrder->load([
                 'product',
                 'billOfMaterial.items.componentProduct',
                 'warehouse',
-                'items.product'
+                'items.product',
             ]);
-            
+
             // Dispatch event
             event(new ProductionOrderCreated($productionOrder));
-            
+
             $this->logInfo('Production order created successfully', ['id' => $productionOrder->id]);
-            
+
             return $productionOrder;
         });
     }
@@ -109,16 +109,16 @@ class ProductionOrderService extends BaseService
     {
         return $this->transaction(function () use ($id, $dto) {
             $productionOrder = $this->productionOrderRepository->findOrFail($id);
-            
+
             // Check if can be edited
-            if (!$productionOrder->status->canEdit()) {
+            if (! $productionOrder->status->canEdit()) {
                 throw new \InvalidArgumentException(
                     "Production order with status '{$productionOrder->status->label()}' cannot be edited"
                 );
             }
-            
+
             $this->logInfo('Updating production order', ['id' => $id]);
-            
+
             // Update production order
             $this->productionOrderRepository->update($id, [
                 'production_order_number' => $dto->productionOrderNumber,
@@ -131,17 +131,17 @@ class ProductionOrderService extends BaseService
                 'priority' => $dto->priority?->value ?? 'normal',
                 'notes' => $dto->notes,
             ]);
-            
+
             $productionOrder->refresh();
             $productionOrder->load([
                 'product',
                 'billOfMaterial.items.componentProduct',
                 'warehouse',
-                'items.product'
+                'items.product',
             ]);
-            
+
             $this->logInfo('Production order updated successfully', ['id' => $id]);
-            
+
             return $productionOrder;
         });
     }
@@ -152,22 +152,22 @@ class ProductionOrderService extends BaseService
     public function deleteProductionOrder(int $id): bool
     {
         $productionOrder = $this->productionOrderRepository->findOrFail($id);
-        
+
         // Check if can be deleted
-        if (!$productionOrder->status->canEdit()) {
+        if (! $productionOrder->status->canEdit()) {
             throw new \InvalidArgumentException(
                 "Production order with status '{$productionOrder->status->label()}' cannot be deleted"
             );
         }
-        
+
         $this->logInfo('Deleting production order', ['id' => $id]);
-        
+
         $result = $this->productionOrderRepository->delete($id);
-        
+
         if ($result) {
             $this->logInfo('Production order deleted successfully', ['id' => $id]);
         }
-        
+
         return $result;
     }
 
@@ -186,33 +186,33 @@ class ProductionOrderService extends BaseService
     {
         return $this->transaction(function () use ($id) {
             $productionOrder = $this->productionOrderRepository->findOrFail($id);
-            
+
             // Check if can be released
-            if (!$productionOrder->status->canRelease()) {
+            if (! $productionOrder->status->canRelease()) {
                 throw new \InvalidArgumentException(
                     "Production order with status '{$productionOrder->status->label()}' cannot be released"
                 );
             }
-            
+
             $this->logInfo('Releasing production order', ['id' => $id]);
-            
+
             // Update status
             $this->productionOrderRepository->update($id, [
                 'status' => ProductionOrderStatus::RELEASED->value,
                 'released_by' => Auth::id(),
                 'released_at' => now(),
             ]);
-            
+
             $productionOrder->refresh();
             $productionOrder->load([
                 'product',
                 'billOfMaterial.items.componentProduct',
                 'warehouse',
-                'items.product'
+                'items.product',
             ]);
-            
+
             $this->logInfo('Production order released successfully', ['id' => $id]);
-            
+
             return $productionOrder;
         });
     }
@@ -224,21 +224,21 @@ class ProductionOrderService extends BaseService
     {
         return $this->transaction(function () use ($id) {
             $productionOrder = $this->productionOrderRepository->findWithRelations($id);
-            
+
             // Check if can be started
-            if (!$productionOrder->status->canStart()) {
+            if (! $productionOrder->status->canStart()) {
                 throw new \InvalidArgumentException(
                     "Production order with status '{$productionOrder->status->label()}' cannot be started"
                 );
             }
-            
+
             $this->logInfo('Starting production', ['id' => $id]);
-            
+
             // Consume materials from inventory
             foreach ($productionOrder->items as $item) {
                 if ($item->consumed_quantity < $item->planned_quantity) {
                     $quantityToConsume = $item->planned_quantity - $item->consumed_quantity;
-                    
+
                     // Record stock movement OUT
                     // Note: unitCost is set to 0 as the StockMovementService will automatically
                     // calculate the cost using the FIFO/weighted average method from stock ledger
@@ -252,31 +252,31 @@ class ProductionOrderService extends BaseService
                         referenceId: $productionOrder->id,
                         notes: "Consumed for production order #{$productionOrder->production_order_number}"
                     );
-                    
+
                     $this->stockMovementService->recordMovement($stockMovementDto);
-                    
+
                     // Update consumed quantity
                     $item->consumed_quantity = $item->planned_quantity;
                     $item->save();
                 }
             }
-            
+
             // Update status
             $this->productionOrderRepository->update($id, [
                 'status' => ProductionOrderStatus::IN_PROGRESS->value,
                 'actual_start_date' => now(),
             ]);
-            
+
             $productionOrder->refresh();
             $productionOrder->load([
                 'product',
                 'billOfMaterial.items.componentProduct',
                 'warehouse',
-                'items.product'
+                'items.product',
             ]);
-            
+
             $this->logInfo('Production started successfully', ['id' => $id]);
-            
+
             return $productionOrder;
         });
     }
@@ -288,34 +288,34 @@ class ProductionOrderService extends BaseService
     {
         return $this->transaction(function () use ($dto) {
             $productionOrder = $this->productionOrderRepository->findWithRelations($dto->productionOrderId);
-            
+
             $this->logInfo('Recording material consumption', ['production_order_id' => $dto->productionOrderId]);
-            
+
             // Process each consumed item
             foreach ($dto->consumedItems as $consumedItem) {
                 $poItem = $productionOrder->items()
                     ->where('product_id', $consumedItem['product_id'])
                     ->first();
-                
-                if (!$poItem) {
+
+                if (! $poItem) {
                     throw new \InvalidArgumentException(
                         "Product {$consumedItem['product_id']} is not in the production order"
                     );
                 }
-                
+
                 $quantity = $consumedItem['quantity'];
-                
+
                 // Validate quantity
                 if ($quantity <= 0) {
                     throw new \InvalidArgumentException('Consumed quantity must be greater than 0');
                 }
-                
+
                 if (($poItem->consumed_quantity + $quantity) > $poItem->planned_quantity) {
                     throw new \InvalidArgumentException(
                         "Consumed quantity exceeds planned quantity for product {$consumedItem['product_id']}"
                     );
                 }
-                
+
                 // Record stock movement OUT
                 // Note: unitCost is set to 0 as the StockMovementService will automatically
                 // calculate the cost using the FIFO/weighted average method from stock ledger
@@ -332,18 +332,18 @@ class ProductionOrderService extends BaseService
                     lotNumber: $consumedItem['lot_number'] ?? null,
                     serialNumber: $consumedItem['serial_number'] ?? null
                 );
-                
+
                 $this->stockMovementService->recordMovement($stockMovementDto);
-                
+
                 // Update consumed quantity
                 $poItem->consumed_quantity += $quantity;
                 $poItem->save();
             }
-            
+
             $productionOrder->refresh();
-            
+
             $this->logInfo('Material consumption recorded', ['production_order_id' => $dto->productionOrderId]);
-            
+
             return $productionOrder;
         });
     }
@@ -355,16 +355,16 @@ class ProductionOrderService extends BaseService
     {
         return $this->transaction(function () use ($id) {
             $productionOrder = $this->productionOrderRepository->findWithRelations($id);
-            
+
             // Check if can be completed
-            if (!$productionOrder->status->canComplete()) {
+            if (! $productionOrder->status->canComplete()) {
                 throw new \InvalidArgumentException(
                     "Production order with status '{$productionOrder->status->label()}' cannot be completed"
                 );
             }
-            
+
             $this->logInfo('Completing production order', ['id' => $id]);
-            
+
             // Add finished goods to inventory
             // Note: unitCost is set to 0. The actual cost of finished goods should ideally
             // be calculated based on consumed materials. For now, the StockMovementService
@@ -380,9 +380,9 @@ class ProductionOrderService extends BaseService
                 referenceId: $productionOrder->id,
                 notes: "Produced from production order #{$productionOrder->production_order_number}"
             );
-            
+
             $this->stockMovementService->recordMovement($stockMovementDto);
-            
+
             // Update status
             $this->productionOrderRepository->update($id, [
                 'status' => ProductionOrderStatus::COMPLETED->value,
@@ -390,20 +390,20 @@ class ProductionOrderService extends BaseService
                 'completed_by' => Auth::id(),
                 'completed_at' => now(),
             ]);
-            
+
             $productionOrder->refresh();
             $productionOrder->load([
                 'product',
                 'billOfMaterial.items.componentProduct',
                 'warehouse',
-                'items.product'
+                'items.product',
             ]);
-            
+
             // Dispatch event
             event(new ProductionOrderCompleted($productionOrder));
-            
+
             $this->logInfo('Production order completed successfully', ['id' => $id]);
-            
+
             return $productionOrder;
         });
     }
@@ -415,30 +415,30 @@ class ProductionOrderService extends BaseService
     {
         return $this->transaction(function () use ($id) {
             $productionOrder = $this->productionOrderRepository->findOrFail($id);
-            
+
             // Check if can be cancelled
-            if (!$productionOrder->status->canCancel()) {
+            if (! $productionOrder->status->canCancel()) {
                 throw new \InvalidArgumentException(
                     "Production order with status '{$productionOrder->status->label()}' cannot be cancelled"
                 );
             }
-            
+
             $this->logInfo('Cancelling production order', ['id' => $id]);
-            
+
             $this->productionOrderRepository->update($id, [
                 'status' => ProductionOrderStatus::CANCELLED->value,
             ]);
-            
+
             $productionOrder->refresh();
             $productionOrder->load([
                 'product',
                 'billOfMaterial.items.componentProduct',
                 'warehouse',
-                'items.product'
+                'items.product',
             ]);
-            
+
             $this->logInfo('Production order cancelled successfully', ['id' => $id]);
-            
+
             return $productionOrder;
         });
     }

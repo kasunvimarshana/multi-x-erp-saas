@@ -24,7 +24,7 @@ class CustomerController extends BaseController
 
             return $this->successResponse($customers);
         } catch (\Exception $e) {
-            return $this->errorResponse('Failed to retrieve customers: ' . $e->getMessage());
+            return $this->errorResponse('Failed to retrieve customers: '.$e->getMessage());
         }
     }
 
@@ -40,7 +40,7 @@ class CustomerController extends BaseController
         } catch (\Illuminate\Validation\ValidationException $e) {
             return $this->validationError($e->errors());
         } catch (\Exception $e) {
-            return $this->errorResponse('Failed to create customer: ' . $e->getMessage());
+            return $this->errorResponse('Failed to create customer: '.$e->getMessage());
         }
     }
 
@@ -52,13 +52,13 @@ class CustomerController extends BaseController
         try {
             $customer = $this->service->getCustomer($id);
 
-            if (!$customer) {
+            if (! $customer) {
                 return $this->errorResponse('Customer not found', null, 404);
             }
 
             return $this->successResponse($customer);
         } catch (\Exception $e) {
-            return $this->errorResponse('Failed to retrieve customer: ' . $e->getMessage());
+            return $this->errorResponse('Failed to retrieve customer: '.$e->getMessage());
         }
     }
 
@@ -70,7 +70,7 @@ class CustomerController extends BaseController
         try {
             $customer = $this->service->updateCustomer($id, $request->all());
 
-            if (!$customer) {
+            if (! $customer) {
                 return $this->errorResponse('Customer not found', 404);
             }
 
@@ -78,7 +78,7 @@ class CustomerController extends BaseController
         } catch (\Illuminate\Validation\ValidationException $e) {
             return $this->validationError($e->errors());
         } catch (\Exception $e) {
-            return $this->errorResponse('Failed to update customer: ' . $e->getMessage());
+            return $this->errorResponse('Failed to update customer: '.$e->getMessage());
         }
     }
 
@@ -90,13 +90,13 @@ class CustomerController extends BaseController
         try {
             $deleted = $this->service->deleteCustomer($id);
 
-            if (!$deleted) {
+            if (! $deleted) {
                 return $this->errorResponse('Customer not found', 404);
             }
 
             return $this->successResponse(null, 'Customer deleted successfully');
         } catch (\Exception $e) {
-            return $this->errorResponse('Failed to delete customer: ' . $e->getMessage());
+            return $this->errorResponse('Failed to delete customer: '.$e->getMessage());
         }
     }
 
@@ -117,7 +117,7 @@ class CustomerController extends BaseController
 
             return $this->successResponse($customers);
         } catch (\Exception $e) {
-            return $this->errorResponse('Search failed: ' . $e->getMessage());
+            return $this->errorResponse('Search failed: '.$e->getMessage());
         }
     }
 }

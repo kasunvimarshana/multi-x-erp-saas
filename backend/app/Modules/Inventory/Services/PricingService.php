@@ -10,12 +10,6 @@ class PricingService extends BaseService
 {
     /**
      * Calculate price for a product with optional rules
-     *
-     * @param int $productId
-     * @param float $quantity
-     * @param int|null $customerId
-     * @param array $options
-     * @return array
      */
     public function calculatePrice(
         int $productId,
@@ -42,13 +36,13 @@ class PricingService extends BaseService
         }
 
         // 2. Tiered pricing based on quantity
-        if (!empty($options['apply_tiered_pricing'])) {
+        if (! empty($options['apply_tiered_pricing'])) {
             $tieredDiscount = $this->calculateTieredDiscount($product, $quantity, $subtotal);
             $discountAmount = max($discountAmount, $tieredDiscount);
         }
 
         // 3. Customer-specific pricing
-        if ($customerId && !empty($options['apply_customer_pricing'])) {
+        if ($customerId && ! empty($options['apply_customer_pricing'])) {
             $customerDiscount = $this->calculateCustomerDiscount($productId, $customerId, $subtotal);
             $discountAmount += $customerDiscount;
         }
@@ -91,11 +85,6 @@ class PricingService extends BaseService
 
     /**
      * Calculate tiered discount based on quantity
-     *
-     * @param Product $product
-     * @param float $quantity
-     * @param float $subtotal
-     * @return float
      */
     protected function calculateTieredDiscount(Product $product, float $quantity, float $subtotal): float
     {
@@ -119,11 +108,6 @@ class PricingService extends BaseService
 
     /**
      * Calculate customer-specific discount
-     *
-     * @param int $productId
-     * @param int $customerId
-     * @param float $subtotal
-     * @return float
      */
     protected function calculateCustomerDiscount(int $productId, int $customerId, float $subtotal): float
     {
@@ -134,11 +118,6 @@ class PricingService extends BaseService
 
     /**
      * Calculate profit margin
-     *
-     * @param Product $product
-     * @param float $sellingPrice
-     * @param float $quantity
-     * @return array
      */
     protected function calculateProfitMargin(Product $product, float $sellingPrice, float $quantity): array
     {
@@ -156,10 +135,7 @@ class PricingService extends BaseService
     /**
      * Apply additional discount to calculated price
      *
-     * @param array $priceData
-     * @param float $additionalDiscount
-     * @param string $type (percentage or fixed)
-     * @return array
+     * @param  string  $type  (percentage or fixed)
      */
     public function applyAdditionalDiscount(array $priceData, float $additionalDiscount, string $type = 'percentage'): array
     {

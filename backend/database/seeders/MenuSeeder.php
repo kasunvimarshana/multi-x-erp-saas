@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class MenuSeeder extends Seeder
 {
@@ -14,7 +14,7 @@ class MenuSeeder extends Seeder
     public function run(): void
     {
         $now = Carbon::now();
-        
+
         // Insert root menu items
         $menus = [
             [
@@ -153,48 +153,48 @@ class MenuSeeder extends Seeder
                 'updated_at' => $now,
             ],
         ];
-        
+
         // Insert child menu items
         $subMenus = [
             // Inventory submenu
             ['parent_id' => 2, 'name' => 'products', 'label' => 'Products', 'icon' => 'box', 'route' => '/inventory/products', 'entity_name' => 'product', 'permission' => 'products.view', 'order' => 0],
             ['parent_id' => 2, 'name' => 'stock_ledger', 'label' => 'Stock Ledger', 'icon' => 'list', 'route' => '/inventory/stock-ledger', 'entity_name' => 'stock_ledger', 'permission' => 'stock-ledgers.view', 'order' => 1],
             ['parent_id' => 2, 'name' => 'warehouses', 'label' => 'Warehouses', 'icon' => 'warehouse', 'route' => '/inventory/warehouses', 'entity_name' => 'warehouse', 'permission' => 'warehouses.view', 'order' => 2],
-            
+
             // CRM submenu
             ['parent_id' => 3, 'name' => 'customers', 'label' => 'Customers', 'icon' => 'user', 'route' => '/crm/customers', 'entity_name' => 'customer', 'permission' => 'customers.view', 'order' => 0],
-            
+
             // Procurement submenu
             ['parent_id' => 4, 'name' => 'suppliers', 'label' => 'Suppliers', 'icon' => 'truck', 'route' => '/procurement/suppliers', 'entity_name' => 'supplier', 'permission' => 'suppliers.view', 'order' => 0],
             ['parent_id' => 4, 'name' => 'purchase_orders', 'label' => 'Purchase Orders', 'icon' => 'shopping-cart', 'route' => '/procurement/purchase-orders', 'entity_name' => 'purchase_order', 'permission' => 'purchase-orders.view', 'order' => 1],
-            
+
             // POS submenu
             ['parent_id' => 5, 'name' => 'quotations', 'label' => 'Quotations', 'icon' => 'file-text', 'route' => '/pos/quotations', 'entity_name' => 'quotation', 'permission' => 'quotations.view', 'order' => 0],
             ['parent_id' => 5, 'name' => 'sales_orders', 'label' => 'Sales Orders', 'icon' => 'shopping-bag', 'route' => '/pos/sales-orders', 'entity_name' => 'sales_order', 'permission' => 'sales-orders.view', 'order' => 1],
             ['parent_id' => 5, 'name' => 'invoices', 'label' => 'Invoices', 'icon' => 'file-invoice', 'route' => '/pos/invoices', 'entity_name' => 'invoice', 'permission' => 'invoices.view', 'order' => 2],
             ['parent_id' => 5, 'name' => 'payments', 'label' => 'Payments', 'icon' => 'credit-card', 'route' => '/pos/payments', 'entity_name' => 'payment', 'permission' => 'payments.view', 'order' => 3],
-            
+
             // Manufacturing submenu
             ['parent_id' => 6, 'name' => 'boms', 'label' => 'Bill of Materials', 'icon' => 'list-alt', 'route' => '/manufacturing/boms', 'entity_name' => 'bom', 'permission' => 'boms.view', 'order' => 0],
             ['parent_id' => 6, 'name' => 'production_orders', 'label' => 'Production Orders', 'icon' => 'industry', 'route' => '/manufacturing/production-orders', 'entity_name' => 'production_order', 'permission' => 'production-orders.view', 'order' => 1],
             ['parent_id' => 6, 'name' => 'work_orders', 'label' => 'Work Orders', 'icon' => 'wrench', 'route' => '/manufacturing/work-orders', 'entity_name' => 'work_order', 'permission' => 'work-orders.view', 'order' => 2],
-            
+
             // Finance submenu
             ['parent_id' => 7, 'name' => 'accounts', 'label' => 'Chart of Accounts', 'icon' => 'book', 'route' => '/finance/accounts', 'entity_name' => 'account', 'permission' => 'accounts.view', 'order' => 0],
             ['parent_id' => 7, 'name' => 'journal_entries', 'label' => 'Journal Entries', 'icon' => 'edit', 'route' => '/finance/journal-entries', 'entity_name' => 'journal_entry', 'permission' => 'journal-entries.view', 'order' => 1],
             ['parent_id' => 7, 'name' => 'financial_reports', 'label' => 'Financial Reports', 'icon' => 'file-alt', 'route' => '/finance/reports', 'entity_name' => null, 'permission' => 'financial-reports.view', 'order' => 2],
-            
+
             // Reporting submenu
             ['parent_id' => 8, 'name' => 'reports_list', 'label' => 'Reports', 'icon' => 'chart-bar', 'route' => '/reports', 'entity_name' => 'report', 'permission' => 'reports.view', 'order' => 0],
             ['parent_id' => 8, 'name' => 'dashboards_list', 'label' => 'Dashboards', 'icon' => 'tachometer-alt', 'route' => '/reports/dashboards', 'entity_name' => 'dashboard', 'permission' => 'dashboards.view', 'order' => 1],
             ['parent_id' => 8, 'name' => 'analytics', 'label' => 'Analytics', 'icon' => 'chart-line', 'route' => '/reports/analytics', 'entity_name' => null, 'permission' => 'analytics.view', 'order' => 2],
-            
+
             // IAM submenu
             ['parent_id' => 9, 'name' => 'users', 'label' => 'Users', 'icon' => 'user', 'route' => '/iam/users', 'entity_name' => 'user', 'permission' => 'users.view', 'order' => 0],
             ['parent_id' => 9, 'name' => 'roles', 'label' => 'Roles', 'icon' => 'shield', 'route' => '/iam/roles', 'entity_name' => 'role', 'permission' => 'roles.view', 'order' => 1],
             ['parent_id' => 9, 'name' => 'permissions', 'label' => 'Permissions', 'icon' => 'key', 'route' => '/iam/permissions', 'entity_name' => 'permission', 'permission' => 'permissions.view', 'order' => 2],
         ];
-        
+
         foreach ($subMenus as &$submenu) {
             $submenu['is_active'] = true;
             $submenu['is_system'] = true;

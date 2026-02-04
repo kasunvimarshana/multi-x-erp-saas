@@ -20,7 +20,7 @@ class ProductionOrderItemFactory extends Factory
     public function definition(): array
     {
         $plannedQuantity = fake()->randomFloat(4, 1, 100);
-        
+
         return [
             'production_order_id' => ProductionOrder::factory(),
             'product_id' => Product::factory(),

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Tenant Model
- * 
+ *
  * Represents a tenant in the multi-tenant system.
  */
 class Tenant extends Model
@@ -57,8 +57,6 @@ class Tenant extends Model
 
     /**
      * Get the users for the tenant
-     *
-     * @return HasMany
      */
     public function users(): HasMany
     {
@@ -67,8 +65,6 @@ class Tenant extends Model
 
     /**
      * Check if tenant is active
-     *
-     * @return bool
      */
     public function isActive(): bool
     {
@@ -77,12 +73,10 @@ class Tenant extends Model
 
     /**
      * Check if tenant subscription is active
-     *
-     * @return bool
      */
     public function hasActiveSubscription(): bool
     {
-        if (!$this->subscription_ends_at) {
+        if (! $this->subscription_ends_at) {
             return false;
         }
 
@@ -91,12 +85,10 @@ class Tenant extends Model
 
     /**
      * Check if tenant is in trial period
-     *
-     * @return bool
      */
     public function isInTrial(): bool
     {
-        if (!$this->trial_ends_at) {
+        if (! $this->trial_ends_at) {
             return false;
         }
 

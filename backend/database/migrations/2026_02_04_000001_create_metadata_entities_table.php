@@ -31,7 +31,7 @@ return new class extends Migration
             $table->json('permissions')->nullable(); // Entity-level permissions configuration
             $table->timestamps();
             $table->softDeletes();
-            
+
             $table->unique(['tenant_id', 'name']);
             $table->index(['module', 'is_active']);
         });

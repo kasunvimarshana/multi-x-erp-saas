@@ -17,7 +17,7 @@ class CheckReorderLevel implements ShouldQueue
         $product = $stockLedger->product;
 
         // Check if product has reorder level set
-        if (!$product->reorder_level) {
+        if (! $product->reorder_level) {
             return;
         }
 

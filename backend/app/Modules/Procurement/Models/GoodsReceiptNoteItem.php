@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Goods Receipt Note Item Model
- * 
+ *
  * Represents individual line items in a goods receipt note
  */
 class GoodsReceiptNoteItem extends Model

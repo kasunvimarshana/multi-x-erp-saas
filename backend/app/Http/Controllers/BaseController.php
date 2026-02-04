@@ -9,7 +9,7 @@ use Illuminate\Routing\Controller;
 
 /**
  * Base API Controller
- * 
+ *
  * Provides standardized JSON response methods for consistent API responses.
  */
 abstract class BaseController extends Controller
@@ -18,11 +18,6 @@ abstract class BaseController extends Controller
 
     /**
      * Return a success response
-     *
-     * @param mixed $data
-     * @param string $message
-     * @param int $statusCode
-     * @return JsonResponse
      */
     protected function successResponse(
         mixed $data = null,
@@ -32,17 +27,12 @@ abstract class BaseController extends Controller
         return response()->json([
             'success' => true,
             'message' => $message,
-            'data' => $data
+            'data' => $data,
         ], $statusCode);
     }
 
     /**
      * Return an error response
-     *
-     * @param string $message
-     * @param mixed $errors
-     * @param int $statusCode
-     * @return JsonResponse
      */
     protected function errorResponse(
         string $message = 'Operation failed',
@@ -51,7 +41,7 @@ abstract class BaseController extends Controller
     ): JsonResponse {
         $response = [
             'success' => false,
-            'message' => $message
+            'message' => $message,
         ];
 
         if ($errors !== null) {
@@ -63,10 +53,6 @@ abstract class BaseController extends Controller
 
     /**
      * Return a created response
-     *
-     * @param mixed $data
-     * @param string $message
-     * @return JsonResponse
      */
     protected function createdResponse(
         mixed $data = null,
@@ -77,8 +63,6 @@ abstract class BaseController extends Controller
 
     /**
      * Return a no content response
-     *
-     * @return JsonResponse
      */
     protected function noContentResponse(): JsonResponse
     {
@@ -87,9 +71,6 @@ abstract class BaseController extends Controller
 
     /**
      * Return a not found response
-     *
-     * @param string $message
-     * @return JsonResponse
      */
     protected function notFoundResponse(
         string $message = 'Resource not found'
@@ -99,9 +80,6 @@ abstract class BaseController extends Controller
 
     /**
      * Return an unauthorized response
-     *
-     * @param string $message
-     * @return JsonResponse
      */
     protected function unauthorizedResponse(
         string $message = 'Unauthorized'
@@ -111,9 +89,6 @@ abstract class BaseController extends Controller
 
     /**
      * Return a forbidden response
-     *
-     * @param string $message
-     * @return JsonResponse
      */
     protected function forbiddenResponse(
         string $message = 'Forbidden'
@@ -123,10 +98,6 @@ abstract class BaseController extends Controller
 
     /**
      * Return a validation error response
-     *
-     * @param array $errors
-     * @param string $message
-     * @return JsonResponse
      */
     protected function validationErrorResponse(
         array $errors,
@@ -137,6 +108,7 @@ abstract class BaseController extends Controller
 
     /**
      * Alias for successResponse for backwards compatibility
+     *
      * @deprecated Use successResponse instead
      */
     protected function success($data = null, string $message = 'Operation successful', int $statusCode = 200): JsonResponse
@@ -146,6 +118,7 @@ abstract class BaseController extends Controller
 
     /**
      * Alias for errorResponse for backwards compatibility
+     *
      * @deprecated Use errorResponse instead
      */
     protected function error(string $message = 'Operation failed', mixed $errors = null, int $statusCode = 400): JsonResponse
@@ -155,6 +128,7 @@ abstract class BaseController extends Controller
 
     /**
      * Alias for validationErrorResponse for backwards compatibility
+     *
      * @deprecated Use validationErrorResponse instead
      */
     protected function validationError(array $errors, string $message = 'Validation failed'): JsonResponse

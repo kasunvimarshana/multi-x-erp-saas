@@ -12,7 +12,7 @@ use App\Services\BaseService;
 
 /**
  * Dashboard Service
- * 
+ *
  * Handles dashboard CRUD and widget management.
  */
 class DashboardService extends BaseService
@@ -23,9 +23,6 @@ class DashboardService extends BaseService
 
     /**
      * Create a new dashboard
-     *
-     * @param CreateDashboardDTO $dto
-     * @return Dashboard
      */
     public function createDashboard(CreateDashboardDTO $dto): Dashboard
     {
@@ -38,15 +35,11 @@ class DashboardService extends BaseService
 
     /**
      * Update a dashboard
-     *
-     * @param int $dashboardId
-     * @param array $data
-     * @return bool
      */
     public function updateDashboard(int $dashboardId, array $data): bool
     {
         $result = $this->dashboardRepository->update($dashboardId, $data);
-        
+
         if ($result) {
             $dashboard = $this->dashboardRepository->findOrFail($dashboardId);
             event(new DashboardUpdated($dashboard));
@@ -57,9 +50,6 @@ class DashboardService extends BaseService
 
     /**
      * Delete a dashboard
-     *
-     * @param int $dashboardId
-     * @return bool
      */
     public function deleteDashboard(int $dashboardId): bool
     {
@@ -68,9 +58,6 @@ class DashboardService extends BaseService
 
     /**
      * Add widget to dashboard
-     *
-     * @param AddWidgetDTO $dto
-     * @return DashboardWidget
      */
     public function addWidget(AddWidgetDTO $dto): DashboardWidget
     {
@@ -92,10 +79,6 @@ class DashboardService extends BaseService
 
     /**
      * Update widget
-     *
-     * @param int $widgetId
-     * @param array $data
-     * @return bool
      */
     public function updateWidget(int $widgetId, array $data): bool
     {
@@ -111,15 +94,12 @@ class DashboardService extends BaseService
 
     /**
      * Remove widget from dashboard
-     *
-     * @param int $widgetId
-     * @return bool
      */
     public function removeWidget(int $widgetId): bool
     {
         $widget = DashboardWidget::findOrFail($widgetId);
         $dashboard = $widget->dashboard;
-        
+
         $result = $widget->delete();
 
         if ($result) {
@@ -131,9 +111,6 @@ class DashboardService extends BaseService
 
     /**
      * Get dashboard with widgets
-     *
-     * @param int $dashboardId
-     * @return Dashboard
      */
     public function getDashboardWithWidgets(int $dashboardId): Dashboard
     {
@@ -143,7 +120,6 @@ class DashboardService extends BaseService
     /**
      * Get user dashboards
      *
-     * @param int $userId
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getUserDashboards(int $userId)
@@ -153,9 +129,6 @@ class DashboardService extends BaseService
 
     /**
      * Get default dashboard for user
-     *
-     * @param int $userId
-     * @return Dashboard|null
      */
     public function getDefaultDashboard(int $userId): ?Dashboard
     {
@@ -164,10 +137,6 @@ class DashboardService extends BaseService
 
     /**
      * Set dashboard as default
-     *
-     * @param int $dashboardId
-     * @param int $userId
-     * @return bool
      */
     public function setAsDefault(int $dashboardId, int $userId): bool
     {
@@ -176,10 +145,6 @@ class DashboardService extends BaseService
 
     /**
      * Reorder widgets
-     *
-     * @param int $dashboardId
-     * @param array $widgetsOrder
-     * @return bool
      */
     public function reorderWidgets(int $dashboardId, array $widgetsOrder): bool
     {

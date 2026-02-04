@@ -34,18 +34,18 @@ class InitialDataSeeder extends Seeder
                 ['name' => 'Create Products', 'slug' => 'products.create', 'module' => 'inventory'],
                 ['name' => 'Edit Products', 'slug' => 'products.edit', 'module' => 'inventory'],
                 ['name' => 'Delete Products', 'slug' => 'products.delete', 'module' => 'inventory'],
-                
+
                 // Stock permissions
                 ['name' => 'View Stock', 'slug' => 'stock.view', 'module' => 'inventory'],
                 ['name' => 'Adjust Stock', 'slug' => 'stock.adjust', 'module' => 'inventory'],
                 ['name' => 'Transfer Stock', 'slug' => 'stock.transfer', 'module' => 'inventory'],
-                
+
                 // User permissions
                 ['name' => 'View Users', 'slug' => 'users.view', 'module' => 'iam'],
                 ['name' => 'Create Users', 'slug' => 'users.create', 'module' => 'iam'],
                 ['name' => 'Edit Users', 'slug' => 'users.edit', 'module' => 'iam'],
                 ['name' => 'Delete Users', 'slug' => 'users.delete', 'module' => 'iam'],
-                
+
                 // Role permissions
                 ['name' => 'View Roles', 'slug' => 'roles.view', 'module' => 'iam'],
                 ['name' => 'Create Roles', 'slug' => 'roles.create', 'module' => 'iam'],
@@ -193,4 +193,3 @@ class InitialDataSeeder extends Seeder
         });
     }
 }
-

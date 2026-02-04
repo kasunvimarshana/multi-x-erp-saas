@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Production Order Completed Event
- * 
+ *
  * Dispatched when a production order is completed.
  */
 class ProductionOrderCompleted

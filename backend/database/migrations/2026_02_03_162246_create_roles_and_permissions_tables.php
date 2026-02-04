@@ -30,7 +30,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->boolean('is_system_role')->default(false);
             $table->timestamps();
-            
+
             $table->unique(['tenant_id', 'slug']);
         });
 
@@ -40,7 +40,7 @@ return new class extends Migration
             $table->foreignId('permission_id')->constrained()->onDelete('cascade');
             $table->foreignId('role_id')->constrained()->onDelete('cascade');
             $table->timestamps();
-            
+
             $table->unique(['permission_id', 'role_id']);
         });
 
@@ -50,7 +50,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('role_id')->constrained()->onDelete('cascade');
             $table->timestamps();
-            
+
             $table->unique(['user_id', 'role_id']);
         });
     }

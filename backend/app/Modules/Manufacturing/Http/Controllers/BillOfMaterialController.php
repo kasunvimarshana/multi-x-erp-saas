@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 /**
  * Bill of Material API Controller
- * 
+ *
  * Handles HTTP requests for BOM management.
  */
 class BillOfMaterialController extends BaseController
@@ -26,7 +26,7 @@ class BillOfMaterialController extends BaseController
     {
         $perPage = $request->input('per_page', 15);
         $boms = $this->bomService->getAllBOMs($perPage);
-        
+
         return $this->successResponse($boms, 'BOMs retrieved successfully');
     }
 
@@ -49,10 +49,10 @@ class BillOfMaterialController extends BaseController
             'items.*.scrap_factor' => 'nullable|numeric|min:0|max:100',
             'items.*.notes' => 'nullable|string',
         ]);
-        
+
         $dto = CreateBillOfMaterialDTO::fromArray($validated);
         $bom = $this->bomService->createBOM($dto);
-        
+
         return $this->createdResponse($bom, 'BOM created successfully');
     }
 
@@ -62,7 +62,7 @@ class BillOfMaterialController extends BaseController
     public function show(int $id): JsonResponse
     {
         $bom = $this->bomService->getBOMById($id);
-        
+
         return $this->successResponse($bom, 'BOM retrieved successfully');
     }
 
@@ -73,7 +73,7 @@ class BillOfMaterialController extends BaseController
     {
         $validated = $request->validate([
             'product_id' => 'required|integer|exists:products,id',
-            'bom_number' => 'required|string|unique:bill_of_materials,bom_number,' . $id,
+            'bom_number' => 'required|string|unique:bill_of_materials,bom_number,'.$id,
             'version' => 'nullable|integer|min:1',
             'is_active' => 'nullable|boolean',
             'effective_date' => 'nullable|date',
@@ -85,10 +85,10 @@ class BillOfMaterialController extends BaseController
             'items.*.scrap_factor' => 'nullable|numeric|min:0|max:100',
             'items.*.notes' => 'nullable|string',
         ]);
-        
+
         $dto = CreateBillOfMaterialDTO::fromArray($validated);
         $bom = $this->bomService->updateBOM($id, $dto);
-        
+
         return $this->successResponse($bom, 'BOM updated successfully');
     }
 
@@ -98,7 +98,7 @@ class BillOfMaterialController extends BaseController
     public function destroy(int $id): JsonResponse
     {
         $this->bomService->deleteBOM($id);
-        
+
         return $this->successResponse(null, 'BOM deleted successfully');
     }
 
@@ -108,7 +108,7 @@ class BillOfMaterialController extends BaseController
     public function createVersion(int $id): JsonResponse
     {
         $bom = $this->bomService->createNewVersion($id);
-        
+
         return $this->createdResponse($bom, 'New BOM version created successfully');
     }
 
@@ -118,7 +118,7 @@ class BillOfMaterialController extends BaseController
     public function byProduct(int $productId): JsonResponse
     {
         $boms = $this->bomService->getBOMsForProduct($productId);
-        
+
         return $this->successResponse($boms, 'BOMs retrieved successfully');
     }
 
@@ -128,7 +128,7 @@ class BillOfMaterialController extends BaseController
     public function latestActive(int $productId): JsonResponse
     {
         $bom = $this->bomService->getLatestActiveBOMForProduct($productId);
-        
+
         return $this->successResponse($bom, 'Latest active BOM retrieved successfully');
     }
 
@@ -140,9 +140,9 @@ class BillOfMaterialController extends BaseController
         $validated = $request->validate([
             'query' => 'required|string|min:1',
         ]);
-        
+
         $boms = $this->bomService->searchBOMs($validated['query']);
-        
+
         return $this->successResponse($boms, 'Search results retrieved successfully');
     }
 }

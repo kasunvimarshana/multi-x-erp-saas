@@ -12,7 +12,7 @@ use App\Services\BaseService;
 
 /**
  * Inventory Service
- * 
+ *
  * Handles business logic for inventory management including
  * stock movements, valuation, and reporting.
  */
@@ -26,8 +26,6 @@ class InventoryService extends BaseService
     /**
      * Record a stock movement
      *
-     * @param StockMovementDTO $dto
-     * @return StockLedger
      * @throws \Throwable
      */
     public function recordStockMovement(StockMovementDTO $dto): StockLedger
@@ -35,15 +33,15 @@ class InventoryService extends BaseService
         return $this->transaction(function () use ($dto) {
             // Validate product exists
             $product = $this->productRepository->findOrFail($dto->productId);
-            
+
             // Validate stock tracking
-            if (!$product->requiresStockTracking()) {
+            if (! $product->requiresStockTracking()) {
                 throw new \InvalidArgumentException('Product does not require stock tracking');
             }
-            
+
             // Calculate quantity with proper sign
             $quantity = $dto->quantity * $dto->movementType->getSign();
-            
+
             // Create stock ledger entry
             $ledgerData = [
                 'tenant_id' => $product->tenant_id,
@@ -65,25 +63,21 @@ class InventoryService extends BaseService
                 'metadata' => $dto->metadata,
                 'transaction_date' => $dto->transactionDate ?? now(),
             ];
-            
+
             $stockLedger = $this->stockLedgerRepository->create($ledgerData);
-            
+
             $this->logInfo('Stock movement recorded', [
                 'product_id' => $dto->productId,
                 'movement_type' => $dto->movementType->value,
                 'quantity' => $quantity,
             ]);
-            
+
             return $stockLedger;
         });
     }
 
     /**
      * Get current stock balance for a product
-     *
-     * @param int $productId
-     * @param int|null $warehouseId
-     * @return float
      */
     public function getCurrentStock(int $productId, ?int $warehouseId = null): float
     {
@@ -93,11 +87,6 @@ class InventoryService extends BaseService
     /**
      * Adjust stock
      *
-     * @param int $productId
-     * @param float $quantity
-     * @param int|null $warehouseId
-     * @param string|null $notes
-     * @return StockLedger
      * @throws \Throwable
      */
     public function adjustStock(
@@ -106,10 +95,10 @@ class InventoryService extends BaseService
         ?int $warehouseId = null,
         ?string $notes = null
     ): StockLedger {
-        $movementType = $quantity >= 0 
-            ? StockMovementType::ADJUSTMENT_IN 
+        $movementType = $quantity >= 0
+            ? StockMovementType::ADJUSTMENT_IN
             : StockMovementType::ADJUSTMENT_OUT;
-        
+
         $dto = new StockMovementDTO(
             productId: $productId,
             movementType: $movementType,
@@ -117,19 +106,13 @@ class InventoryService extends BaseService
             warehouseId: $warehouseId,
             notes: $notes
         );
-        
+
         return $this->recordStockMovement($dto);
     }
 
     /**
      * Transfer stock between warehouses
      *
-     * @param int $productId
-     * @param int $fromWarehouseId
-     * @param int $toWarehouseId
-     * @param float $quantity
-     * @param string|null $notes
-     * @return array
      * @throws \Throwable
      */
     public function transferStock(
@@ -155,7 +138,7 @@ class InventoryService extends BaseService
                 notes: $notes
             );
             $outMovement = $this->recordStockMovement($outDto);
-            
+
             // Record inward movement to destination warehouse
             $inDto = new StockMovementDTO(
                 productId: $productId,
@@ -165,7 +148,7 @@ class InventoryService extends BaseService
                 notes: $notes
             );
             $inMovement = $this->recordStockMovement($inDto);
-            
+
             return [
                 'out_movement' => $outMovement,
                 'in_movement' => $inMovement,
@@ -175,10 +158,6 @@ class InventoryService extends BaseService
 
     /**
      * Get stock valuation for a product
-     *
-     * @param int $productId
-     * @param int|null $warehouseId
-     * @return float
      */
     public function getStockValuation(int $productId, ?int $warehouseId = null): float
     {
@@ -198,8 +177,6 @@ class InventoryService extends BaseService
     /**
      * Get expiring stock for a product
      *
-     * @param int $productId
-     * @param int $days
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getExpiringStock(int $productId, int $days = 30)
@@ -210,8 +187,6 @@ class InventoryService extends BaseService
     /**
      * Get stock movement history
      *
-     * @param int $productId
-     * @param int|null $warehouseId
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getStockHistory(int $productId, ?int $warehouseId = null)
@@ -221,11 +196,6 @@ class InventoryService extends BaseService
 
     /**
      * Verify stock availability
-     *
-     * @param int $productId
-     * @param float $requiredQuantity
-     * @param int|null $warehouseId
-     * @return bool
      */
     public function verifyStockAvailability(
         int $productId,
@@ -233,6 +203,7 @@ class InventoryService extends BaseService
         ?int $warehouseId = null
     ): bool {
         $currentStock = $this->getCurrentStock($productId, $warehouseId);
+
         return $currentStock >= $requiredQuantity;
     }
 }

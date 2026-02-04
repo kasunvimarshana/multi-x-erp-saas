@@ -71,7 +71,7 @@ class Quotation extends Model
 
     public function calculateTotals(): void
     {
-        $this->subtotal = $this->items->sum(fn($item) => $item->quantity * $item->unit_price);
+        $this->subtotal = $this->items->sum(fn ($item) => $item->quantity * $item->unit_price);
         $this->discount_amount = $this->items->sum('discount_amount');
         $this->tax_amount = $this->items->sum('tax_amount');
         $this->total_amount = $this->subtotal - $this->discount_amount + $this->tax_amount;
@@ -84,6 +84,6 @@ class Quotation extends Model
 
     public function isConverted(): bool
     {
-        return !is_null($this->converted_to_sales_order_id);
+        return ! is_null($this->converted_to_sales_order_id);
     }
 }

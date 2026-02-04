@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Production Order Created Event
- * 
+ *
  * Dispatched when a new production order is created.
  */
 class ProductionOrderCreated

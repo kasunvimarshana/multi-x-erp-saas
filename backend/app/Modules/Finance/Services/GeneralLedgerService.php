@@ -8,7 +8,7 @@ use App\Services\BaseService;
 
 /**
  * General Ledger Service
- * 
+ *
  * Handles general ledger operations including account balances and transactions.
  */
 class GeneralLedgerService extends BaseService
@@ -24,7 +24,7 @@ class GeneralLedgerService extends BaseService
         $this->logInfo('Getting account ledger', compact('accountId', 'startDate', 'endDate'));
 
         $account = $this->accountRepository->findOrFail($accountId);
-        
+
         $journalEntries = $this->journalEntryRepository->getEntriesByAccount($accountId, $startDate, $endDate);
 
         $openingBalance = $this->accountService->getAccountBalance($accountId, $startDate);
@@ -78,9 +78,9 @@ class GeneralLedgerService extends BaseService
 
         foreach ($accounts as $account) {
             $ledger = $this->getAccountLedger($account->id, $startDate, $endDate);
-            
+
             // Only include accounts with transactions
-            if (!empty($ledger['transactions'])) {
+            if (! empty($ledger['transactions'])) {
                 $ledgers[] = $ledger;
             }
         }

@@ -12,7 +12,7 @@ use Illuminate\Validation\Rules\Enum;
 
 /**
  * Journal Entry API Controller
- * 
+ *
  * Handles HTTP requests for journal entry management.
  */
 class JournalEntryController extends BaseController
@@ -25,7 +25,7 @@ class JournalEntryController extends BaseController
     {
         $perPage = $request->input('per_page', 15);
         $journalEntries = $this->journalEntryService->getAllJournalEntries($perPage);
-        
+
         return $this->successResponse($journalEntries, 'Journal entries retrieved successfully');
     }
 
@@ -45,17 +45,17 @@ class JournalEntryController extends BaseController
             'lines.*.description' => 'nullable|string',
             'lines.*.cost_center_id' => 'nullable|integer|exists:cost_centers,id',
         ]);
-        
+
         $dto = CreateJournalEntryDTO::fromArray($validated);
         $journalEntry = $this->journalEntryService->createJournalEntry($dto);
-        
+
         return $this->createdResponse($journalEntry, 'Journal entry created successfully');
     }
 
     public function show(int $id): JsonResponse
     {
         $journalEntry = $this->journalEntryService->getJournalEntryById($id);
-        
+
         return $this->successResponse($journalEntry, 'Journal entry retrieved successfully');
     }
 
@@ -74,31 +74,31 @@ class JournalEntryController extends BaseController
             'lines.*.description' => 'nullable|string',
             'lines.*.cost_center_id' => 'nullable|integer|exists:cost_centers,id',
         ]);
-        
+
         $dto = CreateJournalEntryDTO::fromArray($validated);
         $journalEntry = $this->journalEntryService->updateJournalEntry($id, $dto);
-        
+
         return $this->successResponse($journalEntry, 'Journal entry updated successfully');
     }
 
     public function destroy(int $id): JsonResponse
     {
         $this->journalEntryService->deleteJournalEntry($id);
-        
+
         return $this->successResponse(null, 'Journal entry deleted successfully');
     }
 
     public function post(int $id): JsonResponse
     {
         $journalEntry = $this->journalEntryService->postJournalEntry($id);
-        
+
         return $this->successResponse($journalEntry, 'Journal entry posted successfully');
     }
 
     public function void(int $id): JsonResponse
     {
         $journalEntry = $this->journalEntryService->voidJournalEntry($id);
-        
+
         return $this->successResponse($journalEntry, 'Journal entry voided successfully');
     }
 
@@ -107,24 +107,24 @@ class JournalEntryController extends BaseController
         $validated = $request->validate([
             'status' => ['required', new Enum(JournalEntryStatus::class)],
         ]);
-        
+
         $status = JournalEntryStatus::from($validated['status']);
         $journalEntries = $this->journalEntryService->getJournalEntriesByStatus($status);
-        
+
         return $this->successResponse($journalEntries, 'Journal entries retrieved successfully');
     }
 
     public function draft(): JsonResponse
     {
         $journalEntries = $this->journalEntryService->getDraftEntries();
-        
+
         return $this->successResponse($journalEntries, 'Draft journal entries retrieved successfully');
     }
 
     public function posted(): JsonResponse
     {
         $journalEntries = $this->journalEntryService->getPostedEntries();
-        
+
         return $this->successResponse($journalEntries, 'Posted journal entries retrieved successfully');
     }
 
@@ -133,16 +133,16 @@ class JournalEntryController extends BaseController
         $validated = $request->validate([
             'search' => 'required|string|min:1',
         ]);
-        
+
         $journalEntries = $this->journalEntryService->searchJournalEntries($validated['search']);
-        
+
         return $this->successResponse($journalEntries, 'Search results retrieved successfully');
     }
 
     public function generateEntryNumber(): JsonResponse
     {
         $entryNumber = $this->journalEntryService->generateEntryNumber();
-        
+
         return $this->successResponse(
             ['entry_number' => $entryNumber],
             'Entry number generated successfully'

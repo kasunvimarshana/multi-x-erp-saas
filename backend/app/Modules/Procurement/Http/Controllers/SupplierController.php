@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 /**
  * Supplier API Controller
- * 
+ *
  * Handles HTTP requests for supplier management.
  */
 class SupplierController extends BaseController
@@ -20,23 +20,17 @@ class SupplierController extends BaseController
 
     /**
      * Display a listing of suppliers
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
     {
         $perPage = $request->input('per_page', 15);
         $suppliers = $this->supplierService->getAllSuppliers($perPage);
-        
+
         return $this->successResponse($suppliers, 'Suppliers retrieved successfully');
     }
 
     /**
      * Store a newly created supplier
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function store(Request $request): JsonResponse
     {
@@ -57,31 +51,24 @@ class SupplierController extends BaseController
             'is_active' => 'boolean',
             'notes' => 'nullable|string',
         ]);
-        
+
         $supplier = $this->supplierService->createSupplier($validated);
-        
+
         return $this->createdResponse($supplier, 'Supplier created successfully');
     }
 
     /**
      * Display the specified supplier
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function show(int $id): JsonResponse
     {
         $supplier = $this->supplierService->getSupplierById($id);
-        
+
         return $this->successResponse($supplier, 'Supplier retrieved successfully');
     }
 
     /**
      * Update the specified supplier
-     *
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
      */
     public function update(Request $request, int $id): JsonResponse
     {
@@ -102,48 +89,40 @@ class SupplierController extends BaseController
             'is_active' => 'boolean',
             'notes' => 'nullable|string',
         ]);
-        
+
         $supplier = $this->supplierService->updateSupplier($id, $validated);
-        
+
         return $this->successResponse($supplier, 'Supplier updated successfully');
     }
 
     /**
      * Remove the specified supplier
-     *
-     * @param int $id
-     * @return JsonResponse
      */
     public function destroy(int $id): JsonResponse
     {
         $this->supplierService->deleteSupplier($id);
-        
+
         return $this->successResponse(null, 'Supplier deleted successfully');
     }
 
     /**
      * Search suppliers
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function search(Request $request): JsonResponse
     {
         $search = $request->input('q', '');
         $suppliers = $this->supplierService->searchSuppliers($search);
-        
+
         return $this->successResponse($suppliers, 'Search results retrieved successfully');
     }
 
     /**
      * Get active suppliers
-     *
-     * @return JsonResponse
      */
     public function active(): JsonResponse
     {
         $suppliers = $this->supplierService->getActiveSuppliers();
-        
+
         return $this->successResponse($suppliers, 'Active suppliers retrieved successfully');
     }
 }

@@ -16,8 +16,9 @@ class WebPushNotificationService
     public function send(User $user, string $title, string $body, array $data = []): bool
     {
         // Check if user has enabled web push notifications
-        if (!$this->isChannelEnabled($user->id, $data['event_type'] ?? 'general')) {
-            Log::info("Web push disabled for user", ['user_id' => $user->id]);
+        if (! $this->isChannelEnabled($user->id, $data['event_type'] ?? 'general')) {
+            Log::info('Web push disabled for user', ['user_id' => $user->id]);
+
             return false;
         }
 
@@ -25,7 +26,8 @@ class WebPushNotificationService
         $subscriptions = PushSubscription::where('user_id', $user->id)->get();
 
         if ($subscriptions->isEmpty()) {
-            Log::info("No push subscriptions found", ['user_id' => $user->id]);
+            Log::info('No push subscriptions found', ['user_id' => $user->id]);
+
             return false;
         }
 
@@ -33,8 +35,8 @@ class WebPushNotificationService
             'title' => $title,
             'body' => $body,
             'data' => $data,
-            'icon' => config('app.url') . '/images/logo.png',
-            'badge' => config('app.url') . '/images/badge.png',
+            'icon' => config('app.url').'/images/logo.png',
+            'badge' => config('app.url').'/images/badge.png',
             'timestamp' => now()->timestamp,
         ];
 
@@ -46,7 +48,7 @@ class WebPushNotificationService
                 $this->queueNotification($user, 'web_push', $data['event_type'] ?? 'general', $payload);
                 $success = true;
             } catch (\Exception $e) {
-                Log::error("Failed to send push notification", [
+                Log::error('Failed to send push notification', [
                     'user_id' => $user->id,
                     'subscription_id' => $subscription->id,
                     'error' => $e->getMessage(),
@@ -144,7 +146,7 @@ class WebPushNotificationService
                 }
             } catch (\Exception $e) {
                 $notification->markAsFailed($e->getMessage());
-                Log::error("Failed to process notification", [
+                Log::error('Failed to process notification', [
                     'notification_id' => $notification->id,
                     'error' => $e->getMessage(),
                 ]);
@@ -162,8 +164,8 @@ class WebPushNotificationService
         //
         // $webPush = new WebPush($auth);
         // $webPush->sendNotification($subscription, json_encode($notification->data));
-        
-        Log::info("Push notification sent", [
+
+        Log::info('Push notification sent', [
             'notification_id' => $notification->id,
             'user_id' => $notification->user_id,
             'type' => $notification->type,

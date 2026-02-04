@@ -6,12 +6,11 @@ use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
-use Laravel\Sanctum\Sanctum;
 use Tests\Feature\FeatureTestCase;
 
 /**
  * Authentication Test
- * 
+ *
  * Tests the authentication endpoints.
  */
 class AuthenticationTest extends FeatureTestCase
@@ -83,7 +82,7 @@ class AuthenticationTest extends FeatureTestCase
     public function registration_requires_unique_email()
     {
         $tenant = Tenant::factory()->create();
-        
+
         User::factory()->forTenant($tenant)->create([
             'email' => 'existing@example.com',
         ]);

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * ScheduledReport Model
- * 
+ *
  * Represents a scheduled report with cron configuration.
  */
 class ScheduledReport extends Model
@@ -56,8 +56,6 @@ class ScheduledReport extends Model
 
     /**
      * Get the report
-     *
-     * @return BelongsTo
      */
     public function report(): BelongsTo
     {
@@ -66,8 +64,6 @@ class ScheduledReport extends Model
 
     /**
      * Check if schedule is active
-     *
-     * @return bool
      */
     public function isActive(): bool
     {
@@ -76,13 +72,11 @@ class ScheduledReport extends Model
 
     /**
      * Check if schedule is due
-     *
-     * @return bool
      */
     public function isDue(): bool
     {
-        return $this->is_active && 
-               $this->next_run_at && 
+        return $this->is_active &&
+               $this->next_run_at &&
                $this->next_run_at->isPast();
     }
 }

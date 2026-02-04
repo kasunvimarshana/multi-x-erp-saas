@@ -4,7 +4,7 @@ namespace App\Modules\Procurement\DTOs;
 
 /**
  * Purchase Order Receipt Data Transfer Object
- * 
+ *
  * Encapsulates data for receiving goods from purchase orders.
  */
 class PurchaseOrderReceiptDTO
@@ -19,9 +19,6 @@ class PurchaseOrderReceiptDTO
 
     /**
      * Create DTO from array
-     *
-     * @param array $data
-     * @return self
      */
     public static function fromArray(array $data): self
     {
@@ -36,8 +33,6 @@ class PurchaseOrderReceiptDTO
 
     /**
      * Convert DTO to array
-     *
-     * @return array
      */
     public function toArray(): array
     {

@@ -2,15 +2,15 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use App\Models\Tenant;
+use App\Models\User;
 use App\Modules\CRM\Models\Customer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 /**
  * CRM Customer API Tests
- * 
+ *
  * Tests the customer management endpoints for the CRM module
  */
 class CustomerApiTest extends TestCase
@@ -18,6 +18,7 @@ class CustomerApiTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
+
     protected Tenant $tenant;
 
     protected function setUp(): void

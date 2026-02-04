@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Hash;
 
 /**
  * User Service
- * 
+ *
  * Handles business logic for user management including
  * role assignments and permissions.
  */
@@ -25,23 +25,19 @@ class UserService extends BaseService
 
     /**
      * Get all users
-     *
-     * @param int|null $tenantId
-     * @return Collection
      */
     public function getAllUsers(?int $tenantId = null): Collection
     {
         if ($tenantId) {
             return $this->userRepository->getByTenant($tenantId);
         }
-        
+
         return $this->userRepository->all();
     }
 
     /**
      * Get paginated users
      *
-     * @param int $perPage
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function getPaginatedUsers(int $perPage = 15)
@@ -51,9 +47,6 @@ class UserService extends BaseService
 
     /**
      * Get user by ID
-     *
-     * @param int $id
-     * @return User
      */
     public function getUserById(int $id): User
     {
@@ -62,9 +55,6 @@ class UserService extends BaseService
 
     /**
      * Get user by email
-     *
-     * @param string $email
-     * @return User|null
      */
     public function getUserByEmail(string $email): ?User
     {
@@ -74,8 +64,6 @@ class UserService extends BaseService
     /**
      * Create a new user
      *
-     * @param UserDTO $dto
-     * @return User
      * @throws \Throwable
      */
     public function createUser(UserDTO $dto): User
@@ -87,7 +75,7 @@ class UserService extends BaseService
             }
 
             $userData = $dto->toArray();
-            
+
             // Hash password if provided
             if ($dto->password) {
                 $userData['password'] = Hash::make($dto->password);
@@ -107,9 +95,6 @@ class UserService extends BaseService
     /**
      * Update user
      *
-     * @param int $id
-     * @param array $data
-     * @return User
      * @throws \Throwable
      */
     public function updateUser(int $id, array $data): User
@@ -142,15 +127,13 @@ class UserService extends BaseService
     /**
      * Delete user
      *
-     * @param int $id
-     * @return bool
      * @throws \Throwable
      */
     public function deleteUser(int $id): bool
     {
         return $this->transaction(function () use ($id) {
             $user = $this->userRepository->findOrFail($id);
-            
+
             $result = $this->userRepository->delete($id);
 
             $this->logInfo('User deleted', [
@@ -164,9 +147,6 @@ class UserService extends BaseService
     /**
      * Assign roles to user
      *
-     * @param int $userId
-     * @param array $roleIds
-     * @return User
      * @throws \Throwable
      */
     public function assignRoles(int $userId, array $roleIds): User
@@ -197,9 +177,6 @@ class UserService extends BaseService
     /**
      * Sync user roles (replace all existing roles)
      *
-     * @param int $userId
-     * @param array $roleIds
-     * @return User
      * @throws \Throwable
      */
     public function syncRoles(int $userId, array $roleIds): User
@@ -225,26 +202,21 @@ class UserService extends BaseService
 
     /**
      * Get user roles
-     *
-     * @param int $userId
-     * @return Collection
      */
     public function getUserRoles(int $userId): Collection
     {
         $user = $this->userRepository->findOrFail($userId);
+
         return $user->roles;
     }
 
     /**
      * Get user permissions (via roles)
-     *
-     * @param int $userId
-     * @return Collection
      */
     public function getUserPermissions(int $userId): Collection
     {
         $user = $this->userRepository->findOrFail($userId);
-        
+
         // Get all unique permissions from all user roles
         return $user->roles()
             ->with('permissions')
@@ -257,9 +229,6 @@ class UserService extends BaseService
 
     /**
      * Search users
-     *
-     * @param string $search
-     * @return Collection
      */
     public function searchUsers(string $search): Collection
     {
@@ -268,8 +237,6 @@ class UserService extends BaseService
 
     /**
      * Get active users
-     *
-     * @return Collection
      */
     public function getActiveUsers(): Collection
     {
@@ -278,9 +245,6 @@ class UserService extends BaseService
 
     /**
      * Get users by role
-     *
-     * @param int $roleId
-     * @return Collection
      */
     public function getUsersByRole(int $roleId): Collection
     {

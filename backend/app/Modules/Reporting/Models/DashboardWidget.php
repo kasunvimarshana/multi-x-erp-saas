@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * DashboardWidget Model
- * 
+ *
  * Represents a widget on a dashboard.
  */
 class DashboardWidget extends Model
@@ -58,8 +58,6 @@ class DashboardWidget extends Model
 
     /**
      * Get the dashboard
-     *
-     * @return BelongsTo
      */
     public function dashboard(): BelongsTo
     {

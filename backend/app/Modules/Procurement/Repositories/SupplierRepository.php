@@ -7,15 +7,13 @@ use App\Repositories\BaseRepository;
 
 /**
  * Supplier Repository
- * 
+ *
  * Handles data access for suppliers.
  */
 class SupplierRepository extends BaseRepository
 {
     /**
      * Specify Model class name
-     *
-     * @return string
      */
     protected function model(): string
     {
@@ -35,7 +33,6 @@ class SupplierRepository extends BaseRepository
     /**
      * Search suppliers
      *
-     * @param string $search
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function search(string $search)
@@ -52,9 +49,6 @@ class SupplierRepository extends BaseRepository
 
     /**
      * Find supplier by email
-     *
-     * @param string $email
-     * @return Supplier|null
      */
     public function findByEmail(string $email): ?Supplier
     {
@@ -63,9 +57,6 @@ class SupplierRepository extends BaseRepository
 
     /**
      * Find supplier by tax number
-     *
-     * @param string $taxNumber
-     * @return Supplier|null
      */
     public function findByTaxNumber(string $taxNumber): ?Supplier
     {

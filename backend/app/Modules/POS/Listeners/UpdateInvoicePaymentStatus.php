@@ -11,12 +11,12 @@ class UpdateInvoicePaymentStatus implements ShouldQueue
     {
         // Invoice payment status is already updated in PaymentService
         // This listener can handle additional async tasks
-        
-        \Log::info("Invoice Payment Status Updated", [
+
+        \Log::info('Invoice Payment Status Updated', [
             'invoice_id' => $event->payment->invoice_id,
             'payment_amount' => $event->payment->amount,
         ]);
-        
+
         // Future: Update analytics and reports
         // Future: Trigger accounting entries
         // Future: Update customer credit status
