@@ -138,17 +138,36 @@ class ReportExecutionRepository extends BaseRepository
      */
     public function getStatistics(int $reportId): array
     {
-        $executions = $this->query()
+        // Use database aggregation for better performance
+        $stats = $this->query()
+            ->selectRaw('
+                COUNT(*) as total,
+                SUM(CASE WHEN status = ? THEN 1 ELSE 0 END) as completed,
+                SUM(CASE WHEN status = ? THEN 1 ELSE 0 END) as failed,
+                SUM(CASE WHEN status = ? THEN 1 ELSE 0 END) as running,
+                AVG(CASE WHEN status = ? THEN execution_time ELSE NULL END) as average_time
+            ', [
+                ReportExecutionStatus::COMPLETED->value,
+                ReportExecutionStatus::FAILED->value,
+                ReportExecutionStatus::RUNNING->value,
+                ReportExecutionStatus::COMPLETED->value,
+            ])
             ->where('report_id', $reportId)
-            ->get();
+            ->first();
+
+        $lastExecution = $this->query()
+            ->where('report_id', $reportId)
+            ->with(['executedBy'])
+            ->latest()
+            ->first();
 
         return [
-            'total' => $executions->count(),
-            'completed' => $executions->where('status', ReportExecutionStatus::COMPLETED)->count(),
-            'failed' => $executions->where('status', ReportExecutionStatus::FAILED)->count(),
-            'running' => $executions->where('status', ReportExecutionStatus::RUNNING)->count(),
-            'average_time' => $this->getAverageExecutionTime($reportId),
-            'last_execution' => $executions->sortByDesc('created_at')->first(),
+            'total' => (int) $stats->total,
+            'completed' => (int) $stats->completed,
+            'failed' => (int) $stats->failed,
+            'running' => (int) $stats->running,
+            'average_time' => (float) ($stats->average_time ?? 0.0),
+            'last_execution' => $lastExecution,
         ];
     }
 
