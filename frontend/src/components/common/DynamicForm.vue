@@ -1,8 +1,54 @@
 <template>
   <form @submit.prevent="handleSubmit" class="dynamic-form">
-    <div v-for="field in fields" :key="field.name" class="form-field">
+    <div v-for="field in visibleFields" :key="field.name" class="form-field">
+      <!-- Rich Text Editor -->
+      <div v-if="field.type === 'richtext'" class="form-group">
+        <RichTextEditor
+          v-model="formData[field.name]"
+          :label="field.label"
+          :required="field.required"
+          :disabled="disabled"
+          :placeholder="field.ui_config?.placeholder || ''"
+          :help="field.ui_config?.help"
+          :error="errors[field.name]"
+          :toolbar="field.ui_config?.toolbar || ['bold', 'italic', 'underline', 'list', 'link']"
+          @blur="validateField(field.name)"
+        />
+      </div>
+
+      <!-- File Upload -->
+      <div v-else-if="field.type === 'file'" class="form-group">
+        <FileUpload
+          v-model="formData[field.name]"
+          :label="field.label"
+          :required="field.required"
+          :disabled="disabled"
+          :accept="field.ui_config?.accept || ''"
+          :multiple="field.ui_config?.multiple || false"
+          :help="field.ui_config?.help"
+          :error="errors[field.name]"
+          @change="validateField(field.name)"
+        />
+      </div>
+
+      <!-- Multi-Select -->
+      <div v-else-if="field.type === 'multiselect'" class="form-group">
+        <MultiSelect
+          v-model="formData[field.name]"
+          :options="field.options || []"
+          :label="field.label"
+          :required="field.required"
+          :disabled="disabled"
+          :placeholder="field.ui_config?.placeholder || 'Select options...'"
+          :searchable="field.ui_config?.searchable !== false"
+          :help="field.ui_config?.help"
+          :error="errors[field.name]"
+          @change="validateField(field.name)"
+        />
+      </div>
+
       <!-- Text Input -->
-      <div v-if="isTextType(field.type)" class="form-group">
+      <div v-else-if="isTextType(field.type)" class="form-group">
         <label :for="field.name" class="form-label">
           {{ field.label }}
           <span v-if="field.required" class="required">*</span>
@@ -179,6 +225,9 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue';
+import RichTextEditor from '../fields/RichTextEditor.vue';
+import FileUpload from '../fields/FileUpload.vue';
+import MultiSelect from '../fields/MultiSelect.vue';
 
 const props = defineProps({
   fields: {
@@ -209,6 +258,33 @@ const emit = defineEmits(['update:modelValue', 'submit', 'cancel']);
 const formData = ref({});
 const errors = ref({});
 const touched = ref({});
+
+// Computed visible fields with conditional visibility support
+const visibleFields = computed(() => {
+  return props.fields.filter(field => {
+    // Check base visibility
+    if (field.is_visible_form === false || field.visible === false) {
+      return false;
+    }
+    
+    // Check conditional visibility
+    if (field.ui_config?.condition) {
+      const condition = field.ui_config.condition;
+      if (condition.field && condition.value !== undefined) {
+        const fieldValue = formData.value[condition.field];
+        if (condition.operator === 'equals') {
+          return fieldValue === condition.value;
+        } else if (condition.operator === 'not_equals') {
+          return fieldValue !== condition.value;
+        } else if (condition.operator === 'in') {
+          return Array.isArray(condition.value) && condition.value.includes(fieldValue);
+        }
+      }
+    }
+    
+    return true;
+  });
+});
 
 // Initialize form data with default values
 onMounted(() => {
