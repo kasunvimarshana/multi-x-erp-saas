@@ -2,6 +2,14 @@
 
 This document provides comprehensive guidelines for developing the Multi-X ERP SaaS platform. These instructions help ensure consistency, quality, and adherence to architectural principles across the codebase.
 
+## Quick Reference
+
+- **Setup**: See [Getting Started & Build Instructions](#getting-started--build-instructions) for environment setup
+- **Build/Test**: See [Build & Development Commands](#build--development-commands) for running the app and tests
+- **Architecture**: See [Architecture Principles](#architecture-principles) and [Coding Guidelines](#coding-guidelines)
+- **Validation**: See [Validation Before Committing](#validation-before-committing) for pre-commit checks
+- **File Structure**: See [Key File Locations](#key-file-locations) for navigating the codebase
+
 ## Project Overview
 
 Multi-X ERP SaaS is a fully production-ready, enterprise-grade, modular ERP SaaS platform featuring:
@@ -9,6 +17,252 @@ Multi-X ERP SaaS is a fully production-ready, enterprise-grade, modular ERP SaaS
 - **Purpose**: Enterprise Resource Planning system with comprehensive Inventory Management
 - **Target Users**: Multi-tenant businesses requiring organization, vendor, branch, and warehouse management
 - **Core Features**: IAM, Inventory Management, CRM, POS, Invoicing, Procurement, Manufacturing, Warehouse Operations, Reporting, and Analytics
+
+## Getting Started & Build Instructions
+
+### Repository Structure
+
+```
+/
+├── backend/           # Laravel backend application
+│   ├── app/          # Application code (Controllers, Services, Repositories, Models, etc.)
+│   ├── config/       # Configuration files
+│   ├── database/     # Migrations, seeders, factories
+│   ├── routes/       # API and web routes
+│   ├── tests/        # PHPUnit tests (Unit and Feature)
+│   ├── composer.json # PHP dependencies
+│   └── phpunit.xml   # PHPUnit configuration
+├── frontend/         # Vue.js frontend application
+│   ├── src/          # Source code (components, views, stores, services)
+│   ├── public/       # Static assets
+│   ├── package.json  # JavaScript dependencies
+│   └── vite.config.js # Vite configuration
+└── .github/          # GitHub configuration and instructions
+```
+
+### Prerequisites
+
+- **PHP**: 8.2 or higher
+- **Composer**: Latest version
+- **Node.js**: 18.x or higher
+- **npm**: Latest version
+- **Database**: MySQL 8.0+ or PostgreSQL 13+
+
+### Environment Setup
+
+**ALWAYS** follow these steps in order for a fresh setup:
+
+1. **Navigate to backend directory**:
+   ```bash
+   cd backend
+   ```
+
+2. **Install PHP dependencies**:
+   ```bash
+   composer install
+   ```
+
+3. **Create environment file** (if it doesn't exist):
+   ```bash
+   cp .env.example .env
+   ```
+
+4. **Generate application key**:
+   ```bash
+   php artisan key:generate
+   ```
+
+5. **Configure database** in `.env` file:
+   ```
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=multi_x_erp
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
+
+6. **Run migrations**:
+   ```bash
+   php artisan migrate
+   ```
+
+7. **Install Node dependencies**:
+   ```bash
+   npm install
+   ```
+
+### Build & Development Commands
+
+**Backend (Laravel)**
+
+- **Run development server** (backend only):
+  ```bash
+  cd backend
+  php artisan serve
+  # Server runs at http://localhost:8000
+  ```
+
+- **Run with queue and logs** (recommended for full development):
+  ```bash
+  cd backend
+  composer dev
+  # This runs: server, queue listener, logs (pail), and vite concurrently
+  ```
+
+- **Build frontend assets**:
+  ```bash
+  cd backend
+  npm run build
+  ```
+
+- **Run tests**:
+  ```bash
+  cd backend
+  php artisan test
+  ```
+
+- **Run specific test suite**:
+  ```bash
+  cd backend
+  php artisan test --testsuite=Unit
+  php artisan test --testsuite=Feature
+  ```
+
+- **Run tests with coverage**:
+  ```bash
+  cd backend
+  php artisan test --coverage
+  ```
+
+- **Lint code** (StyleCI configuration in `.styleci.yml`):
+  ```bash
+  cd backend
+  # If pint is available:
+  ./vendor/bin/pint
+  # Otherwise, StyleCI will run automatically on push
+  ```
+
+**Frontend (Vue.js)**
+
+- **Run development server**:
+  ```bash
+  cd frontend
+  npm run dev
+  # Server runs at http://localhost:5173
+  ```
+
+- **Build for production**:
+  ```bash
+  cd frontend
+  npm run build
+  ```
+
+- **Preview production build**:
+  ```bash
+  cd frontend
+  npm run preview
+  ```
+
+### Quick Setup Script
+
+For automated setup, use the composer setup script from the backend directory:
+
+```bash
+cd backend
+composer setup
+# This runs: composer install, creates .env, generates key, runs migrations, installs npm, builds assets
+```
+
+### Common Issues & Workarounds
+
+1. **Database connection errors**: Ensure database exists and credentials in `.env` are correct
+2. **Permission issues**: Set correct permissions on `storage/` and `bootstrap/cache/`
+   ```bash
+   cd backend
+   chmod -R 775 storage bootstrap/cache
+   ```
+3. **Node module issues**: Clear cache and reinstall
+   ```bash
+   rm -rf node_modules package-lock.json
+   npm install
+   ```
+
+### Validation Before Committing
+
+**ALWAYS** run these commands before committing changes:
+
+1. **Clear config cache**:
+   ```bash
+   cd backend
+   php artisan config:clear
+   ```
+
+2. **Run tests**:
+   ```bash
+   cd backend
+   php artisan test
+   ```
+
+3. **Lint code** (if pint is available):
+   ```bash
+   cd backend
+   test -f vendor/bin/pint && ./vendor/bin/pint || echo "Pint not installed, StyleCI will check on push"
+   ```
+
+4. **Build frontend** (if frontend changes):
+   ```bash
+   cd backend
+   npm run build
+   # OR for standalone frontend:
+   cd frontend
+   npm run build
+   ```
+
+### Key File Locations
+
+**Backend Configuration & Setup:**
+- `backend/composer.json` - PHP dependencies and setup scripts
+- `backend/.env.example` - Environment configuration template
+- `backend/config/` - Application configuration files
+- `backend/phpunit.xml` - Test suite configuration
+- `backend/.styleci.yml` - Code style configuration
+
+**Backend Application Structure:**
+- `backend/app/Http/Controllers/` - API controllers (thin, validation only)
+- `backend/app/Services/` - Business logic layer
+- `backend/app/Repositories/` - Data access layer
+- `backend/app/Models/` - Eloquent models
+- `backend/app/Modules/` - Modular features (IAM, Inventory, CRM, POS, Finance, Procurement, Manufacturing, Reporting)
+- `backend/app/Policies/` - Authorization policies
+- `backend/app/Events/` - Event definitions
+- `backend/app/Listeners/` - Event handlers
+- `backend/app/Enums/` - Enum definitions
+- `backend/database/migrations/` - Database migrations
+- `backend/routes/api.php` - API route definitions
+
+**Frontend Configuration & Setup:**
+- `frontend/package.json` - JavaScript dependencies and scripts
+- `frontend/vite.config.js` - Vite build configuration
+- `frontend/index.html` - Main HTML entry point
+
+**Frontend Application Structure:**
+- `frontend/src/main.js` - Application entry point
+- `frontend/src/App.vue` - Root component
+- `frontend/src/router/` - Vue Router configuration
+- `frontend/src/stores/` - Pinia state management
+- `frontend/src/services/` - API communication layer
+- `frontend/src/components/` - Reusable Vue components
+- `frontend/src/views/` - Page-level components
+- `frontend/src/modules/` - Feature modules (mirrors backend modules)
+- `frontend/src/composables/` - Vue composition functions
+- `frontend/src/layouts/` - Layout components
+
+**Documentation:**
+- `README.md` - Project overview and quick start
+- `ARCHITECTURE.md` - Detailed architecture documentation
+- `IMPLEMENTATION_GUIDE.md` - Implementation guidelines
+- `.github/copilot-instructions.md` - This file
 
 ## Technology Stack
 
@@ -558,3 +812,5 @@ Closes #123
 ---
 
 **Remember**: Before making any changes, always review, analyze, and fully understand existing code, documentation, schemas, migrations, services, and architectural decisions. This ensures consistency and prevents introducing technical debt.
+
+**Trust these instructions**: The commands and workflows documented in this file have been validated and should be trusted. Only perform additional searching if the information here is incomplete or found to be incorrect.
