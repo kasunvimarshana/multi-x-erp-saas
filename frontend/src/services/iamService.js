@@ -41,5 +41,14 @@ export default {
   },
   getPermission(id) {
     return apiClient.get(`/iam/permissions/${id}`)
+  },
+  createPermission(data) {
+    return apiClient.post('/iam/permissions', data)
+  },
+  updatePermission(id, data) {
+    return apiClient.put(`/iam/permissions/${id}`, data)
+  },
+  deletePermission(id) {
+    return apiClient.delete(`/iam/permissions/${id}`)
   }
 }
