@@ -449,6 +449,7 @@ import FormSelect from '../../../components/forms/FormSelect.vue'
 import FormTextarea from '../../../components/forms/FormTextarea.vue'
 import manufacturingService from '../../../services/manufacturingService'
 import inventoryService from '../../../services/inventoryService'
+import iamService from '../../../services/iamService'
 
 const loading = ref(false)
 const showModal = ref(false)
@@ -574,11 +575,8 @@ const fetchProducts = async () => {
 
 const fetchUsers = async () => {
   try {
-    users.value = [
-      { id: 1, name: 'John Doe' },
-      { id: 2, name: 'Jane Smith' },
-      { id: 3, name: 'Bob Johnson' }
-    ]
+    const response = await iamService.getUsers({ status: 'active' })
+    users.value = response.data.data || []
   } catch (error) {
     console.error('Failed to fetch users:', error)
   }
