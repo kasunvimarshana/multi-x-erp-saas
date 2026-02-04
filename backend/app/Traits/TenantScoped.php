@@ -25,7 +25,7 @@ trait TenantScoped
         });
 
         static::creating(function (Model $model) {
-            if (auth()->check() && auth()->user()->tenant_id) {
+            if (auth()->check() && auth()->user()->tenant_id && ! $model->tenant_id) {
                 $model->tenant_id = auth()->user()->tenant_id;
             }
         });
