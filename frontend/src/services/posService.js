@@ -49,5 +49,8 @@ export default {
   },
   createPayment(data) {
     return apiClient.post('/pos/payments', data)
+  },
+  deletePayment(id) {
+    return apiClient.delete(`/pos/payments/${id}`)
   }
 }

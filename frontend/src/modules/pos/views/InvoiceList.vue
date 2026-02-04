@@ -717,9 +717,14 @@ const handleRecordPayment = async () => {
   }
 }
 
-const printInvoice = (invoice) => {
-  // TODO: Implement PDF generation and printing functionality
-  alert(`Print/Download functionality for invoice ${invoice.invoice_number} would be implemented here.`)
+const printInvoice = async (invoice) => {
+  try {
+    const { generateInvoicePDF } = await import('@/utils/pdfGenerator')
+    await generateInvoicePDF(invoice)
+  } catch (err) {
+    console.error('Error printing invoice:', err)
+    alert('Failed to print invoice')
+  }
 }
 
 const isOverdue = (dueDate, status) => {
