@@ -3,13 +3,14 @@
 namespace App\Modules\Procurement\Models;
 
 use App\Modules\Inventory\Models\Product;
+use App\Traits\TenantScoped;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PurchaseOrderItem extends Model
 {
-    use HasFactory;
+    use HasFactory, TenantScoped;
 
     /**
      * Create a new factory instance for the model.
@@ -20,6 +21,7 @@ class PurchaseOrderItem extends Model
     }
 
     protected $fillable = [
+        'tenant_id',
         'purchase_order_id',
         'product_id',
         'quantity',

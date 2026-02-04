@@ -4,13 +4,14 @@ namespace App\Modules\Manufacturing\Models;
 
 use App\Modules\Inventory\Models\Product;
 use App\Modules\Inventory\Models\UnitOfMeasure;
+use App\Traits\TenantScoped;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProductionOrderItem extends Model
 {
-    use HasFactory;
+    use HasFactory, TenantScoped;
 
     /**
      * Create a new factory instance for the model.
@@ -21,6 +22,7 @@ class ProductionOrderItem extends Model
     }
 
     protected $fillable = [
+        'tenant_id',
         'production_order_id',
         'product_id',
         'planned_quantity',

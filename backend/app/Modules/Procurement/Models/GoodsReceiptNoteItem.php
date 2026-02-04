@@ -3,6 +3,7 @@
 namespace App\Modules\Procurement\Models;
 
 use App\Modules\Inventory\Models\Product;
+use App\Traits\TenantScoped;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,9 +16,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class GoodsReceiptNoteItem extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, TenantScoped;
 
     protected $fillable = [
+        'tenant_id',
         'goods_receipt_note_id',
         'purchase_order_item_id',
         'product_id',

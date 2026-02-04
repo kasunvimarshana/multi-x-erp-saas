@@ -3,11 +3,9 @@
 namespace App\Modules\Finance\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
-use App\Modules\Finance\Events\FiscalYearClosed;
-use App\Modules\Finance\Repositories\FiscalYearRepository;
+use App\Modules\Finance\Services\FiscalYearService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Fiscal Year API Controller
@@ -17,13 +15,13 @@ use Illuminate\Support\Facades\Auth;
 class FiscalYearController extends BaseController
 {
     public function __construct(
-        protected FiscalYearRepository $fiscalYearRepository
+        protected FiscalYearService $fiscalYearService
     ) {}
 
     public function index(Request $request): JsonResponse
     {
         $perPage = $request->input('per_page', 15);
-        $fiscalYears = $this->fiscalYearRepository->paginate($perPage);
+        $fiscalYears = $this->fiscalYearService->list($perPage);
         
         return $this->successResponse($fiscalYears, 'Fiscal years retrieved successfully');
     }
@@ -36,87 +34,71 @@ class FiscalYearController extends BaseController
             'end_date' => 'required|date|after:start_date',
         ]);
         
-        $validated['tenant_id'] = Auth::user()->tenant_id;
-        $validated['is_closed'] = false;
-        
-        $fiscalYear = $this->fiscalYearRepository->create($validated);
+        $fiscalYear = $this->fiscalYearService->create($validated);
         
         return $this->createdResponse($fiscalYear, 'Fiscal year created successfully');
     }
 
     public function show(int $id): JsonResponse
     {
-        $fiscalYear = $this->fiscalYearRepository->findOrFail($id);
+        $fiscalYear = $this->fiscalYearService->find($id);
         
         return $this->successResponse($fiscalYear, 'Fiscal year retrieved successfully');
     }
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $fiscalYear = $this->fiscalYearRepository->findOrFail($id);
-        
-        if ($fiscalYear->is_closed) {
-            return $this->errorResponse('Cannot update closed fiscal year', null, 400);
-        }
-        
         $validated = $request->validate([
             'name' => 'required|string|max:100',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
         ]);
         
-        $this->fiscalYearRepository->update($id, $validated);
-        $fiscalYear->refresh();
-        
-        return $this->successResponse($fiscalYear, 'Fiscal year updated successfully');
+        try {
+            $fiscalYear = $this->fiscalYearService->update($id, $validated);
+            return $this->successResponse($fiscalYear, 'Fiscal year updated successfully');
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), null, 400);
+        }
     }
 
     public function destroy(int $id): JsonResponse
     {
-        $fiscalYear = $this->fiscalYearRepository->findOrFail($id);
-        
-        if ($fiscalYear->is_closed) {
-            return $this->errorResponse('Cannot delete closed fiscal year', null, 400);
+        try {
+            $this->fiscalYearService->delete($id);
+            return $this->successResponse(null, 'Fiscal year deleted successfully');
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), null, 400);
         }
-        
-        $this->fiscalYearRepository->delete($id);
-        
-        return $this->successResponse(null, 'Fiscal year deleted successfully');
     }
 
     public function close(int $id): JsonResponse
     {
-        $fiscalYear = $this->fiscalYearRepository->findOrFail($id);
-        
-        if ($fiscalYear->is_closed) {
-            return $this->errorResponse('Fiscal year is already closed', null, 400);
+        try {
+            $fiscalYear = $this->fiscalYearService->close($id);
+            return $this->successResponse($fiscalYear, 'Fiscal year closed successfully');
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), null, 400);
         }
-        
-        $this->fiscalYearRepository->update($id, ['is_closed' => true]);
-        $fiscalYear->refresh();
-        
-        event(new FiscalYearClosed($fiscalYear));
-        
-        return $this->successResponse($fiscalYear, 'Fiscal year closed successfully');
     }
 
     public function open(): JsonResponse
     {
-        $fiscalYears = $this->fiscalYearRepository->getOpenFiscalYears();
+        $fiscalYears = $this->fiscalYearService->getOpenFiscalYears();
         
         return $this->successResponse($fiscalYears, 'Open fiscal years retrieved successfully');
     }
 
     public function closed(): JsonResponse
     {
-        $fiscalYears = $this->fiscalYearRepository->getClosedFiscalYears();
+        $fiscalYears = $this->fiscalYearService->getClosedFiscalYears();
         
         return $this->successResponse($fiscalYears, 'Closed fiscal years retrieved successfully');
     }
 
     public function current(): JsonResponse
     {
-        $fiscalYear = $this->fiscalYearRepository->getCurrentFiscalYear();
+        $fiscalYear = $this->fiscalYearService->getCurrentFiscalYear();
         
         if (!$fiscalYear) {
             return $this->notFoundResponse('No current fiscal year found');
