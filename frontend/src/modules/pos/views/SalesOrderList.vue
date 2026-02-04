@@ -324,6 +324,9 @@ import posService from '../../../services/posService'
 import customerService from '../../../services/customerService'
 import inventoryService from '../../../services/inventoryService'
 
+// Constants
+const LOW_STOCK_THRESHOLD = 10
+
 const loading = ref(false)
 const showModal = ref(false)
 const showViewModal = ref(false)
@@ -639,9 +642,6 @@ const getStatusColor = (status) => {
   }
   return colors[status] || 'gray'
 }
-
-// Constants
-const LOW_STOCK_THRESHOLD = 10
 
 const getStockClass = (quantity) => {
   if (quantity === 0) return 'stock-out'

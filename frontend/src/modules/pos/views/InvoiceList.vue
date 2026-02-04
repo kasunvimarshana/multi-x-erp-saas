@@ -765,7 +765,7 @@ const getStatusColor = (status) => {
 
 <style scoped>
 .page-container {
-  max-width: 1600px;
+  max-width: 1400px;
 }
 
 .page-header {
