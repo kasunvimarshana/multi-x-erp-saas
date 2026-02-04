@@ -119,6 +119,7 @@ import { generateBreadcrumbs } from '../services/dynamicRoutesService';
 import DynamicTable from '../components/common/DynamicTable.vue';
 import DynamicForm from '../components/common/DynamicForm.vue';
 import { usePermissions } from '../composables/usePermissions';
+import apiClient from '../services/api';
 
 const route = useRoute();
 const router = useRouter();
@@ -232,13 +233,32 @@ async function loadListData(page = 1, search = '', sort = {}) {
     throw new Error('API path not configured');
   }
 
-  // TODO: Implement generic API call
-  // const response = await fetch(`${apiPath}?page=${page}&search=${search}`);
-  // const data = await response.json();
-  // items.value = data.data;
-  // pagination.value = data.meta;
-  
-  items.value = [];
+  try {
+    const params = {
+      page: currentPage.value,
+      per_page: perPage.value
+    };
+    
+    if (searchTerm.value) {
+      params.search = searchTerm.value;
+    }
+    
+    const response = await apiClient.get(apiPath, { params });
+    items.value = response.data || [];
+    
+    // Handle pagination metadata
+    if (response.meta) {
+      pagination.value = response.meta;
+      totalPages.value = response.meta.last_page || 1;
+    } else if (response.pagination) {
+      pagination.value = response.pagination;
+      totalPages.value = response.pagination.total_pages || 1;
+    }
+  } catch (err) {
+    console.error('Failed to load data:', err);
+    items.value = [];
+    throw err;
+  }
 }
 
 // Load single item
@@ -248,17 +268,20 @@ async function loadSingleItem(id) {
     throw new Error('API path not configured');
   }
 
-  // TODO: Implement generic API call
-  // const response = await fetch(`${apiPath}/${id}`);
-  // const data = await response.json();
-  // currentItem.value = data.data;
-  // if (viewType.value === 'edit') {
-  //   formData.value = { ...data.data };
-  // }
-
-  currentItem.value = {};
-  if (viewType.value === 'edit') {
-    formData.value = {};
+  try {
+    const response = await apiClient.get(`${apiPath}/${id}`);
+    currentItem.value = response.data || response;
+    
+    if (viewType.value === 'edit') {
+      formData.value = { ...currentItem.value };
+    }
+  } catch (err) {
+    console.error('Failed to load item:', err);
+    currentItem.value = {};
+    if (viewType.value === 'edit') {
+      formData.value = {};
+    }
+    throw err;
   }
 }
 
@@ -281,8 +304,12 @@ async function handleDelete(item) {
   }
 
   try {
-    // TODO: Implement delete API call
-    // await deleteApi(item.id);
+    const apiPath = entityMetadata.value?.api_config?.base_path;
+    if (!apiPath) {
+      throw new Error('API path not configured');
+    }
+    
+    await apiClient.delete(`${apiPath}/${item.id}`);
     await loadData();
   } catch (err) {
     console.error('Failed to delete:', err);
@@ -296,8 +323,12 @@ async function handleDeleteCurrent() {
   }
 
   try {
-    // TODO: Implement delete API call
-    // await deleteApi(route.params.id);
+    const apiPath = entityMetadata.value?.api_config?.base_path;
+    if (!apiPath) {
+      throw new Error('API path not configured');
+    }
+    
+    await apiClient.delete(`${apiPath}/${route.params.id}`);
     router.push({ name: `${entityName.value}_list` });
   } catch (err) {
     console.error('Failed to delete:', err);
@@ -309,12 +340,15 @@ async function handleSubmit(data) {
   try {
     saving.value = true;
 
+    const apiPath = entityMetadata.value?.api_config?.base_path;
+    if (!apiPath) {
+      throw new Error('API path not configured');
+    }
+
     if (viewType.value === 'create') {
-      // TODO: Implement create API call
-      // await createApi(data);
+      await apiClient.post(apiPath, data);
     } else if (viewType.value === 'edit') {
-      // TODO: Implement update API call
-      // await updateApi(route.params.id, data);
+      await apiClient.put(`${apiPath}/${route.params.id}`, data);
     }
 
     router.push({ name: `${entityName.value}_list` });

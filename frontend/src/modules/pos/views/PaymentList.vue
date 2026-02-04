@@ -406,18 +406,24 @@ const editPayment = async (payment) => {
 const deletePaymentConfirm = async (payment) => {
   if (confirm(`Are you sure you want to delete payment ${payment.payment_number}?`)) {
     try {
-      // TODO: Implement payment deletion when backend API is ready
-      alert('Payment deletion would be implemented here with proper backend support.')
+      await posService.deletePayment(payment.id)
+      await fetchPayments()
+      alert('Payment deleted successfully')
     } catch (error) {
       console.error('Failed to delete payment:', error)
-      alert('Failed to delete payment. Please try again.')
+      alert('Failed to delete payment. This operation may not be supported by the backend.')
     }
   }
 }
 
-const printReceipt = (payment) => {
-  // TODO: Implement PDF receipt generation and printing
-  alert(`Print receipt functionality for payment ${payment.payment_number} would be implemented here.`)
+const printReceipt = async (payment) => {
+  try {
+    const { generateReceiptPDF } = await import('@/utils/pdfGenerator')
+    await generateReceiptPDF(payment)
+  } catch (err) {
+    console.error('Error printing receipt:', err)
+    alert('Failed to print receipt')
+  }
 }
 
 const formatDate = (date) => {
