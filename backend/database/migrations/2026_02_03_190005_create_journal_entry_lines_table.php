@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('journal_entry_lines', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tenant_id')->constrained()->onDelete('cascade');
             $table->foreignId('journal_entry_id')->constrained()->onDelete('cascade');
             $table->foreignId('account_id')->constrained()->onDelete('restrict');
             $table->decimal('debit', 15, 2)->default(0.00);
@@ -19,6 +20,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
+            $table->index(['tenant_id', 'journal_entry_id']);
             $table->index(['journal_entry_id', 'account_id']);
             $table->index('account_id');
         });
