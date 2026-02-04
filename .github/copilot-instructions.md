@@ -2,6 +2,14 @@
 
 This document provides comprehensive guidelines for developing the Multi-X ERP SaaS platform. These instructions help ensure consistency, quality, and adherence to architectural principles across the codebase.
 
+## Quick Reference
+
+- **Setup**: See [Getting Started & Build Instructions](#getting-started--build-instructions) for environment setup
+- **Build/Test**: See [Build & Development Commands](#build--development-commands) for running the app and tests
+- **Architecture**: See [Architecture Principles](#architecture-principles) and [Coding Guidelines](#coding-guidelines)
+- **Validation**: See [Validation Before Committing](#validation-before-committing) for pre-commit checks
+- **File Structure**: See [Key File Locations](#key-file-locations) for navigating the codebase
+
 ## Project Overview
 
 Multi-X ERP SaaS is a fully production-ready, enterprise-grade, modular ERP SaaS platform featuring:
@@ -804,3 +812,5 @@ Closes #123
 ---
 
 **Remember**: Before making any changes, always review, analyze, and fully understand existing code, documentation, schemas, migrations, services, and architectural decisions. This ensures consistency and prevents introducing technical debt.
+
+**Trust these instructions**: The commands and workflows documented in this file have been validated and should be trusted. Only perform additional searching if the information here is incomplete or found to be incorrect.
