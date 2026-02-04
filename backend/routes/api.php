@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Api\MetadataController;
+use App\Http\Controllers\Api\MenuController;
+use App\Http\Controllers\Api\FeatureFlagController;
 use App\Modules\CRM\Http\Controllers\CustomerController;
 use App\Modules\IAM\Http\Controllers\PermissionController;
 use App\Modules\IAM\Http\Controllers\RoleController;
@@ -69,6 +72,43 @@ Route::prefix('v1')->group(function () {
             Route::get('me', [AuthController::class, 'me']);
             Route::put('profile', [AuthController::class, 'profile']);
             Route::put('change-password', [AuthController::class, 'changePassword']);
+        });
+        
+        // Metadata API Routes
+        Route::prefix('metadata')->group(function () {
+            // Get metadata catalog and entity info
+            Route::get('catalog', [MetadataController::class, 'catalog']);
+            Route::get('entity/{name}', [MetadataController::class, 'entity']);
+            Route::get('module/{module}', [MetadataController::class, 'module']);
+            Route::get('entity/{entityName}/fields', [MetadataController::class, 'fieldConfig']);
+            Route::get('entity/{entityName}/validation', [MetadataController::class, 'validationRules']);
+            Route::post('cache/clear', [MetadataController::class, 'clearCache']);
+            
+            // Admin routes for managing metadata
+            Route::post('entities', [MetadataController::class, 'createEntity']);
+            Route::put('entities/{id}', [MetadataController::class, 'updateEntity']);
+        });
+        
+        // Menu API Routes
+        Route::prefix('menu')->group(function () {
+            Route::get('/', [MenuController::class, 'index']); // User menu
+            Route::get('all', [MenuController::class, 'all']); // Admin view
+            Route::post('/', [MenuController::class, 'store']);
+            Route::put('{id}', [MenuController::class, 'update']);
+            Route::delete('{id}', [MenuController::class, 'destroy']);
+            Route::post('reorder', [MenuController::class, 'reorder']);
+        });
+        
+        // Feature Flags API Routes
+        Route::prefix('features')->group(function () {
+            Route::get('/', [FeatureFlagController::class, 'index']); // Enabled features
+            Route::get('check/{name}', [FeatureFlagController::class, 'check']);
+            Route::post('check-multiple', [FeatureFlagController::class, 'checkMultiple']);
+            Route::get('module/{module}', [FeatureFlagController::class, 'byModule']);
+            Route::post('{name}/enable', [FeatureFlagController::class, 'enable']);
+            Route::post('{name}/disable', [FeatureFlagController::class, 'disable']);
+            Route::post('/', [FeatureFlagController::class, 'store']);
+            Route::put('{id}', [FeatureFlagController::class, 'update']);
         });
         
         // Products (root level)
