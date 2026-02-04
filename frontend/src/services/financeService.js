@@ -14,6 +14,9 @@ export default {
   updateAccount(id, data) {
     return apiClient.put(`/finance/accounts/${id}`, data)
   },
+  deleteAccount(id) {
+    return apiClient.delete(`/finance/accounts/${id}`)
+  },
   
   // Journal Entries
   getJournalEntries(params = {}) {
@@ -25,6 +28,21 @@ export default {
   createJournalEntry(data) {
     return apiClient.post('/finance/journal-entries', data)
   },
+  updateJournalEntry(id, data) {
+    return apiClient.put(`/finance/journal-entries/${id}`, data)
+  },
+  deleteJournalEntry(id) {
+    return apiClient.delete(`/finance/journal-entries/${id}`)
+  },
+  postJournalEntry(id) {
+    return apiClient.post(`/finance/journal-entries/${id}/post`)
+  },
+  approveJournalEntry(id) {
+    return apiClient.post(`/finance/journal-entries/${id}/approve`)
+  },
+  reverseJournalEntry(id) {
+    return apiClient.post(`/finance/journal-entries/${id}/reverse`)
+  },
   
   // Reports
   getFinancialReports(params = {}) {
@@ -35,5 +53,17 @@ export default {
   },
   getIncomeStatement(params = {}) {
     return apiClient.get('/finance/reports/income-statement', { params })
+  },
+  getTrialBalance(params = {}) {
+    return apiClient.get('/finance/reports/trial-balance', { params })
+  },
+  getCashFlowStatement(params = {}) {
+    return apiClient.get('/finance/reports/cash-flow', { params })
+  },
+  getGeneralLedger(params = {}) {
+    return apiClient.get('/finance/reports/general-ledger', { params })
+  },
+  getAccountAging(params = {}) {
+    return apiClient.get('/finance/reports/account-aging', { params })
   }
 }
